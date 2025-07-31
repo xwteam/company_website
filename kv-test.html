@@ -118,6 +118,8 @@
             <a href="admin.html" class="btn">管理页面</a>
             <button id="force-refresh-btn" class="btn">强制刷新网站</button>
             <button id="clear-cache-btn" class="btn">清除缓存</button>
+            <button id="clear-server-cache-btn" class="btn">清除服务器缓存</button>
+            <button id="force-sync-btn" class="btn">强制同步</button>
         </div>
         
         <div class="test-section">
@@ -398,6 +400,50 @@
                     }
                 } catch (error) {
                     resultDiv.innerHTML = `<span class="error">清除缓存失败: ${error.message}</span>`;
+                }
+            });
+
+            // 清除服务器缓存
+            document.getElementById('clear-server-cache-btn').addEventListener('click', async function() {
+                const resultDiv = document.getElementById('status-result');
+                resultDiv.innerHTML = '正在清除服务器缓存...';
+                
+                try {
+                    // 清除stella服务器缓存
+                    if (typeof stella !== 'undefined' && typeof stella.clearServerCache === 'function') {
+                        const success = await stella.clearServerCache();
+                        if (success) {
+                            resultDiv.innerHTML = '<span class="success">服务器缓存已清除</span>';
+                        } else {
+                            resultDiv.innerHTML = '<span class="warning">清除服务器缓存可能未成功</span>';
+                        }
+                    } else {
+                        resultDiv.innerHTML = '<span class="warning">无法访问stella服务器缓存清除功能</span>';
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">清除服务器缓存失败: ${error.message}</span>`;
+                }
+            });
+            
+            // 强制同步
+            document.getElementById('force-sync-btn').addEventListener('click', async function() {
+                const resultDiv = document.getElementById('status-result');
+                resultDiv.innerHTML = '正在强制同步KV数据...';
+                
+                try {
+                    // 强制同步
+                    if (typeof stella !== 'undefined' && typeof stella.forceSync === 'function') {
+                        const success = await stella.forceSync();
+                        if (success) {
+                            resultDiv.innerHTML = '<span class="success">KV数据强制同步成功</span>';
+                        } else {
+                            resultDiv.innerHTML = '<span class="warning">KV数据强制同步可能未成功</span>';
+                        }
+                    } else {
+                        resultDiv.innerHTML = '<span class="warning">无法访问stella强制同步功能</span>';
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">强制同步失败: ${error.message}</span>`;
                 }
             });
         });

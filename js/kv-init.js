@@ -213,6 +213,85 @@
             window.location.href = currentUrl.toString();
         },
         
+        // 清除服务器缓存
+        async clearServerCache() {
+            console.log('KV存储API: 清除服务器缓存');
+            try {
+                // 清除本地缓存
+                this.clearCache();
+                
+                // 清除服务器缓存
+                const timestamp = new Date().getTime();
+                const response = await fetch(`/api/kv/config?t=${timestamp}&clear_cache=1`, {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                if (response.ok) {
+                    console.log('KV存储API: 服务器缓存已清除');
+                    return true;
+                } else {
+                    throw new Error(`API返回错误: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('KV存储API: 清除服务器缓存失败:', error);
+                return false;
+            }
+        },
+        
+        // 强制同步
+        async forceSync() {
+            console.log('KV存储API: 强制同步');
+            try {
+                // 清除缓存
+                await this.clearServerCache();
+                
+                // 获取所有键
+                const response = await fetch('/api/kv', {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    credentials: 'same-origin'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const keys = data.keys.map(key => key.name);
+                    console.log('KV存储API: 获取到的键:', keys);
+                    
+                    // 对每个键强制读取一次
+                    const promises = keys.map(key => 
+                        fetch(`/api/kv/${key}?t=${Date.now()}&force_consistency=1`, {
+                            method: 'GET',
+                            headers: {
+                                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                                'Pragma': 'no-cache',
+                                'Expires': '0'
+                            },
+                            credentials: 'same-origin'
+                        })
+                    );
+                    
+                    await Promise.all(promises);
+                    console.log('KV存储API: 强制同步完成');
+                    return true;
+                } else {
+                    throw new Error(`API返回错误: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('KV存储API: 强制同步失败:', error);
+                return false;
+            }
+        },
+        
         // 保存到localStorage作为备份
         _saveToLocalStorage(key, value) {
             try {

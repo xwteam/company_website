@@ -850,14 +850,28 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
             document.body.appendChild(statusDiv);
             
             // 清除stella缓存
-            if (typeof stella !== 'undefined' && typeof stella.clearCache === 'function') {
-                stella.clearCache();
+            if (typeof stella !== 'undefined') {
+                if (typeof stella.clearCache === 'function') {
+                    stella.clearCache();
+                }
+                
+                // 清除服务器缓存并强制同步
+                if (typeof stella.clearServerCache === 'function') {
+                    stella.clearServerCache().then(() => {
+                        if (typeof stella.forceSync === 'function') {
+                            return stella.forceSync();
+                        }
+                        return Promise.resolve();
+                    }).catch(err => {
+                        console.error("清除服务器缓存或强制同步失败:", err);
+                    });
+                }
             }
             
             // 清除浏览器缓存
             Promise.all([
                 // 尝试清除所有配置键的缓存
-                fetch('/api/kv/config?t=' + Date.now() + '&force_consistency=1', {
+                fetch('/api/kv/config?t=' + Date.now() + '&force_consistency=1&clear_cache=1', {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -915,9 +929,74 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
             refreshBtnGroup.innerHTML = `
                 <button onclick="clearCacheAndReload()" class="btn primary">强制刷新网站</button>
                 <a href="kv-test.html" class="btn secondary">测试KV连接</a>
+                <button onclick="forceSync()" class="btn secondary">强制同步KV数据</button>
             `;
             adminContainer.insertBefore(refreshBtnGroup, adminContainer.firstChild);
         });
+    </script>
+    
+    <script>
+        // 强制同步KV数据
+        async function forceSync() {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'status-message';
+            statusDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <h4>正在强制同步KV数据...</h4>
+                    <p>这可能需要一些时间，请稍候...</p>
+                </div>
+            `;
+            document.body.appendChild(statusDiv);
+            
+            try {
+                if (typeof stella !== 'undefined' && typeof stella.forceSync === 'function') {
+                    const success = await stella.forceSync();
+                    
+                    if (success) {
+                        statusDiv.innerHTML = `
+                            <div class="alert alert-success">
+                                <h4>强制同步成功</h4>
+                                <p>KV数据已在全球数据中心同步。</p>
+                                <div class="btn-group">
+                                    <button onclick="this.parentNode.parentNode.parentNode.remove()" class="btn primary">关闭</button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        statusDiv.innerHTML = `
+                            <div class="alert alert-warning">
+                                <h4>强制同步可能未成功</h4>
+                                <p>请查看浏览器控制台获取详细信息。</p>
+                                <div class="btn-group">
+                                    <button onclick="this.parentNode.parentNode.parentNode.remove()" class="btn primary">关闭</button>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-warning">
+                            <h4>强制同步功能不可用</h4>
+                            <p>无法访问stella强制同步功能。</p>
+                            <div class="btn-group">
+                                <button onclick="this.parentNode.parentNode.parentNode.remove()" class="btn primary">关闭</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('强制同步失败:', error);
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h4>强制同步失败</h4>
+                        <p>错误信息: ${error.message}</p>
+                        <div class="btn-group">
+                            <button onclick="this.parentNode.parentNode.parentNode.remove()" class="btn primary">关闭</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
     </script>
 </body>
 </html> 
