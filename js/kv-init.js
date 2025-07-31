@@ -12,8 +12,51 @@
         
         // 创建一个模拟的KV存储API，用于本地开发测试
         window.stella = {
+            // 存储数据的内部对象
+            _storage: {},
+            
+            // 初始化本地存储
+            _init() {
+                // 尝试从localStorage加载数据
+                try {
+                    const savedData = localStorage.getItem('stella_kv_storage');
+                    if (savedData) {
+                        this._storage = JSON.parse(savedData);
+                        console.log('已从localStorage加载KV存储数据:', this._storage);
+                    }
+                } catch (error) {
+                    console.error('从localStorage加载KV存储数据失败:', error);
+                }
+            },
+            
+            // 保存数据到localStorage
+            _save() {
+                try {
+                    localStorage.setItem('stella_kv_storage', JSON.stringify(this._storage));
+                    console.log('已保存KV存储数据到localStorage');
+                } catch (error) {
+                    console.error('保存KV存储数据到localStorage失败:', error);
+                }
+            },
+            
             async get(key, type) {
                 console.warn(`KV存储模拟: 获取键 "${key}" (类型: ${type})`);
+                
+                // 检查本地存储中是否有数据
+                if (this._storage[key]) {
+                    const value = this._storage[key];
+                    console.log(`KV存储模拟: 从本地存储获取键 "${key}" 的值:`, value);
+                    
+                    if (type === 'json' && typeof value === 'string') {
+                        try {
+                            return JSON.parse(value);
+                        } catch (error) {
+                            console.error(`KV存储模拟: 解析JSON失败:`, error);
+                        }
+                    }
+                    
+                    return value;
+                }
                 
                 // 返回默认值
                 const defaultConfig = {
@@ -80,6 +123,7 @@
                 
                 // 根据请求的键返回相应的值
                 const value = defaultConfig[key];
+                console.log(`KV存储模拟: 返回默认值:`, value);
                 
                 // 根据请求的类型返回值
                 if (type === 'json' && value) {
@@ -93,25 +137,81 @@
             
             async put(key, value) {
                 console.warn(`KV存储模拟: 设置键 "${key}" 的值为:`, value);
+                
+                // 保存到本地存储
+                this._storage[key] = value;
+                this._save();
+                
                 return true;
             },
             
             async delete(key) {
                 console.warn(`KV存储模拟: 删除键 "${key}"`);
+                
+                // 从本地存储中删除
+                delete this._storage[key];
+                this._save();
+                
                 return true;
             },
             
             async list(options) {
                 console.warn('KV存储模拟: 列出键', options);
+                
+                // 返回本地存储中的所有键
+                const keys = Object.keys(this._storage).map(key => ({ name: key }));
+                
                 return {
-                    keys: [],
+                    keys: keys,
                     list_complete: true,
                     cursor: ''
                 };
+            },
+            
+            // 添加toString方法，用于标识模拟对象
+            toString() {
+                return '[对象 模拟KV存储API]';
             }
         };
+        
+        // 初始化本地存储
+        window.stella._init();
+        
+        // 添加一个标识，表示这是模拟对象
+        window.stella.isMock = true;
+        
     } else {
         console.log('KV存储初始化成功: stella命名空间已加载');
+        
+        // 添加一个标识，表示这是真实对象
+        window.stella.isMock = false;
+        
+        // 包装原始方法，添加日志
+        const originalGet = window.stella.get;
+        window.stella.get = async function(key, type) {
+            console.log(`KV存储: 获取键 "${key}" (类型: ${type})`);
+            try {
+                const result = await originalGet.apply(this, arguments);
+                console.log(`KV存储: 获取键 "${key}" 成功:`, result);
+                return result;
+            } catch (error) {
+                console.error(`KV存储: 获取键 "${key}" 失败:`, error);
+                throw error;
+            }
+        };
+        
+        const originalPut = window.stella.put;
+        window.stella.put = async function(key, value) {
+            console.log(`KV存储: 设置键 "${key}" 的值为:`, value);
+            try {
+                const result = await originalPut.apply(this, arguments);
+                console.log(`KV存储: 设置键 "${key}" 成功`);
+                return result;
+            } catch (error) {
+                console.error(`KV存储: 设置键 "${key}" 失败:`, error);
+                throw error;
+            }
+        };
     }
 })();
 
@@ -124,6 +224,7 @@ async function initializeKVWithConfig(config) {
         }
         
         console.log('开始初始化KV存储...');
+        console.log('配置数据:', config);
         
         // 存储hero背景
         await stella.put('hero-bg', config['hero-bg']);
@@ -138,7 +239,9 @@ async function initializeKVWithConfig(config) {
         console.log('已存储hero描述');
         
         // 存储服务描述
-        await stella.put('services-description', JSON.stringify(config['services-description']));
+        const servicesJson = JSON.stringify(config['services-description']);
+        console.log('服务描述JSON:', servicesJson);
+        await stella.put('services-description', servicesJson);
         console.log('已存储服务描述');
         
         // 存储精选产品描述
@@ -146,10 +249,18 @@ async function initializeKVWithConfig(config) {
         console.log('已存储精选产品描述');
         
         // 存储客户评价
-        await stella.put('testimonials-description', JSON.stringify(config['testimonials-description']));
+        const testimonialsJson = JSON.stringify(config['testimonials-description']);
+        console.log('客户评价JSON:', testimonialsJson);
+        await stella.put('testimonials-description', testimonialsJson);
         console.log('已存储客户评价');
         
         console.log('KV存储初始化完成！');
+        
+        // 如果是在模拟环境中，显示提示
+        if (stella.isMock) {
+            console.warn('注意: 当前使用的是模拟KV存储API，配置已保存到localStorage，但不会同步到EdgeOne KV存储');
+        }
+        
         return true;
     } catch (error) {
         console.error('KV存储初始化失败:', error);

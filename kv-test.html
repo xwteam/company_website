@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KV存储测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .test-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #eee;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            color: #4caf50;
+        }
+        
+        .error {
+            color: #f44336;
+        }
+        
+        .warning {
+            color: #ff9800;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: #0b7dda;
+        }
+        
+        .btn-group {
+            margin: 20px 0;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .input-group textarea {
+            min-height: 100px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KV存储测试工具</h1>
+        
+        <div class="btn-group">
+            <a href="index.html" class="btn">返回首页</a>
+            <a href="admin.html" class="btn">管理页面</a>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">KV存储状态</div>
+            <button id="check-status-btn" class="btn">检查KV存储状态</button>
+            <div id="status-result" class="test-result">点击按钮检查KV存储状态...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">读取KV存储</div>
+            <div class="input-group">
+                <label for="get-key">键名:</label>
+                <input type="text" id="get-key" placeholder="例如: hero-bg">
+            </div>
+            <div class="input-group">
+                <label for="get-type">类型:</label>
+                <select id="get-type">
+                    <option value="text">text</option>
+                    <option value="json">json</option>
+                </select>
+            </div>
+            <button id="get-btn" class="btn">读取</button>
+            <div id="get-result" class="test-result">输入键名并点击读取按钮...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">写入KV存储</div>
+            <div class="input-group">
+                <label for="put-key">键名:</label>
+                <input type="text" id="put-key" placeholder="例如: test-key">
+            </div>
+            <div class="input-group">
+                <label for="put-value">值:</label>
+                <textarea id="put-value" placeholder="例如: 这是一个测试值"></textarea>
+            </div>
+            <button id="put-btn" class="btn">写入</button>
+            <div id="put-result" class="test-result">输入键名和值并点击写入按钮...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">列出所有键</div>
+            <button id="list-btn" class="btn">列出所有键</button>
+            <div id="list-result" class="test-result">点击按钮列出所有键...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">删除键</div>
+            <div class="input-group">
+                <label for="delete-key">键名:</label>
+                <input type="text" id="delete-key" placeholder="例如: test-key">
+            </div>
+            <button id="delete-btn" class="btn">删除</button>
+            <div id="delete-result" class="test-result">输入键名并点击删除按钮...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">测试配置加载</div>
+            <button id="test-config-btn" class="btn">测试配置加载</button>
+            <div id="test-config-result" class="test-result">点击按钮测试配置加载...</div>
+        </div>
+    </div>
+    
+    <script src="js/kv-init.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查KV存储状态
+            document.getElementById('check-status-btn').addEventListener('click', async function() {
+                const resultDiv = document.getElementById('status-result');
+                resultDiv.innerHTML = '正在检查KV存储状态...';
+                
+                try {
+                    // 检查stella对象是否存在
+                    if (typeof stella === 'undefined') {
+                        resultDiv.innerHTML = '<span class="error">错误: stella对象未定义</span>';
+                        return;
+                    }
+                    
+                    // 检查stella是否是模拟对象
+                    const isMock = stella.isMock === true;
+                    
+                    if (isMock) {
+                        resultDiv.innerHTML = '<span class="warning">警告: 当前使用的是模拟KV存储API</span>\n';
+                        resultDiv.innerHTML += '这意味着您的网站可能在以下环境中运行:\n';
+                        resultDiv.innerHTML += '- 本地开发环境\n';
+                        resultDiv.innerHTML += '- 非EdgeOne Pages环境\n';
+                        resultDiv.innerHTML += '- EdgeOne Pages环境，但KV存储未正确绑定\n';
+                    } else {
+                        resultDiv.innerHTML = '<span class="success">成功: 已连接到EdgeOne KV存储</span>\n';
+                        resultDiv.innerHTML += `命名空间: stella\n`;
+                        resultDiv.innerHTML += `命名空间ID: ns-ctd2RL3uTaAj\n`;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">检查KV存储状态时出错: ${error.message}</span>`;
+                }
+            });
+            
+            // 读取KV存储
+            document.getElementById('get-btn').addEventListener('click', async function() {
+                const key = document.getElementById('get-key').value.trim();
+                const type = document.getElementById('get-type').value;
+                const resultDiv = document.getElementById('get-result');
+                
+                if (!key) {
+                    resultDiv.innerHTML = '<span class="error">请输入键名</span>';
+                    return;
+                }
+                
+                resultDiv.innerHTML = `正在读取键 "${key}" (类型: ${type})...`;
+                
+                try {
+                    const value = await stella.get(key, type);
+                    resultDiv.innerHTML = `<span class="success">读取成功:</span>\n${JSON.stringify(value, null, 2)}`;
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">读取失败: ${error.message}</span>`;
+                }
+            });
+            
+            // 写入KV存储
+            document.getElementById('put-btn').addEventListener('click', async function() {
+                const key = document.getElementById('put-key').value.trim();
+                const value = document.getElementById('put-value').value;
+                const resultDiv = document.getElementById('put-result');
+                
+                if (!key) {
+                    resultDiv.innerHTML = '<span class="error">请输入键名</span>';
+                    return;
+                }
+                
+                resultDiv.innerHTML = `正在写入键 "${key}"...`;
+                
+                try {
+                    await stella.put(key, value);
+                    resultDiv.innerHTML = `<span class="success">写入成功</span>`;
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">写入失败: ${error.message}</span>`;
+                }
+            });
+            
+            // 列出所有键
+            document.getElementById('list-btn').addEventListener('click', async function() {
+                const resultDiv = document.getElementById('list-result');
+                resultDiv.innerHTML = '正在列出所有键...';
+                
+                try {
+                    const result = await stella.list({});
+                    resultDiv.innerHTML = `<span class="success">列出成功:</span>\n${JSON.stringify(result, null, 2)}`;
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">列出失败: ${error.message}</span>`;
+                }
+            });
+            
+            // 删除键
+            document.getElementById('delete-btn').addEventListener('click', async function() {
+                const key = document.getElementById('delete-key').value.trim();
+                const resultDiv = document.getElementById('delete-result');
+                
+                if (!key) {
+                    resultDiv.innerHTML = '<span class="error">请输入键名</span>';
+                    return;
+                }
+                
+                resultDiv.innerHTML = `正在删除键 "${key}"...`;
+                
+                try {
+                    await stella.delete(key);
+                    resultDiv.innerHTML = `<span class="success">删除成功</span>`;
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">删除失败: ${error.message}</span>`;
+                }
+            });
+            
+            // 测试配置加载
+            document.getElementById('test-config-btn').addEventListener('click', async function() {
+                const resultDiv = document.getElementById('test-config-result');
+                resultDiv.innerHTML = '正在测试配置加载...';
+                
+                try {
+                    // 获取hero背景
+                    const heroBg = await stella.get('hero-bg', 'text');
+                    // 获取hero标题
+                    const heroTitle = await stella.get('hero-content-title', 'text');
+                    // 获取hero描述
+                    const heroDesc = await stella.get('hero-content-description', 'text');
+                    // 获取服务描述
+                    const servicesDesc = await stella.get('services-description', 'json');
+                    // 获取精选产品描述
+                    const featuredProductsDesc = await stella.get('featured-products-description', 'text');
+                    // 获取客户评价
+                    const testimonialsDesc = await stella.get('testimonials-description', 'json');
+                    
+                    // 组合所有配置
+                    const config = {
+                        'hero-bg': heroBg,
+                        'hero-content-title': heroTitle,
+                        'hero-content-description': heroDesc,
+                        'services-description': servicesDesc,
+                        'featured-products-description': featuredProductsDesc,
+                        'testimonials-description': testimonialsDesc
+                    };
+                    
+                    // 显示数据状态
+                    resultDiv.innerHTML = '<span class="success">配置加载测试成功</span>\n';
+                    resultDiv.innerHTML += '数据状态:\n';
+                    resultDiv.innerHTML += `- hero-bg: ${heroBg ? '✅ 已存在' : '❌ 不存在'}\n`;
+                    resultDiv.innerHTML += `- hero-content-title: ${heroTitle ? '✅ 已存在' : '❌ 不存在'}\n`;
+                    resultDiv.innerHTML += `- hero-content-description: ${heroDesc ? '✅ 已存在' : '❌ 不存在'}\n`;
+                    resultDiv.innerHTML += `- services-description: ${servicesDesc ? '✅ 已存在' : '❌ 不存在'}\n`;
+                    resultDiv.innerHTML += `- featured-products-description: ${featuredProductsDesc ? '✅ 已存在' : '❌ 不存在'}\n`;
+                    resultDiv.innerHTML += `- testimonials-description: ${testimonialsDesc ? '✅ 已存在' : '❌ 不存在'}\n`;
+                    
+                    // 检查是否有数据缺失
+                    if (!heroBg || !heroTitle || !heroDesc || !servicesDesc || !featuredProductsDesc || !testimonialsDesc) {
+                        resultDiv.innerHTML += '\n<span class="warning">警告: 部分数据缺失</span>\n';
+                        resultDiv.innerHTML += '请访问管理页面初始化配置。\n';
+                    } else {
+                        resultDiv.innerHTML += '\n<span class="success">所有数据已正确加载</span>\n';
+                    }
+                    
+                    // 显示配置数据
+                    resultDiv.innerHTML += '\n配置数据预览:\n';
+                    resultDiv.innerHTML += JSON.stringify(config, null, 2);
+                    
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">配置加载测试失败: ${error.message}</span>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

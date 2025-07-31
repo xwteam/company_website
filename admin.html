@@ -582,20 +582,98 @@
                         });
                     });
                     
-                    // 保存配置
-                    const success = await initializeKVWithConfig(config);
+                    // 显示详细配置信息
+                    console.log('准备保存的配置:', JSON.stringify(config, null, 2));
                     
-                    if (success) {
-                        statusDiv.className = 'status-message status-success';
-                        statusDiv.textContent = '配置保存成功！';
-                    } else {
-                        statusDiv.className = 'status-message status-error';
-                        statusDiv.textContent = '配置保存失败，请查看控制台获取详细信息。';
+                    // 检查stella对象是否存在
+                    if (typeof stella === 'undefined') {
+                        throw new Error('KV存储API未初始化，请确保在EdgeOne Pages环境中运行');
+                    }
+                    
+                    // 检查stella是否是模拟对象
+                    const isMock = stella.toString().includes('模拟');
+                    if (isMock) {
+                        statusDiv.innerHTML = `
+                            <div class="alert alert-warning">
+                                <h4>警告: 使用模拟KV存储</h4>
+                                <p>当前使用的是模拟KV存储API，配置将不会真正保存到EdgeOne KV存储中。</p>
+                                <p>这可能是因为:</p>
+                                <ul>
+                                    <li>您正在本地开发环境中运行网站</li>
+                                    <li>EdgeOne Pages环境中未正确绑定KV存储命名空间</li>
+                                </ul>
+                                <p>解决方案:</p>
+                                <ul>
+                                    <li>确认在EdgeOne Pages中已正确绑定KV存储命名空间</li>
+                                    <li>检查命名空间名称是否为"stella"</li>
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    // 保存配置
+                    statusDiv.innerHTML += '<p>正在保存配置到KV存储...</p>';
+                    
+                    // 逐个保存配置项，并显示详细进度
+                    try {
+                        // 存储hero背景
+                        await stella.put('hero-bg', config['hero-bg']);
+                        statusDiv.innerHTML += '<p>✅ hero-bg 已保存</p>';
+                        
+                        // 存储hero标题
+                        await stella.put('hero-content-title', config['hero-content-title']);
+                        statusDiv.innerHTML += '<p>✅ hero-content-title 已保存</p>';
+                        
+                        // 存储hero描述
+                        await stella.put('hero-content-description', config['hero-content-description']);
+                        statusDiv.innerHTML += '<p>✅ hero-content-description 已保存</p>';
+                        
+                        // 存储服务描述
+                        const servicesJson = JSON.stringify(config['services-description']);
+                        await stella.put('services-description', servicesJson);
+                        statusDiv.innerHTML += '<p>✅ services-description 已保存</p>';
+                        
+                        // 存储精选产品描述
+                        await stella.put('featured-products-description', config['featured-products-description']);
+                        statusDiv.innerHTML += '<p>✅ featured-products-description 已保存</p>';
+                        
+                        // 存储客户评价
+                        const testimonialsJson = JSON.stringify(config['testimonials-description']);
+                        await stella.put('testimonials-description', testimonialsJson);
+                        statusDiv.innerHTML += '<p>✅ testimonials-description 已保存</p>';
+                        
+                        statusDiv.innerHTML += `
+                            <div class="alert alert-success">
+                                <h4>配置保存成功！</h4>
+                                <p>所有配置项已成功保存到KV存储。</p>
+                                <p>如果网站首页没有立即更新，请尝试以下操作:</p>
+                                <ul>
+                                    <li>清除浏览器缓存</li>
+                                    <li>强制刷新页面 (Ctrl+F5 或 Cmd+Shift+R)</li>
+                                    <li>等待几分钟，KV存储的更改可能需要一些时间才能生效</li>
+                                </ul>
+                                <button onclick="window.open('index.html', '_blank')" class="btn primary">在新标签页中查看网站</button>
+                            </div>
+                        `;
+                    } catch (error) {
+                        console.error('保存配置项时出错:', error);
+                        statusDiv.innerHTML += `
+                            <div class="alert alert-danger">
+                                <h4>保存配置项时出错</h4>
+                                <p>错误信息: ${error.message}</p>
+                                <p>请检查KV存储权限和连接。</p>
+                            </div>
+                        `;
                     }
                 } catch (error) {
                     console.error('保存配置失败:', error);
-                    statusDiv.className = 'status-message status-error';
-                    statusDiv.textContent = '保存配置失败: ' + error.message;
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            <h4>保存配置失败</h4>
+                            <p>错误信息: ${error.message}</p>
+                            <p>请检查控制台获取更多详细信息。</p>
+                        </div>
+                    `;
                 }
             });
             
