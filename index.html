@@ -226,7 +226,9 @@
             // 异步函数，从KV存储加载配置
             async function loadConfig() {
                 console.log("开始加载配置...", new Date().toISOString());
-                document.getElementById('hero-title').innerHTML += " <small style='font-size:14px;color:#999'>(加载中...)</small>";
+                
+                // 预先显示默认内容，避免白屏
+                preRenderDefaultContent();
                 
                 try {
                     // 使用EdgeOne Pages的KV存储API获取配置
@@ -261,9 +263,6 @@
                                 // 应用配置
                                 applyConfig(fullConfig);
                                 
-                                // 移除加载提示
-                                document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, "");
-                                
                                 // 显示成功消息
                                 showSuccess("配置加载成功！");
                                 
@@ -278,35 +277,22 @@
                         console.error("从API端点加载完整配置失败:", apiError);
                     }
                     
-                    // 如果API端点未返回完整配置，则尝试使用stella对象
+                    // 如果API端点未返回完整配置，则尝试使用stella对象并行加载各个配置项
                     if (typeof stella !== 'undefined') {
-                        console.log("使用stella对象加载配置...");
+                        console.log("使用stella对象并行加载配置...");
                         
                         try {
-                            // 获取各个配置项
-                            console.log("获取hero-bg...");
-                            const heroBg = await stella.get('hero-bg', 'text');
-                            console.log("hero-bg:", heroBg);
+                            // 并行获取各个配置项
+                            const promises = [
+                                stella.get('hero-bg', 'text'),
+                                stella.get('hero-content-title', 'text'),
+                                stella.get('hero-content-description', 'text'),
+                                stella.get('services-description', 'json'),
+                                stella.get('featured-products-description', 'text'),
+                                stella.get('testimonials-description', 'json')
+                            ];
                             
-                            console.log("获取hero-content-title...");
-                            const heroTitle = await stella.get('hero-content-title', 'text');
-                            console.log("hero-content-title:", heroTitle);
-                            
-                            console.log("获取hero-content-description...");
-                            const heroDesc = await stella.get('hero-content-description', 'text');
-                            console.log("hero-content-description:", heroDesc);
-                            
-                            console.log("获取services-description...");
-                            const servicesDesc = await stella.get('services-description', 'json');
-                            console.log("services-description:", servicesDesc);
-                            
-                            console.log("获取featured-products-description...");
-                            const featuredProductsDesc = await stella.get('featured-products-description', 'text');
-                            console.log("featured-products-description:", featuredProductsDesc);
-                            
-                            console.log("获取testimonials-description...");
-                            const testimonialsDesc = await stella.get('testimonials-description', 'json');
-                            console.log("testimonials-description:", testimonialsDesc);
+                            const [heroBg, heroTitle, heroDesc, servicesDesc, featuredProductsDesc, testimonialsDesc] = await Promise.all(promises);
                             
                             // 组合配置
                             config['hero-bg'] = heroBg;
@@ -317,13 +303,6 @@
                             config['testimonials-description'] = testimonialsDesc;
                             
                             console.log("配置加载成功:", config);
-                            
-                            // 移除加载提示
-                            document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, "");
-                            
-                            // 移除任何现有的错误消息
-                            const errorMsg = document.querySelector('.error-message');
-                            if (errorMsg) errorMsg.remove();
                             
                             // 应用配置
                             applyConfig(config);
@@ -339,9 +318,64 @@
                     }
                 } catch (error) {
                     console.error(`加载配置失败:`, error);
-                    document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, " <small style='font-size:14px;color:red'>(配置加载失败)</small>");
                     showError("配置加载失败。请确保KV存储已正确配置，或联系网站管理员。错误详情: " + error.message);
                 }
+            }
+            
+            // 预渲染默认内容
+            function preRenderDefaultContent() {
+                // 设置默认hero背景
+                document.getElementById('hero-bg').style.backgroundImage = `url('images/hero-bg.jpg')`;
+                
+                // 设置默认hero标题和描述
+                document.getElementById('hero-title').innerHTML = 'Crafting digital<br>experiences with purpose';
+                document.getElementById('hero-description').textContent = 'Strategy-driven design and technology for forward-thinking brands';
+                
+                // 设置默认服务描述
+                document.getElementById('services-description').textContent = 'We combine strategy, design, and technology to create effective digital solutions';
+                
+                // 设置默认服务卡片
+                const defaultServices = [
+                    {
+                        icon: 'fas fa-globe',
+                        title: 'Brand Identity',
+                        desc: 'We create unique visual systems that embody your brand values'
+                    },
+                    {
+                        icon: 'fas fa-code',
+                        title: 'Web Development',
+                        desc: 'Custom websites and applications built with modern technologies'
+                    },
+                    {
+                        icon: 'fas fa-mobile-alt',
+                        title: 'UX Design',
+                        desc: 'User-centered design that delivers intuitive digital experiences'
+                    }
+                ];
+                
+                const servicesGrid = document.getElementById('services-grid');
+                servicesGrid.innerHTML = ''; // 清空现有内容
+                
+                defaultServices.forEach(item => {
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card';
+                    
+                    serviceCard.innerHTML = `
+                        <div class="service-icon">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <h3>${item.title}</h3>
+                        <p>${item.desc}</p>
+                    `;
+                    
+                    servicesGrid.appendChild(serviceCard);
+                });
+                
+                // 设置默认产品描述
+                document.getElementById('featured-products-description').textContent = 'A selection of our quality products across categories';
+                
+                // 设置默认testimonials描述
+                document.getElementById('testimonials-description').textContent = 'Hear from the businesses we have helped transform';
             }
             
             // 显示错误信息

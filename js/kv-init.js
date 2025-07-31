@@ -1,5 +1,9 @@
 // 初始化KV存储
 (function() {
+    // 创建内存缓存
+    const memoryCache = {};
+    const cacheTTL = 60000; // 缓存有效期，默认1分钟
+    
     // 创建KV存储API客户端
     window.stella = {
         // 标记为API客户端模式
@@ -10,8 +14,16 @@
         async get(key, type) {
             console.log(`KV存储API: 获取键 "${key}" (类型: ${type})`);
             
+            // 首先检查内存缓存
+            const cacheKey = `${key}_${type}`;
+            const cachedItem = memoryCache[cacheKey];
+            if (cachedItem && (Date.now() - cachedItem.timestamp) < cacheTTL) {
+                console.log(`KV存储API: 从缓存获取键 "${key}"`);
+                return cachedItem.value;
+            }
+            
             // 重试次数和延迟
-            const maxRetries = 3;
+            const maxRetries = 1; // 减少重试次数
             let retryCount = 0;
             
             while (retryCount <= maxRetries) {
@@ -36,12 +48,18 @@
                         // 根据请求的类型处理值
                         if (type === 'json' && typeof value === 'string') {
                             try {
-                                return JSON.parse(value);
+                                value = JSON.parse(value);
                             } catch (error) {
                                 console.error(`KV存储API: 解析JSON失败:`, error);
-                                return null;
+                                value = null;
                             }
                         }
+                        
+                        // 保存到内存缓存
+                        memoryCache[cacheKey] = {
+                            value: value,
+                            timestamp: Date.now()
+                        };
                         
                         return value;
                     } else {
@@ -50,14 +68,22 @@
                 } catch (error) {
                     retryCount++;
                     if (retryCount <= maxRetries) {
-                        const delay = retryCount * 1000; // 逐渐增加延迟时间
+                        const delay = 500; // 固定较短的延迟
                         console.warn(`KV存储API: 获取键 "${key}" 失败，${maxRetries - retryCount + 1}次重试机会剩余，等待${delay}ms后重试:`, error);
                         await new Promise(resolve => setTimeout(resolve, delay));
                     } else {
                         console.error(`KV存储API: 获取键 "${key}" 失败，已达到最大重试次数:`, error);
                         
                         // 如果API失败，回退到默认值
-                        return this._getDefaultValue(key, type);
+                        const defaultValue = this._getDefaultValue(key, type);
+                        
+                        // 保存默认值到内存缓存
+                        memoryCache[cacheKey] = {
+                            value: defaultValue,
+                            timestamp: Date.now()
+                        };
+                        
+                        return defaultValue;
                     }
                 }
             }
@@ -67,8 +93,20 @@
         async put(key, value) {
             console.log(`KV存储API: 设置键 "${key}" 的值为:`, value);
             
+            // 更新内存缓存
+            const cacheKeyText = `${key}_text`;
+            const cacheKeyJson = `${key}_json`;
+            memoryCache[cacheKeyText] = {
+                value: typeof value === 'string' ? value : JSON.stringify(value),
+                timestamp: Date.now()
+            };
+            memoryCache[cacheKeyJson] = {
+                value: typeof value === 'string' ? (function() { try { return JSON.parse(value); } catch(e) { return value; } })() : value,
+                timestamp: Date.now()
+            };
+            
             // 重试次数和延迟
-            const maxRetries = 3;
+            const maxRetries = 1; // 减少重试次数
             let retryCount = 0;
             
             while (retryCount <= maxRetries) {
@@ -90,7 +128,7 @@
                 } catch (error) {
                     retryCount++;
                     if (retryCount <= maxRetries) {
-                        const delay = retryCount * 1000; // 逐渐增加延迟时间
+                        const delay = 500; // 固定较短的延迟
                         console.warn(`KV存储API: 设置键 "${key}" 失败，${maxRetries - retryCount + 1}次重试机会剩余，等待${delay}ms后重试:`, error);
                         await new Promise(resolve => setTimeout(resolve, delay));
                     } else {
