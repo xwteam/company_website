@@ -433,17 +433,51 @@
                 try {
                     // 强制同步
                     if (typeof stella !== 'undefined' && typeof stella.forceSync === 'function') {
+                        resultDiv.innerHTML += '<p>1. 清除本地缓存...</p>';
+                        stella.clearCache();
+                        
+                        resultDiv.innerHTML += '<p>2. 清除服务器缓存...</p>';
+                        await stella.clearServerCache();
+                        
+                        resultDiv.innerHTML += '<p>3. 开始同步数据...</p>';
                         const success = await stella.forceSync();
+                        
                         if (success) {
-                            resultDiv.innerHTML = '<span class="success">KV数据强制同步成功</span>';
+                            resultDiv.innerHTML += '<p>4. 同步完成</p>';
+                            resultDiv.innerHTML += '<span class="success">KV数据强制同步成功</span>';
+                            
+                            // 添加刷新按钮
+                            resultDiv.innerHTML += `
+                                <div style="margin-top: 10px;">
+                                    <button onclick="window.location.reload()" class="btn">刷新页面</button>
+                                    <button onclick="window.open('index.html?refresh=${Date.now()}', '_blank')" class="btn">在新标签页中打开网站</button>
+                                </div>
+                            `;
                         } else {
-                            resultDiv.innerHTML = '<span class="warning">KV数据强制同步可能未成功</span>';
+                            resultDiv.innerHTML += '<p>4. 同步部分失败</p>';
+                            resultDiv.innerHTML += '<span class="warning">KV数据强制同步可能未完全成功</span>';
+                            resultDiv.innerHTML += '<p>请查看浏览器控制台获取详细信息</p>';
+                            
+                            // 添加刷新和重试按钮
+                            resultDiv.innerHTML += `
+                                <div style="margin-top: 10px;">
+                                    <button onclick="document.getElementById('force-sync-btn').click()" class="btn">重试同步</button>
+                                    <button onclick="window.location.reload()" class="btn">刷新页面</button>
+                                </div>
+                            `;
                         }
                     } else {
                         resultDiv.innerHTML = '<span class="warning">无法访问stella强制同步功能</span>';
                     }
                 } catch (error) {
                     resultDiv.innerHTML = `<span class="error">强制同步失败: ${error.message}</span>`;
+                    
+                    // 添加重试按钮
+                    resultDiv.innerHTML += `
+                        <div style="margin-top: 10px;">
+                            <button onclick="document.getElementById('force-sync-btn').click()" class="btn">重试同步</button>
+                        </div>
+                    `;
                 }
             });
         });

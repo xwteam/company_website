@@ -1,6 +1,3 @@
-// 全局内存缓存，用于确保同一个服务器实例上的请求能获取到一致的数据
-const memoryCache = {};
-
 export async function onRequest({ request, env }) {
   // 解析请求URL和方法
   const url = new URL(request.url);
@@ -9,15 +6,6 @@ export async function onRequest({ request, env }) {
   
   // 检查是否请求强制一致性
   const forceConsistency = url.searchParams.has('force_consistency');
-  
-  // 检查是否请求清除缓存
-  const clearCache = url.searchParams.has('clear_cache');
-  if (clearCache) {
-    // 清除内存缓存
-    for (const key in memoryCache) {
-      delete memoryCache[key];
-    }
-  }
   
   // 定义标准响应头
   const standardHeaders = {
@@ -60,36 +48,33 @@ export async function onRequest({ request, env }) {
         // 如果没有指定key，则列出所有键
         const keys = await env.stella.list();
         
-        return new Response(JSON.stringify({ keys: keys.keys }), {
+        // 确保返回正确的格式
+        const formattedKeys = keys.keys.map(key => ({
+          name: key.name,
+          expiration: key.expiration
+        }));
+        
+        return new Response(JSON.stringify({ 
+          keys: formattedKeys,
+          list_complete: keys.list_complete,
+          cursor: keys.cursor || '',
+          count: formattedKeys.length
+        }), {
           headers: standardHeaders
         });
       } else {
         // 获取指定key的值
         let value;
         
-        // 如果强制一致性或者缓存中没有该键，则从KV存储读取
-        if (forceConsistency || !memoryCache[key] || (Date.now() - memoryCache[key].timestamp) > 60000) {
-          // 如果请求强制一致性，使用强一致性读取选项
-          const options = forceConsistency ? { type: "text", cacheTtl: 0 } : undefined;
-          value = await env.stella.get(key, options);
-          
-          // 更新内存缓存
-          memoryCache[key] = {
-            value: value,
-            timestamp: Date.now()
-          };
-        } else {
-          // 从内存缓存读取
-          value = memoryCache[key].value;
-        }
+        // 直接从KV存储读取数据
+        const options = forceConsistency ? { type: "text", cacheTtl: 0 } : undefined;
+        value = await env.stella.get(key, options);
         
         return new Response(JSON.stringify({ 
           key, 
           value,
-          from_cache: !forceConsistency && memoryCache[key] && (Date.now() - memoryCache[key].timestamp) <= 60000,
           consistency: forceConsistency ? 'strong' : 'eventual',
-          timestamp: Date.now(),
-          cache_timestamp: memoryCache[key] ? memoryCache[key].timestamp : null
+          timestamp: Date.now()
         }), {
           headers: standardHeaders
         });
@@ -126,11 +111,7 @@ export async function onRequest({ request, env }) {
       // 写入KV存储
       await env.stella.put(key, value);
       
-      // 更新内存缓存
-      memoryCache[key] = {
-        value: value,
-        timestamp: Date.now()
-      };
+      
       
       // 强制读取一次，确保数据已写入
       if (forceConsistency) {
@@ -159,10 +140,7 @@ export async function onRequest({ request, env }) {
       // 删除KV存储中的键
       await env.stella.delete(key);
       
-      // 删除内存缓存中的键
-      if (memoryCache[key]) {
-        delete memoryCache[key];
-      }
+      
       
       return new Response(JSON.stringify({ 
         success: true, 
