@@ -381,90 +381,145 @@
             });
             
             // 初始化默认配置
-            document.getElementById('init-config-btn').addEventListener('click', async function() {
-                const statusDiv = document.getElementById('init-status');
-                statusDiv.style.display = 'block';
-                
+            // 初始化默认配置
+document.getElementById('init-config-btn').addEventListener('click', async function() {
+    const statusDiv = document.getElementById('init-status');
+    statusDiv.style.display = 'block';
+    
+    try {
+        // 默认配置
+        const defaultConfig = {
+            'hero-bg': 'images/hero-bg.jpg',
+            'hero-content-title': 'Crafting digital<br>experiences with purpose',
+            'hero-content-description': 'Strategy-driven design and technology for forward-thinking brands',
+            'services-description': {
+                'title': 'We combine strategy, design, and technology to create effective digital solutions',
+                'items': [
+                    // ... 服务项目 ...
+                ]
+            },
+            'featured-products-description': 'A selection of our quality products across categories',
+            'testimonials-description': {
+                'title': 'Hear from the businesses we have helped transform',
+                'items': [
+                    // ... 客户评价 ...
+                ]
+            }
+        };
+        
+        // 内联实现初始化函数
+        async function initializeKVConfig(config) {
+            try {
+                // 先尝试通过API保存完整配置
                 try {
-                    // 默认配置
-                    const defaultConfig = {
-                        'hero-bg': 'images/hero-bg.jpg',
-                        'hero-content-title': 'Crafting digital<br>experiences with purpose',
-                        'hero-content-description': 'Strategy-driven design and technology for forward-thinking brands',
-                        'services-description': {
-                            'title': 'We combine strategy, design, and technology to create effective digital solutions',
-                            'items': [
-                                {
-                                    'id': '01',
-                                    'icon': 'fas fa-globe',
-                                    'title': 'Brand Identity',
-                                    'desc': 'We create unique visual systems that embody your brand values'
-                                },
-                                {
-                                    'id': '02',
-                                    'icon': 'fas fa-laptop-code',
-                                    'title': 'Web Development',
-                                    'desc': 'Custom website solutions built with cutting-edge technology'
-                                },
-                                {
-                                    'id': '03',
-                                    'icon': 'fas fa-pencil-ruler',
-                                    'title': 'UX Design',
-                                    'desc': 'Human-centered design that creates intuitive experiences'
-                                },
-                                {
-                                    'id': '04',
-                                    'icon': 'fas fa-chart-line',
-                                    'title': 'Digital Marketing',
-                                    'desc': 'Data-driven strategies to increase your visibility'
-                                }
-                            ]
-                        },
-                        'featured-products-description': 'A selection of our quality products across categories',
-                        'testimonials-description': {
-                            'title': 'Hear from the businesses we have helped transform',
-                            'items': [
-                                {
-                                    'id': '01',
-                                    'quote': 'Brand helped us completely reimagine our digital presence.',
-                                    'name': 'Sarah Johnson',
-                                    'position': 'Marketing Director, TechNova',
-                                    'avatar': 'https://randomuser.me/api/portraits/women/45.jpg'
-                                },
-                                {
-                                    'id': '02',
-                                    'quote': 'Working with Brand was a game-changer for our company.',
-                                    'name': 'Michael Chen',
-                                    'position': 'CEO, GreenEarth Solutions',
-                                    'avatar': 'https://randomuser.me/api/portraits/men/32.jpg'
-                                },
-                                {
-                                    'id': '03',
-                                    'quote': 'The team at Brand brings both creativity and strategic thinking.',
-                                    'name': 'Jessica Williams',
-                                    'position': 'Operations Manager, Urban Dwellers',
-                                    'avatar': 'https://randomuser.me/api/portraits/women/26.jpg'
-                                }
-                            ]
-                        }
-                    };
+                    const configResponse = await fetch('/api/kv/config', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ value: config })
+                    });
                     
-                    // 调用初始化函数
-                    const success = await initializeKVWithConfig(defaultConfig);
-                    
-                    if (success) {
-                        statusDiv.className = 'status-message status-success';
-                        statusDiv.textContent = '配置初始化成功！';
-                    } else {
-                        statusDiv.className = 'status-message status-error';
-                        statusDiv.textContent = '配置初始化失败，请查看控制台获取详细信息。';
+                    if (configResponse.ok) {
+                        statusDiv.innerHTML += '<p>✅ 已保存完整配置</p>';
                     }
-                } catch (error) {
-                    console.error('初始化配置失败:', error);
-                    statusDiv.className = 'status-message status-error';
-                    statusDiv.textContent = '配置初始化失败: ' + error.message;
+                } catch (e) {
+                    console.warn('通过API保存完整配置失败:', e);
                 }
-            });
+                
+                // 逐个保存各项配置
+                statusDiv.innerHTML += '<p>正在保存各项配置...</p>';
+                
+                // 通过stella对象保存
+                if (typeof stella !== 'undefined') {
+                    await stella.put('hero-bg', config['hero-bg']);
+                    statusDiv.innerHTML += '<p>✅ hero-bg 已保存</p>';
+                    
+                    await stella.put('hero-content-title', config['hero-content-title']);
+                    statusDiv.innerHTML += '<p>✅ hero-content-title 已保存</p>';
+                    
+                    await stella.put('hero-content-description', config['hero-content-description']);
+                    statusDiv.innerHTML += '<p>✅ hero-content-description 已保存</p>';
+                    
+                    const servicesJson = JSON.stringify(config['services-description']);
+                    await stella.put('services-description', servicesJson);
+                    statusDiv.innerHTML += '<p>✅ services-description 已保存</p>';
+                    
+                    await stella.put('featured-products-description', config['featured-products-description']);
+                    statusDiv.innerHTML += '<p>✅ featured-products-description 已保存</p>';
+                    
+                    const testimonialsJson = JSON.stringify(config['testimonials-description']);
+                    await stella.put('testimonials-description', testimonialsJson);
+                    statusDiv.innerHTML += '<p>✅ testimonials-description 已保存</p>';
+                    
+                    return true;
+                }
+                
+                // 如果stella对象不可用，尝试通过API保存
+                await fetch('/api/kv/hero-bg', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: config['hero-bg'] })
+                });
+                statusDiv.innerHTML += '<p>✅ hero-bg 已通过API保存</p>';
+                
+                await fetch('/api/kv/hero-content-title', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: config['hero-content-title'] })
+                });
+                statusDiv.innerHTML += '<p>✅ hero-content-title 已通过API保存</p>';
+                
+                await fetch('/api/kv/hero-content-description', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: config['hero-content-description'] })
+                });
+                statusDiv.innerHTML += '<p>✅ hero-content-description 已通过API保存</p>';
+                
+                await fetch('/api/kv/services-description', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: JSON.stringify(config['services-description']) })
+                });
+                statusDiv.innerHTML += '<p>✅ services-description 已通过API保存</p>';
+                
+                await fetch('/api/kv/featured-products-description', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: config['featured-products-description'] })
+                });
+                statusDiv.innerHTML += '<p>✅ featured-products-description 已通过API保存</p>';
+                
+                await fetch('/api/kv/testimonials-description', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: JSON.stringify(config['testimonials-description']) })
+                });
+                statusDiv.innerHTML += '<p>✅ testimonials-description 已通过API保存</p>';
+                
+                return true;
+            } catch (error) {
+                console.error('初始化配置失败:', error);
+                statusDiv.innerHTML += `<p>❌ 错误: ${error.message}</p>`;
+                return false;
+            }
+        }
+        
+        // 调用内联初始化函数
+        const success = await initializeKVConfig(defaultConfig);
+        
+        if (success) {
+            statusDiv.className = 'status-message status-success';
+            statusDiv.innerHTML += '<p>配置初始化成功！</p>';
+        } else {
+            statusDiv.className = 'status-message status-error';
+            statusDiv.textContent = '配置初始化失败，请查看控制台获取详细信息。';
+        }
+    } catch (error) {
+        console.error('初始化配置失败:', error);
+        statusDiv.className = 'status-message status-error';
+        statusDiv.textContent = '配置初始化失败: ' + error.message;
+    }
+});
             
             // 加载当前配置
             document.getElementById('load-current-config-btn').addEventListener('click', async function() {

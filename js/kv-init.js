@@ -215,3 +215,48 @@
         }
     })();
 })();
+// 在kv-init.js文件的末尾添加或修改
+// 导出一个函数，用于将配置数据初始化到KV存储中
+window.initializeKVWithConfig = async function(config) {
+    try {
+        console.log('开始初始化KV存储...');
+        console.log('配置数据:', config);
+        
+        // 先尝试保存完整配置
+        try {
+            await stella.put('config', JSON.stringify(config));
+            console.log('已保存完整配置到config键');
+        } catch (error) {
+            console.warn('保存完整配置失败:', error);
+        }
+        
+        // 逐个保存各项配置
+        await stella.put('hero-bg', config['hero-bg']);
+        console.log('已存储hero背景');
+        
+        await stella.put('hero-content-title', config['hero-content-title']);
+        console.log('已存储hero标题');
+        
+        await stella.put('hero-content-description', config['hero-content-description']);
+        console.log('已存储hero描述');
+        
+        const servicesJson = JSON.stringify(config['services-description']);
+        console.log('服务描述JSON:', servicesJson);
+        await stella.put('services-description', servicesJson);
+        console.log('已存储服务描述');
+        
+        await stella.put('featured-products-description', config['featured-products-description']);
+        console.log('已存储精选产品描述');
+        
+        const testimonialsJson = JSON.stringify(config['testimonials-description']);
+        console.log('客户评价JSON:', testimonialsJson);
+        await stella.put('testimonials-description', testimonialsJson);
+        console.log('已存储客户评价');
+        
+        console.log('KV存储初始化完成！');
+        return true;
+    } catch (error) {
+        console.error('KV存储初始化失败:', error);
+        return false;
+    }
+};
