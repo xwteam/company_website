@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand - Digital Experiences with Purpose</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/fontawesome/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">Brand</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="partners.html">Partners</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="header-cta">
+                <a href="contact.html" class="btn primary">Get in Touch</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div id="hero-bg" class="hero-bg"></div>
+        <div class="hero-bg-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 id="hero-title">Crafting digital<br>experiences with purpose</h1>
+                <p id="hero-description">Strategy-driven design and technology for forward-thinking brands</p>
+                <div class="cta-buttons">
+                    <a href="products.html" class="btn primary">View Our Products</a>
+                    <a href="contact.html" class="btn secondary">Work With Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务介绍 -->
+    <section class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <p id="services-description" class="section-description">We combine strategy, design, and technology to create effective digital solutions</p>
+            
+            <div id="services-grid" class="services-grid">
+                <!-- 服务卡片将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 精选项目 -->
+    <section class="featured-projects">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <p id="featured-products-description" class="section-description">A selection of our quality products across categories</p>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/project-1.jpg" alt="Financial Platform Project">
+                        <div class="project-category">Web Development</div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Nova Finance Platform</h3>
+                        <p>A modern banking interface with advanced analytics and personalized insights</p>
+                        <div class="project-tags">
+                            <span>React</span>
+                            <span>TypeScript</span>
+                            <span>Financial</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/project-2.jpg" alt="Eco Habitat Branding">
+                        <div class="project-category">Brand Identity</div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Eco Habitat</h3>
+                        <p>Complete brand identity for a sustainable housing initiative focused on eco-friendly living</p>
+                        <div class="project-tags">
+                            <span>Branding</span>
+                            <span>Sustainability</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="images/project-3.jpg" alt="Health App Project">
+                        <div class="project-category">UX Design</div>
+                    </div>
+                    <div class="project-info">
+                        <h3>Wellness Companion</h3>
+                        <p>A health tracking app designed to promote wellbeing through personalized recommendations</p>
+                        <div class="project-tags">
+                            <span>Mobile</span>
+                            <span>Healthcare</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="center-button">
+                <a href="products.html" class="btn primary">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 客户评价 -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>What Our Clients Say</h2>
+            <p id="testimonials-description" class="section-description">Hear from the businesses we've helped transform</p>
+            
+            <div id="testimonials-carousel" class="testimonial-container">
+                <!-- 客户评价将通过JavaScript动态生成 -->
+                <div class="carousel-controls">
+                    <div id="carousel-indicators" class="carousel-indicators">
+                        <!-- 指示器将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section class="contact-cta blue-bg">
+        <div class="container">
+            <h2>Ready to elevate your digital presence?</h2>
+            <p>Let's discuss how we can help your business stand out in the digital landscape.</p>
+            <a href="contact.html" class="btn primary light">Get in Touch <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Brand</h3>
+                    <p>We create digital experiences that elevate your brand and inspire your audience.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="products.html">Products</a></li>
+                            <li><a href="services.html">Services</a></li>
+                            <li><a href="partners.html">Partners</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="services.html#web-dev">Web Development</a></li>
+                            <li><a href="services.html#brand-identity">Brand Identity</a></li>
+                            <li><a href="services.html#ux-design">UX Design</a></li>
+                            <li><a href="services.html#digital-marketing">Digital Marketing</a></li>
+                            <li><a href="services.html#content">Content Creation</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Contact</h4>
+                        <p>123 Design Street</p>
+                        <p>San Francisco, CA 94103</p>
+                        <p>hello@brand.com</p>
+                        <p>+1 (415) 555-5555</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Brand. All rights reserved.</p>
+                <div class="legal-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/kv-init.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // 加载JSON配置
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded, fetching config...");
+            
+            // 显示加载状态
+            document.getElementById('hero-title').innerHTML += " <small style='font-size:14px;color:#999'>(加载中...)</small>";
+            
+            // 客户评价轮播变量
+            let currentTestimonialIndex = 0;
+            let testimonialItems = [];
+            
+            // 添加鼠标滚轮事件处理
+            document.getElementById('testimonials-carousel').addEventListener('wheel', function(event) {
+                event.preventDefault();
+                if (event.deltaY > 0) {
+                    // 向下滚动，显示下一个评价
+                    currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonialItems.length;
+                } else {
+                    // 向上滚动，显示上一个评价
+                    currentTestimonialIndex = (currentTestimonialIndex - 1 + testimonialItems.length) % testimonialItems.length;
+                }
+                updateTestimonialCarousel();
+            });
+            
+            // 初始化KV存储
+            const stella = stella || {};
+
+            // 加载配置函数
+            async function loadConfig() {
+                console.log("开始加载配置...");
+                document.getElementById('hero-title').innerHTML += " <small style='font-size:14px;color:#999'>(加载中...)</small>";
+                
+                try {
+                    // 尝试从KV存储加载配置
+                    console.log("从KV存储加载配置...");
+                    
+                    // 获取hero背景
+                    const heroBg = await stella.get('hero-bg', 'text');
+                    console.log("获取到hero背景:", heroBg);
+                    
+                    // 获取hero标题
+                    const heroTitle = await stella.get('hero-content-title', 'text');
+                    console.log("获取到hero标题:", heroTitle);
+                    
+                    // 获取hero描述
+                    const heroDesc = await stella.get('hero-content-description', 'text');
+                    console.log("获取到hero描述:", heroDesc);
+                    
+                    // 获取服务描述
+                    const servicesDesc = await stella.get('services-description', 'json');
+                    console.log("获取到服务描述:", servicesDesc);
+                    
+                    // 获取精选产品描述
+                    const featuredProductsDesc = await stella.get('featured-products-description', 'text');
+                    console.log("获取到精选产品描述:", featuredProductsDesc);
+                    
+                    // 获取客户评价
+                    const testimonialsDesc = await stella.get('testimonials-description', 'json');
+                    console.log("获取到客户评价:", testimonialsDesc);
+                    
+                    // 组合所有配置
+                    const config = {
+                        'hero-bg': heroBg,
+                        'hero-content-title': heroTitle,
+                        'hero-content-description': heroDesc,
+                        'services-description': servicesDesc,
+                        'featured-products-description': featuredProductsDesc,
+                        'testimonials-description': testimonialsDesc
+                    };
+                    
+                    console.log("配置加载成功:", config);
+                    
+                    document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, "");
+                    
+                    // 移除任何错误消息
+                    const errorMsg = document.querySelector('.error-message');
+                    if (errorMsg) errorMsg.remove();
+                    
+                    // 应用配置
+                    applyConfig(config);
+                    
+                    // 显示成功消息
+                    showSuccess("配置加载成功！");
+                } catch (error) {
+                    console.error(`加载配置失败:`, error);
+                    document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, " <small style='font-size:14px;color:red'>(配置加载失败)</small>");
+                    showError("配置加载失败。请确保KV存储已正确配置，或联系网站管理员。");
+                }
+            }
+            
+            // 显示错误信息
+            function showError(message) {
+                // 移除任何现有的错误消息
+                const existingError = document.querySelector('.error-message');
+                if (existingError) existingError.remove();
+                
+                // 创建新的错误消息
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'error-message';
+                errorMessage.innerHTML = `
+                    <div class="container">
+                        <div class="alert alert-danger">
+                            <h3>配置加载失败</h3>
+                            <p>${message}</p>
+                            <div class="error-actions">
+                                <button onclick="window.location.reload()" class="btn primary">刷新页面</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.insertBefore(errorMessage, document.body.firstChild);
+            }
+            
+            // 显示成功信息
+            function showSuccess(message) {
+                // 移除任何现有的成功消息
+                const existingSuccess = document.querySelector('.success-message');
+                if (existingSuccess) existingSuccess.remove();
+                
+                // 创建新的成功消息
+                const successMessage = document.createElement('div');
+                successMessage.className = 'success-message';
+                successMessage.innerHTML = `
+                    <div class="container">
+                        <div class="alert alert-success">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+                document.body.insertBefore(successMessage, document.body.firstChild);
+                
+                // 3秒后自动隐藏成功消息
+                setTimeout(() => {
+                    const msg = document.querySelector('.success-message');
+                    if (msg) {
+                        msg.style.opacity = '0';
+                        setTimeout(() => msg.remove(), 500);
+                    }
+                }, 3000);
+            }
+            
+            // 应用配置到页面
+            function applyConfig(config) {
+                // 设置hero背景
+                if (config['hero-bg']) {
+                    console.log("Setting background to:", config['hero-bg']);
+                    document.getElementById('hero-bg').style.backgroundImage = `url('${config['hero-bg']}')`;
+                }
+                
+                // 设置hero标题
+                if (config['hero-content-title']) {
+                    console.log("Setting title to:", config['hero-content-title']);
+                    document.getElementById('hero-title').innerHTML = config['hero-content-title'];
+                }
+                
+                // 设置hero描述
+                if (config['hero-content-description']) {
+                    console.log("Setting description to:", config['hero-content-description']);
+                    document.getElementById('hero-description').textContent = config['hero-content-description'];
+                }
+                
+                // 设置services描述和卡片
+                if (config['services-description']) {
+                    console.log("Setting services data:", config['services-description']);
+                    
+                    // 设置服务描述标题
+                    if (config['services-description'].title) {
+                        document.getElementById('services-description').textContent = config['services-description'].title;
+                    }
+                    
+                    // 生成服务卡片
+                    if (config['services-description'].items && Array.isArray(config['services-description'].items)) {
+                        const servicesGrid = document.getElementById('services-grid');
+                        servicesGrid.innerHTML = ''; // 清空现有内容
+                        
+                        config['services-description'].items.forEach(item => {
+                            const serviceCard = document.createElement('div');
+                            serviceCard.className = 'service-card';
+                            
+                            serviceCard.innerHTML = `
+                                <div class="service-icon">
+                                    <i class="${item.icon || 'fas fa-star'}"></i>
+                                </div>
+                                <h3>${item.title || ''}</h3>
+                                <p>${item.desc || ''}</p>
+                            `;
+                            
+                            servicesGrid.appendChild(serviceCard);
+                        });
+                    }
+                }
+                
+                // 设置featured products描述
+                if (config['featured-products-description']) {
+                    console.log("Setting featured products description to:", config['featured-products-description']);
+                    document.getElementById('featured-products-description').textContent = config['featured-products-description'];
+                }
+                
+                // 设置testimonials描述和轮播
+                if (config['testimonials-description']) {
+                    console.log("Setting testimonials data:", config['testimonials-description']);
+                    
+                    // 设置评价描述标题
+                    if (config['testimonials-description'].title) {
+                        document.getElementById('testimonials-description').textContent = config['testimonials-description'].title;
+                    }
+                    
+                    // 生成客户评价轮播
+                    if (config['testimonials-description'].items && Array.isArray(config['testimonials-description'].items)) {
+                        testimonialItems = config['testimonials-description'].items;
+                        initTestimonialsCarousel();
+                    }
+                }
+            }
+            
+            // 初始化客户评价轮播
+            function initTestimonialsCarousel() {
+                if (testimonialItems.length === 0) return;
+                
+                console.log("Initializing testimonial carousel with", testimonialItems.length, "items:", testimonialItems);
+                
+                const carousel = document.getElementById('testimonials-carousel');
+                const indicators = document.getElementById('carousel-indicators');
+                
+                // 创建指示器
+                indicators.innerHTML = '';
+                testimonialItems.forEach((item, index) => {
+                    console.log(`Creating indicator for item ${index}:`, item.name);
+                    const indicator = document.createElement('span');
+                    indicator.className = 'carousel-dot';
+                    if (index === 0) indicator.classList.add('active');
+                    indicator.addEventListener('click', () => {
+                        currentTestimonialIndex = index;
+                        updateTestimonialCarousel();
+                    });
+                    indicators.appendChild(indicator);
+                });
+                
+                // 初始显示第一个评价
+                updateTestimonialCarousel();
+                
+                // 设置自动轮播
+                setInterval(() => {
+                    currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonialItems.length;
+                    console.log("Auto-advancing to testimonial", currentTestimonialIndex);
+                    updateTestimonialCarousel();
+                }, 5000);
+            }
+            
+            // 更新轮播显示
+            function updateTestimonialCarousel() {
+                if (testimonialItems.length === 0) return;
+                
+                console.log("Updating carousel to show item", currentTestimonialIndex, "of", testimonialItems.length);
+                
+                const item = testimonialItems[currentTestimonialIndex];
+                console.log("Current testimonial:", item);
+                
+                const carousel = document.getElementById('testimonials-carousel');
+                
+                // 更新轮播内容
+                const testimonialContent = document.createElement('div');
+                testimonialContent.className = 'testimonial-content';
+                
+                // 检查是否有自定义头像
+                const avatarUrl = item.avatar || 'images/default-avatar.jpg';
+                console.log("Using avatar:", avatarUrl);
+                
+                testimonialContent.innerHTML = `
+                    <div class="testimonial-quote">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p>${item.quote}</p>
+                    <div class="client-info">
+                        <div class="client-image">
+                            <img src="${avatarUrl}" alt="${item.name}">
+                        </div>
+                        <div class="client-details">
+                            <h4>${item.name}</h4>
+                            <p>${item.position}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // 替换现有内容
+                const existingContent = carousel.querySelector('.testimonial-content');
+                if (existingContent) {
+                    carousel.replaceChild(testimonialContent, existingContent);
+                } else {
+                    carousel.insertBefore(testimonialContent, carousel.firstChild);
+                }
+                
+                // 更新指示器
+                const dots = document.querySelectorAll('.carousel-dot');
+                console.log("Updating indicators, found", dots.length, "dots");
+                dots.forEach((dot, index) => {
+                    if (index === currentTestimonialIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 开始加载配置
+            loadConfig();
+        });
+    </script>
+</body>
+</html> 

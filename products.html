@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Brand</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/fontawesome/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">Brand</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html" class="active">Products</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="partners.html">Partners</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="header-cta">
+                <a href="contact.html" class="btn primary">Get in Touch</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 页面内容 -->
+    <main>
+        <!-- 项目标题 -->
+        <section class="projects-header">
+            <div class="container">
+                <h1>Our Products</h1>
+                <p>Explore our portfolio of products across various industries and categories.</p>
+            </div>
+        </section>
+
+        <!-- 项目筛选 -->
+        <section class="project-filters">
+            <div class="container">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="web">Electronics</button>
+                    <button class="filter-btn" data-filter="brand">Home Goods</button>
+                    <button class="filter-btn" data-filter="mobile">Fashion</button>
+                    <button class="filter-btn" data-filter="digital">Accessories</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目列表 -->
+        <section class="projects-list">
+            <div class="container">
+                <div class="projects-grid">
+                    <!-- 项目1 -->
+                    <div class="project-card" data-category="web">
+                        <div class="project-image">
+                            <img src="images/project-1.jpg" alt="Smart Home System">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">Electronics</div>
+                            <h3>Smart Home System</h3>
+                            <p>Comprehensive home automation system with advanced controls and energy efficiency features.</p>
+                            <div class="project-tags">
+                                <span>IoT</span>
+                                <span>Energy Saving</span>
+                                <span>Smart Control</span>
+                                <span>Premium</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 项目2 -->
+                    <div class="project-card" data-category="brand">
+                        <div class="project-image">
+                            <img src="images/project-2.jpg" alt="Eco Friendly Kitchenware">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">Home Goods</div>
+                            <h3>Eco Friendly Kitchenware</h3>
+                            <p>Complete kitchenware collection made from sustainable materials with modern design aesthetics.</p>
+                            <div class="project-tags">
+                                <span>Sustainable</span>
+                                <span>Kitchen</span>
+                                <span>Eco-friendly</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 项目3 -->
+                    <div class="project-card" data-category="mobile">
+                        <div class="project-image">
+                            <img src="images/project-3.jpg" alt="Active Wear Collection">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">Fashion</div>
+                            <h3>Active Wear Collection</h3>
+                            <p>Premium sportswear made with moisture-wicking fabrics and ergonomic designs for maximum comfort.</p>
+                            <div class="project-tags">
+                                <span>Athletic</span>
+                                <span>Performance</span>
+                                <span>Comfort</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 项目4 -->
+                    <div class="project-card" data-category="brand">
+                        <div class="project-image">
+                            <img src="images/project-4.jpg" alt="Artisan Coffee Set">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">Home Goods</div>
+                            <h3>Artisan Coffee Set</h3>
+                            <p>Handcrafted coffee brewing equipment and accessories for the perfect home brewing experience.</p>
+                            <div class="project-tags">
+                                <span>Handcrafted</span>
+                                <span>Premium</span>
+                                <span>Gourmet</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 项目5 -->
+                    <div class="project-card" data-category="web">
+                        <div class="project-image">
+                            <img src="images/project-5.jpg" alt="Travel Tech Accessories">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">Electronics</div>
+                            <h3>Travel Tech Accessories</h3>
+                            <p>Essential tech accessories for travelers including adapters, power banks, and compact audio devices.</p>
+                            <div class="project-tags">
+                                <span>Travel</span>
+                                <span>Portable</span>
+                                <span>Tech</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 项目6 -->
+                    <div class="project-card" data-category="digital">
+                        <div class="project-image">
+                            <img src="images/project-6.jpg" alt="Designer Watch Collection">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">Accessories</div>
+                            <h3>Designer Watch Collection</h3>
+                            <p>Luxury timepieces combining traditional craftsmanship with modern design elements.</p>
+                            <div class="project-tags">
+                                <span>Luxury</span>
+                                <span>Timepieces</span>
+                                <span>Fashion</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特色项目 -->
+        <section class="featured-project">
+            <div class="container">
+                <div class="featured-label">Featured Product</div>
+                <div class="featured-content">
+                    <div class="featured-text">
+                        <h2>Smart Home Ecosystem</h2>
+                        <p>A complete smart home solution with integrated devices, intuitive controls, and energy management features for modern living.</p>
+                        <ul class="featured-results">
+                            <li><i class="fas fa-check"></i> Up to 30% energy savings</li>
+                            <li><i class="fas fa-check"></i> Compatible with all major smart home platforms</li>
+                            <li><i class="fas fa-check"></i> Award-winning design and user experience</li>
+                        </ul>
+                        <a href="#" class="btn primary">Get in Touch</a>
+                    </div>
+                    <div class="featured-image">
+                        <img src="images/featured-project.jpg" alt="Smart Home Ecosystem">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 项目流程 -->
+        <section class="our-process">
+            <div class="container">
+                <h2>Our Process</h2>
+                <p class="section-description">How we develop each product to ensure exceptional quality</p>
+                
+                <div class="process-grid">
+                    <div class="process-item">
+                        <h3>Research</h3>
+                        <p>We start by understanding market needs, consumer preferences, and industry trends through in-depth research and analysis.</p>
+                    </div>
+                    
+                    <div class="process-item">
+                        <h3>Design</h3>
+                        <p>Based on our findings, we develop comprehensive product designs that balance aesthetics, functionality, and user experience.</p>
+                    </div>
+                    
+                    <div class="process-item">
+                        <h3>Production</h3>
+                        <p>Our manufacturing partners bring the designs to life with strict quality control and sustainable practices.</p>
+                    </div>
+                    
+                    <div class="process-item">
+                        <h3>Distribution</h3>
+                        <p>We ensure efficient delivery to global markets while maintaining product integrity and customer satisfaction.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 联系我们 -->
+        <section class="contact-cta blue-bg">
+            <div class="container">
+                <h2>Let's discuss your product needs</h2>
+                <p>Ready to explore our product offerings? We'd love to help you find the perfect solutions.</p>
+                <a href="contact.html" class="btn primary light">Get in Touch</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Brand</h3>
+                    <p>We create quality products that elevate your lifestyle and inspire your everyday experiences.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Navigation</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="products.html">Products</a></li>
+                            <li><a href="services.html">Services</a></li>
+                            <li><a href="partners.html">Partners</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Categories</h4>
+                        <ul>
+                            <li><a href="products.html#electronics">Electronics</a></li>
+                            <li><a href="products.html#home-goods">Home Goods</a></li>
+                            <li><a href="products.html#fashion">Fashion</a></li>
+                            <li><a href="products.html#accessories">Accessories</a></li>
+                            <li><a href="products.html#new-arrivals">New Arrivals</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="link-group">
+                        <h4>Contact</h4>
+                        <p>123 Design Street</p>
+                        <p>San Francisco, CA 94103</p>
+                        <p>hello@brand.com</p>
+                        <p>+1 (415) 555-5555</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Brand. All rights reserved.</p>
+                <div class="legal-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    
+    <script>
+        // 项目筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // 添加当前按钮的active类
+                    this.classList.add('active');
+                    
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    projectCards.forEach(card => {
+                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.classList.add('fade-in');
+                            }, 10);
+                        } else {
+                            card.classList.remove('fade-in');
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
