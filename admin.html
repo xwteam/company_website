@@ -703,6 +703,17 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                             <div class="alert alert-success">
                                 <h4>保存成功</h4>
                                 <p>所有配置项已成功保存到KV存储。</p>
+                                <p>正在等待数据同步到全球数据中心，请稍候...</p>
+                            </div>
+                        `;
+                        
+                        // 等待一段时间，确保数据同步到全球数据中心
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+                        
+                        statusDiv.innerHTML = `
+                            <div class="alert alert-success">
+                                <h4>保存成功</h4>
+                                <p>所有配置项已成功保存到KV存储。</p>
                                 <p>如果网站首页没有立即更新，请尝试以下操作:</p>
                                 <ul>
                                     <li>清除浏览器缓存</li>
@@ -710,7 +721,7 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                                     <li>等待几分钟，KV存储的更改可能需要一些时间才能生效</li>
                                 </ul>
                                 <div class="btn-group">
-                                    <button onclick="window.open('index.html?t=${Date.now()}', '_blank')" class="btn primary">在新标签页中查看网站</button>
+                                    <button onclick="window.open('index.html?refresh=${Date.now()}', '_blank')" class="btn primary">在新标签页中查看网站</button>
                                     <button onclick="clearCacheAndReload()" class="btn secondary">强制刷新网站</button>
                                 </div>
                             </div>
@@ -846,7 +857,7 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
             // 清除浏览器缓存
             Promise.all([
                 // 尝试清除所有配置键的缓存
-                fetch('/api/kv/config?t=' + Date.now(), {
+                fetch('/api/kv/config?t=' + Date.now() + '&force_consistency=1', {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -855,7 +866,7 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                     },
                     credentials: 'same-origin'
                 }),
-                fetch('/api/kv/hero-bg?t=' + Date.now(), {
+                fetch('/api/kv/hero-bg?t=' + Date.now() + '&force_consistency=1', {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -864,7 +875,7 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                     },
                     credentials: 'same-origin'
                 }),
-                fetch('/api/kv/hero-content-title?t=' + Date.now(), {
+                fetch('/api/kv/hero-content-title?t=' + Date.now() + '&force_consistency=1', {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',

@@ -139,6 +139,12 @@
                     <option value="json">json</option>
                 </select>
             </div>
+            <div class="input-group">
+                <label>
+                    <input type="checkbox" id="force-consistency" checked>
+                    强制全局一致性 (可能较慢但确保最新数据)
+                </label>
+            </div>
             <button id="get-btn" class="btn">读取</button>
             <div id="get-result" class="test-result">输入键名并点击读取按钮...</div>
         </div>
@@ -218,6 +224,7 @@
             document.getElementById('get-btn').addEventListener('click', async function() {
                 const key = document.getElementById('get-key').value.trim();
                 const type = document.getElementById('get-type').value;
+                const forceConsistency = document.getElementById('force-consistency').checked;
                 const resultDiv = document.getElementById('get-result');
                 
                 if (!key) {
@@ -225,11 +232,30 @@
                     return;
                 }
                 
-                resultDiv.innerHTML = `正在读取键 "${key}" (类型: ${type})...`;
+                resultDiv.innerHTML = `正在读取键 "${key}" (类型: ${type}, 强制一致性: ${forceConsistency ? '是' : '否'})...`;
                 
                 try {
+                    // 清除缓存，确保读取最新数据
+                    if (forceConsistency && typeof stella !== 'undefined' && typeof stella.clearCache === 'function') {
+                        stella.clearCache();
+                    }
+                    
+                    // 强制刷新URL参数
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (forceConsistency) {
+                        urlParams.set('refresh', Date.now());
+                    }
+                    
                     const value = await stella.get(key, type);
                     resultDiv.innerHTML = `<span class="success">读取成功:</span>\n${JSON.stringify(value, null, 2)}`;
+                    
+                    // 显示读取时间
+                    resultDiv.innerHTML += `\n\n<span class="info">读取时间: ${new Date().toLocaleTimeString()}</span>`;
+                    
+                    // 如果是强制一致性模式，显示提示
+                    if (forceConsistency) {
+                        resultDiv.innerHTML += `\n<span class="success">已使用强制一致性模式，确保读取到最新数据</span>`;
+                    }
                 } catch (error) {
                     resultDiv.innerHTML = `<span class="error">读取失败: ${error.message}</span>`;
                 }

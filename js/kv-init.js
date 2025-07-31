@@ -34,7 +34,9 @@
                 try {
                     // 添加时间戳参数避免浏览器缓存
                     const timestamp = new Date().getTime();
-                    const response = await fetch(`/api/kv/${key}?t=${timestamp}`, {
+                    // 添加强制一致性参数
+                    const forceConsistency = forceRefresh ? '&force_consistency=1' : '';
+                    const response = await fetch(`/api/kv/${key}?t=${timestamp}${forceConsistency}`, {
                         method: 'GET',
                         headers: {
                             'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -117,7 +119,9 @@
             
             while (retryCount <= maxRetries) {
                 try {
-                    const response = await fetch(`/api/kv/${key}`, {
+                    // 添加强制一致性参数
+                    const timestamp = new Date().getTime();
+                    const response = await fetch(`/api/kv/${key}?t=${timestamp}&force_consistency=1`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',

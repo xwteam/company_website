@@ -4,6 +4,9 @@ export async function onRequest({ request, env }) {
   const method = request.method;
   const path = url.pathname.split('/').filter(Boolean);
   
+  // 检查是否请求强制一致性
+  const forceConsistency = url.searchParams.has('force_consistency');
+  
   // 定义标准响应头
   const standardHeaders = {
     'Content-Type': 'application/json',
@@ -50,9 +53,16 @@ export async function onRequest({ request, env }) {
         });
       } else {
         // 获取指定key的值
-        const value = await env.stella.get(key);
+        // 如果请求强制一致性，使用强一致性读取选项
+        const options = forceConsistency ? { type: "text", cacheTtl: 0 } : undefined;
+        const value = await env.stella.get(key, options);
         
-        return new Response(JSON.stringify({ key, value }), {
+        return new Response(JSON.stringify({ 
+          key, 
+          value,
+          consistency: forceConsistency ? 'strong' : 'eventual',
+          timestamp: Date.now()
+        }), {
           headers: standardHeaders
         });
       }
@@ -88,7 +98,16 @@ export async function onRequest({ request, env }) {
       // 写入KV存储
       await env.stella.put(key, value);
       
-      return new Response(JSON.stringify({ success: true, key }), {
+      // 强制读取一次，确保数据已写入
+      if (forceConsistency) {
+        await env.stella.get(key, { type: "text", cacheTtl: 0 });
+      }
+      
+      return new Response(JSON.stringify({ 
+        success: true, 
+        key,
+        timestamp: Date.now()
+      }), {
         headers: standardHeaders
       });
     }
@@ -106,7 +125,11 @@ export async function onRequest({ request, env }) {
       // 删除KV存储中的键
       await env.stella.delete(key);
       
-      return new Response(JSON.stringify({ success: true, key }), {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        key,
+        timestamp: Date.now()
+      }), {
         headers: standardHeaders
       });
     }

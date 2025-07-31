@@ -249,9 +249,11 @@
                     try {
                         // 添加时间戳参数避免缓存
                         const timestamp = new Date().getTime();
-                        console.log(`尝试从API端点加载配置: /api/kv/config?t=${timestamp}`);
+                        // 添加强制一致性参数
+                        const forceConsistency = forceRefresh ? '&force_consistency=1' : '';
+                        console.log(`尝试从API端点加载配置: /api/kv/config?t=${timestamp}${forceConsistency}`);
                         
-                        const response = await fetch(`/api/kv/config?t=${timestamp}`, {
+                        const response = await fetch(`/api/kv/config?t=${timestamp}${forceConsistency}`, {
                             method: 'GET',
                             headers: {
                                 'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -295,6 +297,15 @@
                         
                         try {
                             // 并行获取各个配置项
+                            // 添加强制一致性参数
+                            const forceConsistencyParam = forceRefresh ? true : false;
+                            
+                            // 如果是强制刷新模式，先等待一小段时间，确保数据同步
+                            if (forceRefresh) {
+                                console.log("强制刷新模式，等待数据同步...");
+                                await new Promise(resolve => setTimeout(resolve, 1000));
+                            }
+                            
                             const promises = [
                                 stella.get('hero-bg', 'text'),
                                 stella.get('hero-content-title', 'text'),
