@@ -227,6 +227,17 @@
             async function loadConfig() {
                 console.log("开始加载配置...", new Date().toISOString());
                 
+                // 检查URL中是否有强制刷新参数
+                const urlParams = new URLSearchParams(window.location.search);
+                const forceRefresh = urlParams.has('refresh');
+                if (forceRefresh) {
+                    console.log("强制刷新模式，清除所有缓存");
+                    // 清除stella缓存
+                    if (typeof stella !== 'undefined') {
+                        stella.clearCache();
+                    }
+                }
+                
                 // 预先显示默认内容，避免白屏
                 preRenderDefaultContent();
                 
@@ -246,7 +257,8 @@
                                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                                 'Pragma': 'no-cache',
                                 'Expires': '0'
-                            }
+                            },
+                            credentials: 'same-origin'
                         });
                         
                         console.log("API响应状态:", response.status, response.statusText);
@@ -394,12 +406,25 @@
                             <p>${message}</p>
                             <div class="error-actions">
                                 <button onclick="window.location.reload()" class="btn primary">刷新页面</button>
+                                <button onclick="forceRefreshPage()" class="btn secondary">强制刷新</button>
                                 <button onclick="window.location.href='admin.html'" class="btn secondary">管理配置</button>
+                                <button onclick="window.location.href='kv-test.html'" class="btn secondary">测试KV连接</button>
                             </div>
                         </div>
                     </div>
                 `;
                 document.body.insertBefore(errorMessage, document.body.firstChild);
+            }
+            
+            // 强制刷新页面，清除所有缓存
+            function forceRefreshPage() {
+                if (typeof stella !== 'undefined' && typeof stella.forceRefresh === 'function') {
+                    stella.forceRefresh();
+                } else {
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('refresh', Date.now());
+                    window.location.href = currentUrl.toString();
+                }
             }
             
             // 显示成功信息

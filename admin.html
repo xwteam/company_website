@@ -838,17 +838,44 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
             `;
             document.body.appendChild(statusDiv);
             
+            // 清除stella缓存
+            if (typeof stella !== 'undefined' && typeof stella.clearCache === 'function') {
+                stella.clearCache();
+            }
+            
             // 清除浏览器缓存
-            fetch('/api/kv/config', {
-                method: 'GET',
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                }
-            }).then(() => {
+            Promise.all([
+                // 尝试清除所有配置键的缓存
+                fetch('/api/kv/config?t=' + Date.now(), {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    credentials: 'same-origin'
+                }),
+                fetch('/api/kv/hero-bg?t=' + Date.now(), {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    credentials: 'same-origin'
+                }),
+                fetch('/api/kv/hero-content-title?t=' + Date.now(), {
+                    method: 'GET',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                    credentials: 'same-origin'
+                })
+            ]).then(() => {
                 // 添加时间戳参数并重新加载
-                window.location.href = `index.html?t=${Date.now()}`;
+                window.location.href = `index.html?refresh=${Date.now()}`;
             }).catch(error => {
                 console.error('清除缓存失败:', error);
                 statusDiv.innerHTML = `
@@ -856,10 +883,30 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                         <h4>清除缓存失败</h4>
                         <p>错误信息: ${error.message}</p>
                         <p>请手动清除浏览器缓存并刷新页面。</p>
+                        <div class="btn-group">
+                            <button onclick="window.location.href='index.html?refresh=${Date.now()}'" class="btn primary">强制刷新网站</button>
+                            <button onclick="window.location.href='kv-test.html'" class="btn secondary">测试KV连接</button>
+                        </div>
                     </div>
                 `;
             });
         }
+    </script>
+    
+    <script>
+        // 页面加载完成后添加强制刷新按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            // 添加强制刷新按钮到页面顶部
+            const adminContainer = document.querySelector('.admin-container');
+            const refreshBtnGroup = document.createElement('div');
+            refreshBtnGroup.className = 'btn-group';
+            refreshBtnGroup.style.marginBottom = '20px';
+            refreshBtnGroup.innerHTML = `
+                <button onclick="clearCacheAndReload()" class="btn primary">强制刷新网站</button>
+                <a href="kv-test.html" class="btn secondary">测试KV连接</a>
+            `;
+            adminContainer.insertBefore(refreshBtnGroup, adminContainer.firstChild);
+        });
     </script>
 </body>
 </html> 

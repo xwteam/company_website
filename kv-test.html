@@ -116,6 +116,8 @@
         <div class="btn-group">
             <a href="index.html" class="btn">返回首页</a>
             <a href="admin.html" class="btn">管理页面</a>
+            <button id="force-refresh-btn" class="btn">强制刷新网站</button>
+            <button id="clear-cache-btn" class="btn">清除缓存</button>
         </div>
         
         <div class="test-section">
@@ -340,6 +342,36 @@
                     
                 } catch (error) {
                     resultDiv.innerHTML = `<span class="error">配置加载测试失败: ${error.message}</span>`;
+                }
+            });
+            
+            // 强制刷新网站
+            document.getElementById('force-refresh-btn').addEventListener('click', function() {
+                if (typeof stella !== 'undefined' && typeof stella.forceRefresh === 'function') {
+                    stella.forceRefresh();
+                } else {
+                    const currentUrl = new URL(window.location.origin);
+                    currentUrl.pathname = '/index.html';
+                    currentUrl.searchParams.set('refresh', Date.now());
+                    window.location.href = currentUrl.toString();
+                }
+            });
+            
+            // 清除缓存
+            document.getElementById('clear-cache-btn').addEventListener('click', function() {
+                const resultDiv = document.getElementById('status-result');
+                resultDiv.innerHTML = '正在清除缓存...';
+                
+                try {
+                    // 清除stella内存缓存
+                    if (typeof stella !== 'undefined' && typeof stella.clearCache === 'function') {
+                        stella.clearCache();
+                        resultDiv.innerHTML = '<span class="success">缓存已清除</span>';
+                    } else {
+                        resultDiv.innerHTML = '<span class="warning">无法访问stella缓存对象</span>';
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML = `<span class="error">清除缓存失败: ${error.message}</span>`;
                 }
             });
         });

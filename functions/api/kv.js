@@ -4,15 +4,22 @@ export async function onRequest({ request, env }) {
   const method = request.method;
   const path = url.pathname.split('/').filter(Boolean);
   
+  // 定义标准响应头
+  const standardHeaders = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  };
+  
   // 处理OPTIONS请求（CORS预检）
   if (method === 'OPTIONS') {
     return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
-      }
+      headers: standardHeaders
     });
   }
 
@@ -24,13 +31,7 @@ export async function onRequest({ request, env }) {
       message: '请确保在EdgeOne Pages项目中绑定了名为"stella"的KV命名空间'
     }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
-      }
+      headers: standardHeaders
     });
   }
 
@@ -45,22 +46,14 @@ export async function onRequest({ request, env }) {
         const keys = await env.stella.list();
         
         return new Response(JSON.stringify({ keys: keys.keys }), {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
-          }
+          headers: standardHeaders
         });
       } else {
         // 获取指定key的值
         const value = await env.stella.get(key);
         
         return new Response(JSON.stringify({ key, value }), {
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
-          }
+          headers: standardHeaders
         });
       }
     }
@@ -71,11 +64,7 @@ export async function onRequest({ request, env }) {
       if (!key) {
         return new Response(JSON.stringify({ error: '缺少键名' }), {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
-          }
+          headers: standardHeaders
         });
       }
       
@@ -100,11 +89,7 @@ export async function onRequest({ request, env }) {
       await env.stella.put(key, value);
       
       return new Response(JSON.stringify({ success: true, key }), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+        headers: standardHeaders
       });
     }
     
@@ -114,11 +99,7 @@ export async function onRequest({ request, env }) {
       if (!key) {
         return new Response(JSON.stringify({ error: '缺少键名' }), {
           status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate'
-          }
+          headers: standardHeaders
         });
       }
       
@@ -126,11 +107,7 @@ export async function onRequest({ request, env }) {
       await env.stella.delete(key);
       
       return new Response(JSON.stringify({ success: true, key }), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
-        }
+        headers: standardHeaders
       });
     }
     
@@ -138,10 +115,8 @@ export async function onRequest({ request, env }) {
     return new Response(JSON.stringify({ error: '不支持的方法' }), {
       status: 405,
       headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Allow': 'GET, PUT, DELETE, OPTIONS',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
+        ...standardHeaders,
+        'Allow': 'GET, PUT, DELETE, OPTIONS'
       }
     });
     
@@ -152,11 +127,7 @@ export async function onRequest({ request, env }) {
       message: error.message
     }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
-      }
+      headers: standardHeaders
     });
   }
 } 

@@ -2,7 +2,7 @@
 (function() {
     // 创建内存缓存
     const memoryCache = {};
-    const cacheTTL = 60000; // 缓存有效期，默认1分钟
+    const cacheTTL = 0; // 禁用缓存，设置为0
     
     // 创建KV存储API客户端
     window.stella = {
@@ -14,21 +14,25 @@
         async get(key, type) {
             console.log(`KV存储API: 获取键 "${key}" (类型: ${type})`);
             
-            // 首先检查内存缓存
+            // 检查URL中是否有强制刷新参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const forceRefresh = urlParams.has('refresh');
+            
+            // 只有在非强制刷新模式下才检查缓存
             const cacheKey = `${key}_${type}`;
             const cachedItem = memoryCache[cacheKey];
-            if (cachedItem && (Date.now() - cachedItem.timestamp) < cacheTTL) {
+            if (!forceRefresh && cacheTTL > 0 && cachedItem && (Date.now() - cachedItem.timestamp) < cacheTTL) {
                 console.log(`KV存储API: 从缓存获取键 "${key}"`);
                 return cachedItem.value;
             }
             
             // 重试次数和延迟
-            const maxRetries = 1; // 减少重试次数
+            const maxRetries = 2; // 增加重试次数
             let retryCount = 0;
             
             while (retryCount <= maxRetries) {
                 try {
-                    // 添加时间戳参数避免缓存
+                    // 添加时间戳参数避免浏览器缓存
                     const timestamp = new Date().getTime();
                     const response = await fetch(`/api/kv/${key}?t=${timestamp}`, {
                         method: 'GET',
@@ -36,7 +40,9 @@
                             'Cache-Control': 'no-cache, no-store, must-revalidate',
                             'Pragma': 'no-cache',
                             'Expires': '0'
-                        }
+                        },
+                        // 添加credentials选项，确保跨浏览器一致性
+                        credentials: 'same-origin'
                     });
                     
                     if (response.ok) {
@@ -106,7 +112,7 @@
             };
             
             // 重试次数和延迟
-            const maxRetries = 1; // 减少重试次数
+            const maxRetries = 2; // 增加重试次数
             let retryCount = 0;
             
             while (retryCount <= maxRetries) {
@@ -114,8 +120,13 @@
                     const response = await fetch(`/api/kv/${key}`, {
                         method: 'PUT',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache',
+                            'Expires': '0'
                         },
+                        // 添加credentials选项，确保跨浏览器一致性
+                        credentials: 'same-origin',
                         body: JSON.stringify({ value })
                     });
                     
@@ -179,6 +190,23 @@
                 console.error('KV存储API: 列出键失败:', error);
                 return { keys: [], list_complete: true, cursor: '' };
             }
+        },
+        
+        // 清除内存缓存
+        clearCache() {
+            console.log('KV存储API: 清除内存缓存');
+            for (let key in memoryCache) {
+                delete memoryCache[key];
+            }
+            return true;
+        },
+        
+        // 强制刷新页面
+        forceRefresh() {
+            console.log('KV存储API: 强制刷新页面');
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('refresh', Date.now());
+            window.location.href = currentUrl.toString();
         },
         
         // 保存到localStorage作为备份
