@@ -9,68 +9,98 @@
         // 通过API获取键值
         async get(key, type) {
             console.log(`KV存储API: 获取键 "${key}" (类型: ${type})`);
-            try {
-                const response = await fetch(`/api/kv/${key}`, {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log(`KV存储API: 获取键 "${key}" 成功:`, data);
-                    
-                    let value = data.value;
-                    
-                    // 根据请求的类型处理值
-                    if (type === 'json' && typeof value === 'string') {
-                        try {
-                            return JSON.parse(value);
-                        } catch (error) {
-                            console.error(`KV存储API: 解析JSON失败:`, error);
-                            return null;
+            
+            // 重试次数和延迟
+            const maxRetries = 3;
+            let retryCount = 0;
+            
+            while (retryCount <= maxRetries) {
+                try {
+                    // 添加时间戳参数避免缓存
+                    const timestamp = new Date().getTime();
+                    const response = await fetch(`/api/kv/${key}?t=${timestamp}`, {
+                        method: 'GET',
+                        headers: {
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache',
+                            'Expires': '0'
                         }
-                    }
+                    });
                     
-                    return value;
-                } else {
-                    throw new Error(`API返回错误: ${response.status} ${response.statusText}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(`KV存储API: 获取键 "${key}" 成功:`, data);
+                        
+                        let value = data.value;
+                        
+                        // 根据请求的类型处理值
+                        if (type === 'json' && typeof value === 'string') {
+                            try {
+                                return JSON.parse(value);
+                            } catch (error) {
+                                console.error(`KV存储API: 解析JSON失败:`, error);
+                                return null;
+                            }
+                        }
+                        
+                        return value;
+                    } else {
+                        throw new Error(`API返回错误: ${response.status} ${response.statusText}`);
+                    }
+                } catch (error) {
+                    retryCount++;
+                    if (retryCount <= maxRetries) {
+                        const delay = retryCount * 1000; // 逐渐增加延迟时间
+                        console.warn(`KV存储API: 获取键 "${key}" 失败，${maxRetries - retryCount + 1}次重试机会剩余，等待${delay}ms后重试:`, error);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        console.error(`KV存储API: 获取键 "${key}" 失败，已达到最大重试次数:`, error);
+                        
+                        // 如果API失败，回退到默认值
+                        return this._getDefaultValue(key, type);
+                    }
                 }
-            } catch (error) {
-                console.error(`KV存储API: 获取键 "${key}" 失败:`, error);
-                
-                // 如果API失败，回退到默认值
-                return this._getDefaultValue(key, type);
             }
         },
         
         // 通过API设置键值
         async put(key, value) {
             console.log(`KV存储API: 设置键 "${key}" 的值为:`, value);
-            try {
-                const response = await fetch(`/api/kv/${key}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ value })
-                });
-                
-                if (response.ok) {
-                    console.log(`KV存储API: 设置键 "${key}" 成功`);
-                    return true;
-                } else {
-                    throw new Error(`API返回错误: ${response.status} ${response.statusText}`);
+            
+            // 重试次数和延迟
+            const maxRetries = 3;
+            let retryCount = 0;
+            
+            while (retryCount <= maxRetries) {
+                try {
+                    const response = await fetch(`/api/kv/${key}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ value })
+                    });
+                    
+                    if (response.ok) {
+                        console.log(`KV存储API: 设置键 "${key}" 成功`);
+                        return true;
+                    } else {
+                        throw new Error(`API返回错误: ${response.status} ${response.statusText}`);
+                    }
+                } catch (error) {
+                    retryCount++;
+                    if (retryCount <= maxRetries) {
+                        const delay = retryCount * 1000; // 逐渐增加延迟时间
+                        console.warn(`KV存储API: 设置键 "${key}" 失败，${maxRetries - retryCount + 1}次重试机会剩余，等待${delay}ms后重试:`, error);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    } else {
+                        console.error(`KV存储API: 设置键 "${key}" 失败，已达到最大重试次数:`, error);
+                        
+                        // 如果API失败，保存到localStorage作为备份
+                        this._saveToLocalStorage(key, value);
+                        return false;
+                    }
                 }
-            } catch (error) {
-                console.error(`KV存储API: 设置键 "${key}" 失败:`, error);
-                
-                // 如果API失败，保存到localStorage作为备份
-                this._saveToLocalStorage(key, value);
-                return false;
             }
         },
         

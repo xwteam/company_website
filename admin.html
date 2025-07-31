@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/fontawesome/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/kv-init.js"></script>
     <style>
         .admin-container {
             max-width: 1200px;
@@ -266,7 +267,6 @@
     </div>
 
     <script src="js/main.js"></script>
-    <script src="js/kv-init.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // 选项卡切换
@@ -663,7 +663,12 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                     }
                     
                     // 逐个保存配置项，并显示详细进度
-                    statusDiv.innerHTML += '<p>正在保存各项配置...</p>';
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-info">
+                            <h4>保存配置中...</h4>
+                            <p>正在保存各个配置项，请稍候...</p>
+                        </div>
+                    `;
                     
                     try {
                         // 存储hero背景
@@ -694,9 +699,9 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                         await stella.put('testimonials-description', testimonialsJson);
                         statusDiv.innerHTML += '<p>✅ testimonials-description 已保存</p>';
                         
-                        statusDiv.innerHTML += `
+                        statusDiv.innerHTML = `
                             <div class="alert alert-success">
-                                <h4>配置保存成功！</h4>
+                                <h4>保存成功</h4>
                                 <p>所有配置项已成功保存到KV存储。</p>
                                 <p>如果网站首页没有立即更新，请尝试以下操作:</p>
                                 <ul>
@@ -704,7 +709,10 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                                     <li>强制刷新页面 (Ctrl+F5 或 Cmd+Shift+R)</li>
                                     <li>等待几分钟，KV存储的更改可能需要一些时间才能生效</li>
                                 </ul>
-                                <button onclick="window.open('index.html?t=${Date.now()}', '_blank')" class="btn primary">在新标签页中查看网站</button>
+                                <div class="btn-group">
+                                    <button onclick="window.open('index.html?t=${Date.now()}', '_blank')" class="btn primary">在新标签页中查看网站</button>
+                                    <button onclick="clearCacheAndReload()" class="btn secondary">强制刷新网站</button>
+                                </div>
                             </div>
                         `;
                     } catch (error) {
@@ -799,7 +807,7 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                         jsonTextarea.value = JSON.stringify(config, null, 2);
                         
                         // 保存配置
-                        const success = await initializeKVConfig(config);
+                        const success = await window.initializeKVWithConfig(config);
                         
                         if (success) {
                             statusDiv.className = 'status-message status-success';
@@ -817,6 +825,41 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                 reader.readAsText(file);
             });
         });
+
+        // 强制刷新网站函数
+        window.clearCacheAndReload = function() {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'status-message';
+            statusDiv.innerHTML = `
+                <div class="alert alert-info">
+                    <h4>正在清除缓存...</h4>
+                    <p>正在清除浏览器缓存并重新加载网站，请稍候...</p>
+                </div>
+            `;
+            document.body.appendChild(statusDiv);
+            
+            // 清除浏览器缓存
+            fetch('/api/kv/config', {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            }).then(() => {
+                // 添加时间戳参数并重新加载
+                window.location.href = `index.html?t=${Date.now()}`;
+            }).catch(error => {
+                console.error('清除缓存失败:', error);
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h4>清除缓存失败</h4>
+                        <p>错误信息: ${error.message}</p>
+                        <p>请手动清除浏览器缓存并刷新页面。</p>
+                    </div>
+                `;
+            });
+        }
     </script>
 </body>
 </html> 
