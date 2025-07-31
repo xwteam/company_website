@@ -799,7 +799,7 @@ document.getElementById('init-config-btn').addEventListener('click', async funct
                         jsonTextarea.value = JSON.stringify(config, null, 2);
                         
                         // 保存配置
-                        const success = await initializeKVWithConfig(config);
+                        const success = await initializeKVConfig(config);
                         
                         if (success) {
                             statusDiv.className = 'status-message status-success';
