@@ -590,31 +590,26 @@
                         throw new Error('KV存储API未初始化，请确保在EdgeOne Pages环境中运行');
                     }
                     
-                    // 检查stella是否是模拟对象
-                    const isMock = stella.toString().includes('模拟');
-                    if (isMock) {
-                        statusDiv.innerHTML = `
-                            <div class="alert alert-warning">
-                                <h4>警告: 使用模拟KV存储</h4>
-                                <p>当前使用的是模拟KV存储API，配置将不会真正保存到EdgeOne KV存储中。</p>
-                                <p>这可能是因为:</p>
-                                <ul>
-                                    <li>您正在本地开发环境中运行网站</li>
-                                    <li>EdgeOne Pages环境中未正确绑定KV存储命名空间</li>
-                                </ul>
-                                <p>解决方案:</p>
-                                <ul>
-                                    <li>确认在EdgeOne Pages中已正确绑定KV存储命名空间</li>
-                                    <li>检查命名空间名称是否为"stella"</li>
-                                </ul>
-                            </div>
-                        `;
+                    // 尝试先保存完整配置到单个键
+                    try {
+                        // 保存完整配置到config键
+                        await fetch('/api/kv/config', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ value: config })
+                        });
+                        console.log('已保存完整配置到config键');
+                        statusDiv.innerHTML += '<p>✅ 已保存完整配置到config键</p>';
+                    } catch (error) {
+                        console.error('保存完整配置失败:', error);
+                        statusDiv.innerHTML += '<p>⚠️ 保存完整配置失败，尝试单独保存各项配置</p>';
                     }
                     
-                    // 保存配置
-                    statusDiv.innerHTML += '<p>正在保存配置到KV存储...</p>';
-                    
                     // 逐个保存配置项，并显示详细进度
+                    statusDiv.innerHTML += '<p>正在保存各项配置...</p>';
+                    
                     try {
                         // 存储hero背景
                         await stella.put('hero-bg', config['hero-bg']);
@@ -630,6 +625,7 @@
                         
                         // 存储服务描述
                         const servicesJson = JSON.stringify(config['services-description']);
+                        console.log('服务描述JSON:', servicesJson);
                         await stella.put('services-description', servicesJson);
                         statusDiv.innerHTML += '<p>✅ services-description 已保存</p>';
                         
@@ -639,6 +635,7 @@
                         
                         // 存储客户评价
                         const testimonialsJson = JSON.stringify(config['testimonials-description']);
+                        console.log('客户评价JSON:', testimonialsJson);
                         await stella.put('testimonials-description', testimonialsJson);
                         statusDiv.innerHTML += '<p>✅ testimonials-description 已保存</p>';
                         
@@ -652,7 +649,7 @@
                                     <li>强制刷新页面 (Ctrl+F5 或 Cmd+Shift+R)</li>
                                     <li>等待几分钟，KV存储的更改可能需要一些时间才能生效</li>
                                 </ul>
-                                <button onclick="window.open('index.html', '_blank')" class="btn primary">在新标签页中查看网站</button>
+                                <button onclick="window.open('index.html?t=${Date.now()}', '_blank')" class="btn primary">在新标签页中查看网站</button>
                             </div>
                         `;
                     } catch (error) {

@@ -104,21 +104,22 @@
                 
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="images/project-3.jpg" alt="Health App Project">
+                        <img src="images/project-3.jpg" alt="Urban Mobility App">
                         <div class="project-category">UX Design</div>
                     </div>
                     <div class="project-info">
-                        <h3>Wellness Companion</h3>
-                        <p>A health tracking app designed to promote wellbeing through personalized recommendations</p>
+                        <h3>CityMove</h3>
+                        <p>User-centered mobility app that integrates public transit, ride-sharing, and micro-mobility options</p>
                         <div class="project-tags">
                             <span>Mobile</span>
-                            <span>Healthcare</span>
+                            <span>UX/UI</span>
+                            <span>Transportation</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="center-button">
+            <div class="section-cta">
                 <a href="products.html" class="btn primary">View All Products</a>
             </div>
         </div>
@@ -127,26 +128,16 @@
     <!-- 客户评价 -->
     <section class="testimonials">
         <div class="container">
-            <h2>What Our Clients Say</h2>
-            <p id="testimonials-description" class="section-description">Hear from the businesses we've helped transform</p>
+            <h2>Client Testimonials</h2>
+            <p id="testimonials-description" class="section-description">Hear from the businesses we have helped transform</p>
             
-            <div id="testimonials-carousel" class="testimonial-container">
+            <div id="testimonials-carousel" class="testimonials-carousel">
                 <!-- 客户评价将通过JavaScript动态生成 -->
-                <div class="carousel-controls">
-                    <div id="carousel-indicators" class="carousel-indicators">
-                        <!-- 指示器将通过JavaScript动态生成 -->
-                    </div>
-                </div>
             </div>
-        </div>
-    </section>
-
-    <!-- 联系我们 -->
-    <section class="contact-cta blue-bg">
-        <div class="container">
-            <h2>Ready to elevate your digital presence?</h2>
-            <p>Let's discuss how we can help your business stand out in the digital landscape.</p>
-            <a href="contact.html" class="btn primary light">Get in Touch <i class="fas fa-arrow-right"></i></a>
+            
+            <div id="carousel-indicators" class="carousel-indicators">
+                <!-- 轮播指示器将通过JavaScript动态生成 -->
+            </div>
         </div>
     </section>
 
@@ -154,20 +145,14 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>Brand</h3>
-                    <p>We create digital experiences that elevate your brand and inspire your audience.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                    </div>
+                <div class="footer-logo">
+                    <a href="index.html">Brand</a>
+                    <p>Creating digital experiences with purpose since 2010</p>
                 </div>
                 
                 <div class="footer-links">
-                    <div class="link-group">
-                        <h4>Navigation</h4>
+                    <div class="footer-links-column">
+                        <h3>Pages</h3>
                         <ul>
                             <li><a href="index.html">Home</a></li>
                             <li><a href="products.html">Products</a></li>
@@ -178,124 +163,146 @@
                         </ul>
                     </div>
                     
-                    <div class="link-group">
-                        <h4>Services</h4>
+                    <div class="footer-links-column">
+                        <h3>Services</h3>
                         <ul>
-                            <li><a href="services.html#web-dev">Web Development</a></li>
-                            <li><a href="services.html#brand-identity">Brand Identity</a></li>
-                            <li><a href="services.html#ux-design">UX Design</a></li>
-                            <li><a href="services.html#digital-marketing">Digital Marketing</a></li>
-                            <li><a href="services.html#content">Content Creation</a></li>
+                            <li><a href="services.html">Brand Identity</a></li>
+                            <li><a href="services.html">Web Development</a></li>
+                            <li><a href="services.html">UX Design</a></li>
+                            <li><a href="services.html">Digital Marketing</a></li>
                         </ul>
                     </div>
                     
-                    <div class="link-group">
-                        <h4>Contact</h4>
-                        <p>123 Design Street</p>
-                        <p>San Francisco, CA 94103</p>
-                        <p>hello@brand.com</p>
-                        <p>+1 (415) 555-5555</p>
+                    <div class="footer-links-column">
+                        <h3>Contact</h3>
+                        <ul>
+                            <li><a href="mailto:hello@brand.com">hello@brand.com</a></li>
+                            <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                            <li>123 Design Street<br>Creative City, 10001</li>
+                        </ul>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 Brand. All rights reserved.</p>
-                <div class="legal-links">
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
+                <div class="copyright">
+                    &copy; 2023 Brand. All rights reserved.
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script src="js/kv-init.js"></script>
-    <script src="js/kv-debug.js"></script>
     <script src="js/main.js"></script>
     <script>
-        // 加载JSON配置
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM loaded, fetching config...");
-            
-            // 显示加载状态
-            document.getElementById('hero-title').innerHTML += " <small style='font-size:14px;color:#999'>(加载中...)</small>";
-            
-            // 客户评价轮播变量
+            // 当前轮播索引
             let currentTestimonialIndex = 0;
+            
+            // 轮播项目数组
             let testimonialItems = [];
             
-            // 添加鼠标滚轮事件处理
+            // 为轮播容器添加鼠标滚轮事件监听器
             document.getElementById('testimonials-carousel').addEventListener('wheel', function(event) {
                 event.preventDefault();
+                
                 if (event.deltaY > 0) {
-                    // 向下滚动，显示下一个评价
+                    // 向下滚动，显示下一个
                     currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonialItems.length;
                 } else {
-                    // 向上滚动，显示上一个评价
+                    // 向上滚动，显示上一个
                     currentTestimonialIndex = (currentTestimonialIndex - 1 + testimonialItems.length) % testimonialItems.length;
                 }
+                
                 updateTestimonialCarousel();
             });
             
-            // 初始化KV存储
-            const stella = stella || {};
-
-            // 加载配置函数
+            // 异步函数，从KV存储加载配置
             async function loadConfig() {
                 console.log("开始加载配置...");
                 document.getElementById('hero-title').innerHTML += " <small style='font-size:14px;color:#999'>(加载中...)</small>";
                 
                 try {
-                    // 尝试从KV存储加载配置
-                    console.log("从KV存储加载配置...");
+                    // 使用EdgeOne Pages的KV存储API获取配置
+                    const config = {};
                     
-                    // 获取hero背景
-                    const heroBg = await stella.get('hero-bg', 'text');
-                    console.log("获取到hero背景:", heroBg);
+                    // 首先尝试使用API端点获取配置
+                    try {
+                        const response = await fetch('/api/kv/config', {
+                            method: 'GET',
+                            headers: {
+                                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                                'Pragma': 'no-cache',
+                                'Expires': '0'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.value) {
+                                // 如果API返回了完整配置，直接使用
+                                const fullConfig = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+                                console.log("从API端点加载完整配置成功:", fullConfig);
+                                
+                                // 应用配置
+                                applyConfig(fullConfig);
+                                
+                                // 移除加载提示
+                                document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, "");
+                                
+                                // 显示成功消息
+                                showSuccess("配置加载成功！");
+                                
+                                return;
+                            }
+                        }
+                    } catch (apiError) {
+                        console.warn("从API端点加载完整配置失败:", apiError);
+                    }
                     
-                    // 获取hero标题
-                    const heroTitle = await stella.get('hero-content-title', 'text');
-                    console.log("获取到hero标题:", heroTitle);
-                    
-                    // 获取hero描述
-                    const heroDesc = await stella.get('hero-content-description', 'text');
-                    console.log("获取到hero描述:", heroDesc);
-                    
-                    // 获取服务描述
-                    const servicesDesc = await stella.get('services-description', 'json');
-                    console.log("获取到服务描述:", servicesDesc);
-                    
-                    // 获取精选产品描述
-                    const featuredProductsDesc = await stella.get('featured-products-description', 'text');
-                    console.log("获取到精选产品描述:", featuredProductsDesc);
-                    
-                    // 获取客户评价
-                    const testimonialsDesc = await stella.get('testimonials-description', 'json');
-                    console.log("获取到客户评价:", testimonialsDesc);
-                    
-                    // 组合所有配置
-                    const config = {
-                        'hero-bg': heroBg,
-                        'hero-content-title': heroTitle,
-                        'hero-content-description': heroDesc,
-                        'services-description': servicesDesc,
-                        'featured-products-description': featuredProductsDesc,
-                        'testimonials-description': testimonialsDesc
-                    };
-                    
-                    console.log("配置加载成功:", config);
-                    
-                    document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, "");
-                    
-                    // 移除任何错误消息
-                    const errorMsg = document.querySelector('.error-message');
-                    if (errorMsg) errorMsg.remove();
-                    
-                    // 应用配置
-                    applyConfig(config);
-                    
-                    // 显示成功消息
-                    showSuccess("配置加载成功！");
+                    // 如果API端点未返回完整配置，则尝试使用stella对象
+                    if (typeof stella !== 'undefined') {
+                        console.log("使用stella对象加载配置...");
+                        
+                        // 获取各个配置项
+                        const heroBg = await stella.get('hero-bg', 'text');
+                        const heroTitle = await stella.get('hero-content-title', 'text');
+                        const heroDesc = await stella.get('hero-content-description', 'text');
+                        const servicesDesc = await stella.get('services-description', 'json');
+                        const featuredProductsDesc = await stella.get('featured-products-description', 'text');
+                        const testimonialsDesc = await stella.get('testimonials-description', 'json');
+                        
+                        // 组合配置
+                        config['hero-bg'] = heroBg;
+                        config['hero-content-title'] = heroTitle;
+                        config['hero-content-description'] = heroDesc;
+                        config['services-description'] = servicesDesc;
+                        config['featured-products-description'] = featuredProductsDesc;
+                        config['testimonials-description'] = testimonialsDesc;
+                        
+                        console.log("配置加载成功:", config);
+                        
+                        // 移除加载提示
+                        document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, "");
+                        
+                        // 移除任何现有的错误消息
+                        const errorMsg = document.querySelector('.error-message');
+                        if (errorMsg) errorMsg.remove();
+                        
+                        // 应用配置
+                        applyConfig(config);
+                        
+                        // 显示成功消息
+                        showSuccess("配置加载成功！");
+                    } else {
+                        throw new Error("stella对象未定义，无法加载配置");
+                    }
                 } catch (error) {
                     console.error(`加载配置失败:`, error);
                     document.getElementById('hero-title').innerHTML = document.getElementById('hero-title').innerHTML.replace(/ <small style='font-size:14px;color:#999'>\([^)]+\)<\/small>/g, " <small style='font-size:14px;color:red'>(配置加载失败)</small>");
@@ -319,6 +326,7 @@
                             <p>${message}</p>
                             <div class="error-actions">
                                 <button onclick="window.location.reload()" class="btn primary">刷新页面</button>
+                                <button onclick="window.location.href='admin.html'" class="btn secondary">管理配置</button>
                             </div>
                         </div>
                     </div>

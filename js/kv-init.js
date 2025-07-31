@@ -7,8 +7,8 @@
 // 初始化KV存储
 (function() {
     // 检查是否在EdgeOne Pages环境中
-    if (typeof stella === 'undefined') {
-        console.error('KV存储初始化失败: stella命名空间未定义，请确保在EdgeOne Pages环境中运行');
+    if (typeof EdgeOne === 'undefined' || !EdgeOne.env || !EdgeOne.env.stella) {
+        console.error('KV存储初始化失败: EdgeOne.env.stella命名空间未定义，请确保在EdgeOne Pages环境中运行');
         
         // 创建一个模拟的KV存储API，用于本地开发测试
         window.stella = {
@@ -42,7 +42,32 @@
             async get(key, type) {
                 console.warn(`KV存储模拟: 获取键 "${key}" (类型: ${type})`);
                 
-                // 检查本地存储中是否有数据
+                try {
+                    // 尝试从API获取数据
+                    const response = await fetch(`/api/kv/${key}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(`KV存储API: 获取键 "${key}" 成功:`, data);
+                        
+                        let value = data.value;
+                        
+                        // 根据请求的类型处理值
+                        if (type === 'json' && typeof value === 'string') {
+                            try {
+                                return JSON.parse(value);
+                            } catch (error) {
+                                console.error(`KV存储API: 解析JSON失败:`, error);
+                                return null;
+                            }
+                        }
+                        
+                        return value;
+                    }
+                } catch (error) {
+                    console.warn(`KV存储API: 获取键 "${key}" 失败:`, error);
+                }
+                
+                // 如果API失败，回退到本地存储
                 if (this._storage[key]) {
                     const value = this._storage[key];
                     console.log(`KV存储模拟: 从本地存储获取键 "${key}" 的值:`, value);
@@ -138,7 +163,25 @@
             async put(key, value) {
                 console.warn(`KV存储模拟: 设置键 "${key}" 的值为:`, value);
                 
-                // 保存到本地存储
+                try {
+                    // 尝试通过API设置值
+                    const response = await fetch(`/api/kv/${key}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ value })
+                    });
+                    
+                    if (response.ok) {
+                        console.log(`KV存储API: 设置键 "${key}" 成功`);
+                        return true;
+                    }
+                } catch (error) {
+                    console.warn(`KV存储API: 设置键 "${key}" 失败:`, error);
+                }
+                
+                // 如果API失败，保存到本地存储
                 this._storage[key] = value;
                 this._save();
                 
@@ -148,7 +191,21 @@
             async delete(key) {
                 console.warn(`KV存储模拟: 删除键 "${key}"`);
                 
-                // 从本地存储中删除
+                try {
+                    // 尝试通过API删除值
+                    const response = await fetch(`/api/kv/${key}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok) {
+                        console.log(`KV存储API: 删除键 "${key}" 成功`);
+                        return true;
+                    }
+                } catch (error) {
+                    console.warn(`KV存储API: 删除键 "${key}" 失败:`, error);
+                }
+                
+                // 如果API失败，从本地存储中删除
                 delete this._storage[key];
                 this._save();
                 
@@ -157,6 +214,19 @@
             
             async list(options) {
                 console.warn('KV存储模拟: 列出键', options);
+                
+                try {
+                    // 尝试通过API获取键列表
+                    const response = await fetch('/api/kv');
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('KV存储API: 列出键成功:', data);
+                        return data;
+                    }
+                } catch (error) {
+                    console.warn('KV存储API: 列出键失败:', error);
+                }
                 
                 // 返回本地存储中的所有键
                 const keys = Object.keys(this._storage).map(key => ({ name: key }));
@@ -181,7 +251,10 @@
         window.stella.isMock = true;
         
     } else {
-        console.log('KV存储初始化成功: stella命名空间已加载');
+        console.log('KV存储初始化成功: EdgeOne.env.stella命名空间已加载');
+        
+        // 使用EdgeOne.env.stella作为KV存储对象
+        window.stella = EdgeOne.env.stella;
         
         // 添加一个标识，表示这是真实对象
         window.stella.isMock = false;
