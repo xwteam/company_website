@@ -225,7 +225,7 @@
         padding: 20px;
         transform: translateY(-150%);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 999;
+        z-index: 9999;
     }
     
     /* 滚动状态下的移动导航增强效果 */

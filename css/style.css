@@ -1827,19 +1827,64 @@ input.error, textarea.error {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     border: 2px solid rgba(255, 255, 255, 0.2);
     position: relative;
+    z-index: 1;
 }
 
 /* 地图控件z-index调整，避免遮挡导航栏 */
-.leaflet-control-container {
-    z-index: 500 !important;
+.map-container .leaflet-control-container {
+    z-index: 10 !important;
 }
 
-.leaflet-control-zoom {
-    z-index: 500 !important;
+.map-container .leaflet-control-zoom {
+    z-index: 10 !important;
 }
 
-.leaflet-control {
-    z-index: 500 !important;
+.map-container .leaflet-control {
+    z-index: 10 !important;
+}
+
+.map-container .leaflet-top {
+    z-index: 10 !important;
+}
+
+.map-container .leaflet-right {
+    z-index: 10 !important;
+}
+
+.map-container .leaflet-control-zoom-in,
+.map-container .leaflet-control-zoom-out {
+    z-index: 10 !important;
+}
+
+.map-container .leaflet-control-attribution {
+    z-index: 10 !important;
+}
+
+
+
+/* 地图内所有控件都使用低z-index */
+#company-map * {
+    z-index: auto !important;
+}
+
+/* 强制地图控件在header之下 */
+.leaflet-control-container,
+.leaflet-control-zoom,
+.leaflet-control,
+.leaflet-top,
+.leaflet-right,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+    z-index: 50 !important;
+    position: relative !important;
+}
+
+/* 确保导航栏始终在最顶层 */
+header,
+header nav,
+.mobile-menu-toggle {
+    z-index: 9999 !important;
 }
 
 /* 自定义地图标记样式 */
