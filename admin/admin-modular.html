@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站管理中心 - 模块化版本</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- 模块化样式 -->
+    <link rel="stylesheet" href="admin/styles/core.css">
+    <link rel="stylesheet" href="admin/styles/forms.css">
+    <link rel="stylesheet" href="admin/styles/collapsible.css">
+    
+    <!-- 模块加载器 -->
+    <script src="js/admin/loader.js"></script>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 页面头部 -->
+        <div class="admin-header">
+            <div class="admin-header-content">
+                <h1><i class="fas fa-shield-alt"></i> 网站管理中心</h1>
+                <div class="admin-status">
+                    <span class="status-indicator" id="connection-status">
+                        <i class="fas fa-circle"></i> 正在连接...
+                    </span>
+                    <span class="user-info">
+                        用户: <span id="current-user">未登录</span>
+                    </span>
+                    <button class="btn btn-secondary" onclick="logout()" style="display: none;" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> 退出
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 登录界面 -->
+        <div id="auth-section" class="auth-section">
+            <div class="auth-card">
+                <h2><i class="fas fa-lock"></i> 管理员登录</h2>
+                <div id="auth-messages" class="messages"></div>
+                
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名">
+                </div>
+                
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="password" placeholder="请输入密码">
+                </div>
+                
+                <button onclick="authenticate()" class="btn btn-primary btn-full">
+                    <i class="fas fa-sign-in-alt"></i> 登录管理后台
+                </button>
+                
+                <div class="security-notice">
+                    <h4><i class="fas fa-shield-alt"></i> 安全提示</h4>
+                    <p>请使用您在 EdgeOne Pages 环境变量中配置的管理员凭据登录。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主工作区 -->
+        <div id="main-workspace" class="main-workspace" style="display: none;">
+            <!-- 导航菜单 -->
+            <div class="nav-menu">
+                <h3><i class="fas fa-cog"></i> 配置管理</h3>
+                <ul class="config-list">
+                    <li><button class="config-btn" data-config="index">
+                        <i class="fas fa-home"></i> 首页配置
+                    </button></li>
+                    <li><button class="config-btn" data-config="products">
+                        <i class="fas fa-box"></i> 产品配置
+                    </button></li>
+                    <li><button class="config-btn" data-config="services">
+                        <i class="fas fa-tools"></i> 服务配置
+                    </button></li>
+                    <li><button class="config-btn" data-config="partners">
+                        <i class="fas fa-handshake"></i> 合作伙伴配置
+                    </button></li>
+                    <li><button class="config-btn" data-config="about">
+                        <i class="fas fa-info-circle"></i> 关于我们配置
+                    </button></li>
+                    <li><button class="config-btn" data-config="contact">
+                        <i class="fas fa-phone"></i> 联系我们配置
+                    </button></li>
+                    <li><button class="config-btn" data-config="footer">
+                        <i class="fas fa-anchor"></i> 页脚配置
+                    </button></li>
+                </ul>
+            </div>
+
+            <!-- 编辑器区域 -->
+            <div class="editor-area">
+                <div class="editor-header">
+                    <h3 id="current-config-title">
+                        <i class="fas fa-file"></i> 选择要编辑的配置
+                    </h3>
+                    <div class="editor-actions">
+                        <button class="btn btn-success" onclick="saveConfig()" id="save-btn" disabled>
+                            <i class="fas fa-save"></i> 保存配置
+                        </button>
+                        <button class="btn btn-secondary" onclick="reloadConfig()" id="reload-btn" disabled>
+                            <i class="fas fa-redo"></i> 重新加载
+                        </button>
+                    </div>
+                </div>
+
+                <div id="editor-messages" class="messages"></div>
+
+                <div class="editor-content">
+                    <form id="config-form">
+                        <div id="form-container">
+                            <div class="welcome-message">
+                                <h4><i class="fas fa-rocket"></i> 欢迎使用模块化管理中心</h4>
+                                <p>这是新的模块化版本，具有以下优势：</p>
+                                <ul>
+                                    <li>📦 <strong>模块化架构</strong>：文件按功能拆分，便于维护</li>
+                                    <li>🚀 <strong>按需加载</strong>：只加载必要的模块，提升性能</li>
+                                    <li>🔧 <strong>易于扩展</strong>：新增配置类型只需添加对应模块</li>
+                                    <li>🎨 <strong>统一样式</strong>：样式模块化，保持视觉一致性</li>
+                                </ul>
+                                <p>请从左侧菜单选择要编辑的配置类型开始。</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要功能脚本 -->
+    <script>
+        let currentConfigType = null;
+        let currentConfigData = null;
+        let userCredentials = null;
+
+        // 等待模块加载完成
+        document.addEventListener('adminModulesLoaded', function() {
+            console.log('🎯 管理面板模块加载完成，初始化事件监听器');
+            initializeEventListeners();
+        });
+
+        // 初始化事件监听器
+        function initializeEventListeners() {
+            // 配置按钮点击事件
+            document.querySelectorAll('.config-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const configType = this.dataset.config;
+                    loadConfigType(configType);
+                });
+            });
+
+            // 表单提交事件
+            document.getElementById('config-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveConfig();
+            });
+        }
+
+        // 认证函数
+        async function authenticate() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showMessage('auth-messages', '请输入用户名和密码', 'error');
+                return;
+            }
+
+            showMessage('auth-messages', '正在验证...', 'info');
+
+            try {
+                if (!window.enhancedAdminConfig) {
+                    throw new Error('配置管理模块未加载');
+                }
+
+                const isValid = await window.enhancedAdminConfig.validateCredentials(username, password);
+                if (isValid) {
+                    userCredentials = `Basic ${btoa(`${username}:${password}`)}`;
+                    document.getElementById('current-user').textContent = username;
+                    showLoginSuccess();
+                } else {
+                    showMessage('auth-messages', '用户名或密码错误，请检查后重试', 'error');
+                }
+            } catch (error) {
+                console.error('登录验证失败:', error);
+                showMessage('auth-messages', `登录失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 显示登录成功
+        function showLoginSuccess() {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('main-workspace').style.display = 'block';
+            document.getElementById('logout-btn').style.display = 'inline-block';
+            updateConnectionStatus('已连接', 'success');
+        }
+
+        // 退出登录
+        function logout() {
+            userCredentials = null;
+            currentConfigType = null;
+            currentConfigData = null;
+            
+            document.getElementById('auth-section').style.display = 'block';
+            document.getElementById('main-workspace').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'none';
+            document.getElementById('current-user').textContent = '未登录';
+            
+            // 清空表单
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('form-container').innerHTML = '<div class="welcome-message"><h4>已退出登录</h4><p>请重新登录以继续使用。</p></div>';
+            
+            updateConnectionStatus('未连接', 'error');
+        }
+
+        // 加载配置类型
+        async function loadConfigType(configType) {
+            if (!userCredentials) {
+                showMessage('editor-messages', '请先登录', 'error');
+                return;
+            }
+
+            currentConfigType = configType;
+            updateConfigTitle(configType);
+            showMessage('editor-messages', '正在加载配置...', 'info');
+
+            try {
+                const config = await window.enhancedAdminConfig.getConfig(configType);
+                currentConfigData = config;
+                
+                // 生成表单
+                if (window.configFormEditor) {
+                    const formHtml = window.configFormEditor.generateForm(configType, config);
+                    document.getElementById('form-container').innerHTML = formHtml;
+                    
+                    // 启用保存和重载按钮
+                    document.getElementById('save-btn').disabled = false;
+                    document.getElementById('reload-btn').disabled = false;
+                    
+                    showMessage('editor-messages', '配置加载成功', 'success');
+                } else {
+                    throw new Error('表单编辑器未初始化');
+                }
+            } catch (error) {
+                console.error('配置加载失败:', error);
+                showMessage('editor-messages', `配置加载失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 保存配置
+        async function saveConfig() {
+            if (!currentConfigType || !userCredentials) {
+                showMessage('editor-messages', '没有可保存的配置', 'error');
+                return;
+            }
+
+            showMessage('editor-messages', '正在保存配置...', 'info');
+
+            try {
+                const formData = new FormData(document.getElementById('config-form'));
+                const config = window.configFormEditor.formDataToConfig(formData);
+                
+                await window.enhancedAdminConfig.saveConfig(currentConfigType, config, userCredentials);
+                currentConfigData = config;
+                
+                showMessage('editor-messages', '配置保存成功！', 'success');
+            } catch (error) {
+                console.error('配置保存失败:', error);
+                showMessage('editor-messages', `保存失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 重新加载配置
+        function reloadConfig() {
+            if (currentConfigType) {
+                loadConfigType(currentConfigType);
+            }
+        }
+
+        // 更新配置标题
+        function updateConfigTitle(configType) {
+            const titles = {
+                'index': '首页配置',
+                'products': '产品配置',
+                'services': '服务配置',
+                'partners': '合作伙伴配置',
+                'about': '关于我们配置',
+                'contact': '联系我们配置',
+                'footer': '页脚配置'
+            };
+            
+            const title = titles[configType] || configType;
+            document.getElementById('current-config-title').innerHTML = 
+                `<i class="fas fa-edit"></i> ${title}`;
+        }
+
+        // 更新连接状态
+        function updateConnectionStatus(text, type) {
+            const indicator = document.getElementById('connection-status');
+            const iconClass = type === 'success' ? 'fa-circle text-success' : 
+                            type === 'error' ? 'fa-circle text-danger' : 'fa-circle text-warning';
+            
+            indicator.innerHTML = `<i class="fas ${iconClass}"></i> ${text}`;
+        }
+
+        // 显示消息
+        function showMessage(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            const alertClass = type === 'success' ? 'alert-success' : 
+                             type === 'error' ? 'alert-danger' : 'alert-info';
+            
+            container.innerHTML = `<div class="alert ${alertClass}">${message}</div>`;
+            
+            // 自动清除成功消息
+            if (type === 'success') {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 3000);
+            }
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            updateConnectionStatus('正在初始化...', 'warning');
+        });
+    </script>
+</body>
+</html>
