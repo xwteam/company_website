@@ -1744,3 +1744,33 @@ input.error, textarea.error {
     font-size: 0.95rem;
     margin-bottom: 0;
 } 
+
+.testimonials-carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonial-item {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.testimonial-item.active {
+    display: block;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin: 0 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.indicator.active {
+    background-color: var(--primary-color);
+    transform: scale(1.2);
+} 

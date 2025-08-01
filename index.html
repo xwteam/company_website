@@ -198,438 +198,278 @@
         </div>
     </footer>
 
-    <script src="js/kv-init.js"></script>
     <script src="js/main.js"></script>
+    
     <script>
+        // 读取JSON配置文件并应用到页面
         document.addEventListener('DOMContentLoaded', function() {
-            // 当前轮播索引
-            let currentTestimonialIndex = 0;
-            
-            // 轮播项目数组
-            let testimonialItems = [];
-            
-            // 为轮播容器添加鼠标滚轮事件监听器
-            document.getElementById('testimonials-carousel').addEventListener('wheel', function(event) {
-                event.preventDefault();
+            // 显示加载状态
+            function showStatus(message, type = 'info') {
+                const statusDiv = document.createElement('div');
+                statusDiv.className = `status-message ${type}`;
+                statusDiv.textContent = message;
+                statusDiv.style.position = 'fixed';
+                statusDiv.style.bottom = '20px';
+                statusDiv.style.right = '20px';
+                statusDiv.style.padding = '10px 15px';
+                statusDiv.style.borderRadius = '4px';
+                statusDiv.style.zIndex = '9999';
                 
-                if (event.deltaY > 0) {
-                    // 向下滚动，显示下一个
-                    currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonialItems.length;
-                } else {
-                    // 向上滚动，显示上一个
-                    currentTestimonialIndex = (currentTestimonialIndex - 1 + testimonialItems.length) % testimonialItems.length;
+                if (type === 'info') {
+                    statusDiv.style.backgroundColor = '#3498db';
+                } else if (type === 'success') {
+                    statusDiv.style.backgroundColor = '#2ecc71';
+                } else if (type === 'error') {
+                    statusDiv.style.backgroundColor = '#e74c3c';
                 }
                 
-                updateTestimonialCarousel();
-            });
-            
-            // 异步函数，从KV存储加载配置
-            async function loadConfig() {
-                console.log("开始加载配置...", new Date().toISOString());
+                statusDiv.style.color = 'white';
+                document.body.appendChild(statusDiv);
                 
-                // 检查URL中是否有强制刷新参数
-                const urlParams = new URLSearchParams(window.location.search);
-                const forceRefresh = urlParams.has('refresh');
-                if (forceRefresh) {
-                    console.log("强制刷新模式，清除所有缓存");
-                    // 清除stella缓存
-                    if (typeof stella !== 'undefined') {
-                        stella.clearCache();
-                    }
-                }
-                
-                // 预先显示默认内容，避免白屏
-                preRenderDefaultContent();
-                
-                try {
-                    // 使用EdgeOne Pages的KV存储API获取配置
-                    const config = {};
-                    
-                    // 首先尝试使用API端点获取配置
-                    try {
-                        // 添加时间戳参数避免缓存
-                        const timestamp = new Date().getTime();
-                        // 添加强制一致性参数
-                        const forceConsistency = forceRefresh ? '&force_consistency=1' : '';
-                        console.log(`尝试从API端点加载配置: /api/kv/config?t=${timestamp}${forceConsistency}`);
-                        
-                        const response = await fetch(`/api/kv/config?t=${timestamp}${forceConsistency}`, {
-                            method: 'GET',
-                            headers: {
-                                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                                'Pragma': 'no-cache',
-                                'Expires': '0'
-                            },
-                            credentials: 'same-origin'
-                        });
-                        
-                        console.log("API响应状态:", response.status, response.statusText);
-                        
-                        if (response.ok) {
-                            const data = await response.json();
-                            console.log("API响应数据:", data);
-                            
-                            if (data.value) {
-                                // 如果API返回了完整配置，直接使用
-                                const fullConfig = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
-                                console.log("从API端点加载完整配置成功:", fullConfig);
-                                
-                                // 应用配置
-                                applyConfig(fullConfig);
-                                
-                                // 显示成功消息
-                                showSuccess("配置加载成功！");
-                                
-                                return;
-                            } else {
-                                console.warn("API响应中没有找到value字段");
-                            }
-                        } else {
-                            console.warn("API响应不成功:", response.status, response.statusText);
-                        }
-                    } catch (apiError) {
-                        console.error("从API端点加载完整配置失败:", apiError);
-                    }
-                    
-                    // 如果API端点未返回完整配置，则尝试使用stella对象并行加载各个配置项
-                    if (typeof stella !== 'undefined') {
-                        console.log("使用stella对象并行加载配置...");
-                        
-                        try {
-                            // 并行获取各个配置项
-                            // 添加强制一致性参数
-                            const forceConsistencyParam = forceRefresh ? true : false;
-                            
-                            // 如果是强制刷新模式，先等待一小段时间，确保数据同步
-                            if (forceRefresh) {
-                                console.log("强制刷新模式，等待数据同步...");
-                                await new Promise(resolve => setTimeout(resolve, 1000));
-                            }
-                            
-                            const promises = [
-                                stella.get('hero-bg', 'text'),
-                                stella.get('hero-content-title', 'text'),
-                                stella.get('hero-content-description', 'text'),
-                                stella.get('services-description', 'json'),
-                                stella.get('featured-products-description', 'text'),
-                                stella.get('testimonials-description', 'json')
-                            ];
-                            
-                            const [heroBg, heroTitle, heroDesc, servicesDesc, featuredProductsDesc, testimonialsDesc] = await Promise.all(promises);
-                            
-                            // 组合配置
-                            config['hero-bg'] = heroBg;
-                            config['hero-content-title'] = heroTitle;
-                            config['hero-content-description'] = heroDesc;
-                            config['services-description'] = servicesDesc;
-                            config['featured-products-description'] = featuredProductsDesc;
-                            config['testimonials-description'] = testimonialsDesc;
-                            
-                            console.log("配置加载成功:", config);
-                            
-                            // 应用配置
-                            applyConfig(config);
-                            
-                            // 显示成功消息
-                            showSuccess("配置加载成功！");
-                        } catch (stellaError) {
-                            console.error("使用stella对象加载配置失败:", stellaError);
-                            throw stellaError;
-                        }
-                    } else {
-                        throw new Error("stella对象未定义，无法加载配置");
-                    }
-                } catch (error) {
-                    console.error(`加载配置失败:`, error);
-                    showError("配置加载失败。请确保KV存储已正确配置，或联系网站管理员。错误详情: " + error.message);
-                }
-            }
-            
-            // 预渲染默认内容
-            function preRenderDefaultContent() {
-                // 设置默认hero背景
-                document.getElementById('hero-bg').style.backgroundImage = `url('images/hero-bg.jpg')`;
-                
-                // 设置默认hero标题和描述
-                document.getElementById('hero-title').innerHTML = 'Crafting digital<br>experiences with purpose';
-                document.getElementById('hero-description').textContent = 'Strategy-driven design and technology for forward-thinking brands';
-                
-                // 设置默认服务描述
-                document.getElementById('services-description').textContent = 'We combine strategy, design, and technology to create effective digital solutions';
-                
-                // 设置默认服务卡片
-                const defaultServices = [
-                    {
-                        icon: 'fas fa-globe',
-                        title: 'Brand Identity',
-                        desc: 'We create unique visual systems that embody your brand values'
-                    },
-                    {
-                        icon: 'fas fa-code',
-                        title: 'Web Development',
-                        desc: 'Custom websites and applications built with modern technologies'
-                    },
-                    {
-                        icon: 'fas fa-mobile-alt',
-                        title: 'UX Design',
-                        desc: 'User-centered design that delivers intuitive digital experiences'
-                    }
-                ];
-                
-                const servicesGrid = document.getElementById('services-grid');
-                servicesGrid.innerHTML = ''; // 清空现有内容
-                
-                defaultServices.forEach(item => {
-                    const serviceCard = document.createElement('div');
-                    serviceCard.className = 'service-card';
-                    
-                    serviceCard.innerHTML = `
-                        <div class="service-icon">
-                            <i class="${item.icon}"></i>
-                        </div>
-                        <h3>${item.title}</h3>
-                        <p>${item.desc}</p>
-                    `;
-                    
-                    servicesGrid.appendChild(serviceCard);
-                });
-                
-                // 设置默认产品描述
-                document.getElementById('featured-products-description').textContent = 'A selection of our quality products across categories';
-                
-                // 设置默认testimonials描述
-                document.getElementById('testimonials-description').textContent = 'Hear from the businesses we have helped transform';
+                setTimeout(() => {
+                    statusDiv.style.opacity = '0';
+                    statusDiv.style.transition = 'opacity 0.5s';
+                    setTimeout(() => {
+                        document.body.removeChild(statusDiv);
+                    }, 500);
+                }, 3000);
             }
             
             // 显示错误信息
             function showError(message) {
-                // 移除任何现有的错误消息
-                const existingError = document.querySelector('.error-message');
-                if (existingError) existingError.remove();
-                
-                // 创建新的错误消息
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.innerHTML = `
-                    <div class="container">
-                        <div class="alert alert-danger">
-                            <h3>配置加载失败</h3>
-                            <p>${message}</p>
-                            <div class="error-actions">
-                                <button onclick="window.location.reload()" class="btn primary">刷新页面</button>
-                                <button onclick="forceRefreshPage()" class="btn secondary">强制刷新</button>
-                                <button onclick="window.location.href='admin.html'" class="btn secondary">管理配置</button>
-                                <button onclick="window.location.href='kv-test.html'" class="btn secondary">测试KV连接</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                document.body.insertBefore(errorMessage, document.body.firstChild);
-            }
-            
-            // 强制刷新页面，清除所有缓存
-            function forceRefreshPage() {
-                if (typeof stella !== 'undefined' && typeof stella.forceRefresh === 'function') {
-                    stella.forceRefresh();
-                } else {
-                    const currentUrl = new URL(window.location.href);
-                    currentUrl.searchParams.set('refresh', Date.now());
-                    window.location.href = currentUrl.toString();
-                }
+                showStatus(message, 'error');
             }
             
             // 显示成功信息
             function showSuccess(message) {
-                // 移除任何现有的成功消息
-                const existingSuccess = document.querySelector('.success-message');
-                if (existingSuccess) existingSuccess.remove();
-                
-                // 创建新的成功消息
-                const successMessage = document.createElement('div');
-                successMessage.className = 'success-message';
-                successMessage.innerHTML = `
-                    <div class="container">
-                        <div class="alert alert-success">
-                            <p>${message}</p>
-                        </div>
-                    </div>
-                `;
-                document.body.insertBefore(successMessage, document.body.firstChild);
-                
-                // 3秒后自动隐藏成功消息
-                setTimeout(() => {
-                    const msg = document.querySelector('.success-message');
-                    if (msg) {
-                        msg.style.opacity = '0';
-                        setTimeout(() => msg.remove(), 500);
+                showStatus(message, 'success');
+            }
+            
+            // 加载配置文件
+            async function loadConfig() {
+                try {
+                    const response = await fetch('config/index.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP错误: ${response.status}`);
                     }
-                }, 3000);
+                    const config = await response.json();
+                    applyConfig(config);
+                    showSuccess('配置加载成功！');
+                } catch (error) {
+                    console.error('加载配置文件失败:', error);
+                    showError('加载配置文件失败，请检查浏览器控制台了解详情');
+                }
             }
             
             // 应用配置到页面
             function applyConfig(config) {
-                // 设置hero背景
+                // 设置英雄区域背景
                 if (config['hero-bg']) {
-                    console.log("Setting background to:", config['hero-bg']);
-                    document.getElementById('hero-bg').style.backgroundImage = `url('${config['hero-bg']}')`;
+                    document.getElementById('hero-bg').style.backgroundImage = `url(${config['hero-bg']})`;
                 }
                 
-                // 设置hero标题
+                // 设置英雄区域标题
                 if (config['hero-content-title']) {
-                    console.log("Setting title to:", config['hero-content-title']);
                     document.getElementById('hero-title').innerHTML = config['hero-content-title'];
                 }
                 
-                // 设置hero描述
+                // 设置英雄区域描述
                 if (config['hero-content-description']) {
-                    console.log("Setting description to:", config['hero-content-description']);
                     document.getElementById('hero-description').textContent = config['hero-content-description'];
                 }
                 
-                // 设置services描述和卡片
+                // 设置服务描述
                 if (config['services-description']) {
-                    console.log("Setting services data:", config['services-description']);
-                    
-                    // 设置服务描述标题
-                    if (config['services-description'].title) {
+                    if (typeof config['services-description'] === 'string') {
+                        document.getElementById('services-description').textContent = config['services-description'];
+                    } else if (config['services-description'].title) {
                         document.getElementById('services-description').textContent = config['services-description'].title;
-                    }
-                    
-                    // 生成服务卡片
-                    if (config['services-description'].items && Array.isArray(config['services-description'].items)) {
-                        const servicesGrid = document.getElementById('services-grid');
-                        servicesGrid.innerHTML = ''; // 清空现有内容
                         
-                        config['services-description'].items.forEach(item => {
-                            const serviceCard = document.createElement('div');
-                            serviceCard.className = 'service-card';
+                        // 生成服务卡片
+                        if (config['services-description'].items && Array.isArray(config['services-description'].items)) {
+                            const servicesGrid = document.getElementById('services-grid');
+                            servicesGrid.innerHTML = ''; // 清空现有内容
                             
-                            serviceCard.innerHTML = `
-                                <div class="service-icon">
-                                    <i class="${item.icon || 'fas fa-star'}"></i>
-                                </div>
-                                <h3>${item.title || ''}</h3>
-                                <p>${item.desc || ''}</p>
-                            `;
-                            
-                            servicesGrid.appendChild(serviceCard);
-                        });
+                            config['services-description'].items.forEach(item => {
+                                const serviceCard = document.createElement('div');
+                                serviceCard.className = 'service-card';
+                                
+                                serviceCard.innerHTML = `
+                                    <div class="service-icon">
+                                        <i class="${item.icon || 'fas fa-star'}"></i>
+                                    </div>
+                                    <h3>${item.title || 'Service Title'}</h3>
+                                    <p>${item.desc || 'Service description goes here'}</p>
+                                `;
+                                
+                                servicesGrid.appendChild(serviceCard);
+                            });
+                        }
                     }
                 }
                 
-                // 设置featured products描述
+                // 设置精选产品描述
                 if (config['featured-products-description']) {
-                    console.log("Setting featured products description to:", config['featured-products-description']);
                     document.getElementById('featured-products-description').textContent = config['featured-products-description'];
                 }
                 
-                // 设置testimonials描述和轮播
+                // 设置客户评价
                 if (config['testimonials-description']) {
-                    console.log("Setting testimonials data:", config['testimonials-description']);
-                    
-                    // 设置评价描述标题
-                    if (config['testimonials-description'].title) {
+                    if (typeof config['testimonials-description'] === 'string') {
+                        document.getElementById('testimonials-description').textContent = config['testimonials-description'];
+                    } else if (config['testimonials-description'].title) {
                         document.getElementById('testimonials-description').textContent = config['testimonials-description'].title;
-                    }
-                    
-                    // 生成客户评价轮播
-                    if (config['testimonials-description'].items && Array.isArray(config['testimonials-description'].items)) {
-                        testimonialItems = config['testimonials-description'].items;
-                        initTestimonialsCarousel();
+                        
+                        // 生成客户评价轮播
+                        if (config['testimonials-description'].items && Array.isArray(config['testimonials-description'].items)) {
+                            const testimonialsCarousel = document.getElementById('testimonials-carousel');
+                            const carouselIndicators = document.getElementById('carousel-indicators');
+                            
+                            testimonialsCarousel.innerHTML = ''; // 清空现有内容
+                            carouselIndicators.innerHTML = ''; // 清空现有内容
+                            
+                            // 添加容器元素
+                            const testimonialContainer = document.createElement('div');
+                            testimonialContainer.className = 'testimonial-container';
+                            testimonialsCarousel.appendChild(testimonialContainer);
+                            
+                            config['testimonials-description'].items.forEach((item, index) => {
+                                // 创建轮播项
+                                const testimonialItem = document.createElement('div');
+                                testimonialItem.className = 'testimonial-item';
+                                if (index === 0) {
+                                    testimonialItem.classList.add('active');
+                                }
+                                
+                                testimonialItem.innerHTML = `
+                                    <div class="testimonial-content">
+                                        <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                                        <p class="quote">${item.quote || 'Testimonial quote goes here'}</p>
+                                        <div class="client-info">
+                                            <div class="client-image">
+                                                <img src="${item.avatar || 'images/default-avatar.jpg'}" alt="${item.name || 'Client'}">
+                                            </div>
+                                            <div class="client-details">
+                                                <h4>${item.name || 'Client Name'}</h4>
+                                                <p>${item.position || 'Position, Company'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                testimonialContainer.appendChild(testimonialItem);
+                                
+                                // 创建指示器
+                                const indicator = document.createElement('span');
+                                indicator.className = index === 0 ? 'indicator active' : 'indicator';
+                                indicator.setAttribute('data-index', index);
+                                carouselIndicators.appendChild(indicator);
+                                
+                                // 添加指示器点击事件
+                                indicator.addEventListener('click', function() {
+                                    showSlide(index);
+                                });
+                            });
+                            
+                            // 添加自动轮播功能
+                            let currentSlide = 0;
+                            const slides = testimonialContainer.querySelectorAll('.testimonial-item');
+                            const indicators = carouselIndicators.querySelectorAll('.indicator');
+                            let slideInterval = setInterval(nextSlide, 5000);
+                            
+                            // 显示指定幻灯片
+                            function showSlide(index) {
+                                // 重置自动轮播计时器
+                                clearInterval(slideInterval);
+                                slideInterval = setInterval(nextSlide, 5000);
+                                
+                                // 移除所有active类
+                                slides.forEach(slide => slide.classList.remove('active'));
+                                indicators.forEach(ind => ind.classList.remove('active'));
+                                
+                                // 添加active类到当前项
+                                currentSlide = index;
+                                slides[currentSlide].classList.add('active');
+                                indicators[currentSlide].classList.add('active');
+                                
+                                // 添加动画效果
+                                slides[currentSlide].style.animation = 'fadeIn 0.5s ease-in-out';
+                            }
+                            
+                            // 下一张幻灯片
+                            function nextSlide() {
+                                currentSlide = (currentSlide + 1) % slides.length;
+                                showSlide(currentSlide);
+                            }
+                            
+                            // 上一张幻灯片
+                            function prevSlide() {
+                                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                                showSlide(currentSlide);
+                            }
+                            
+                            // 添加滚轮控制
+                            testimonialContainer.addEventListener('wheel', function(event) {
+                                event.preventDefault();
+                                if (event.deltaY > 0) {
+                                    nextSlide();
+                                } else {
+                                    prevSlide();
+                                }
+                            });
+                            
+                            // 添加触摸控制
+                            let touchStartX = 0;
+                            let touchEndX = 0;
+                            
+                            testimonialContainer.addEventListener('touchstart', function(event) {
+                                touchStartX = event.changedTouches[0].screenX;
+                            }, false);
+                            
+                            testimonialContainer.addEventListener('touchend', function(event) {
+                                touchEndX = event.changedTouches[0].screenX;
+                                handleSwipe();
+                            }, false);
+                            
+                            function handleSwipe() {
+                                if (touchEndX < touchStartX) {
+                                    nextSlide();
+                                } else if (touchEndX > touchStartX) {
+                                    prevSlide();
+                                }
+                            }
+                            
+                            // 设置鼠标指针样式，提示可以滚动
+                            testimonialContainer.style.cursor = 'ns-resize';
+                            
+                            // 添加内联样式确保轮播正常显示
+                            const style = document.createElement('style');
+                            style.textContent = `
+                                .testimonial-item {
+                                    display: none;
+                                    animation: fadeIn 0.5s ease-in-out;
+                                }
+                                .testimonial-item.active {
+                                    display: block;
+                                }
+                                @keyframes fadeIn {
+                                    from {
+                                        opacity: 0;
+                                        transform: translateY(20px);
+                                    }
+                                    to {
+                                        opacity: 1;
+                                        transform: translateY(0);
+                                    }
+                                }
+                            `;
+                            document.head.appendChild(style);
+                        }
                     }
                 }
             }
             
-            // 初始化客户评价轮播
-            function initTestimonialsCarousel() {
-                if (testimonialItems.length === 0) return;
-                
-                console.log("Initializing testimonial carousel with", testimonialItems.length, "items:", testimonialItems);
-                
-                const carousel = document.getElementById('testimonials-carousel');
-                const indicators = document.getElementById('carousel-indicators');
-                
-                // 创建指示器
-                indicators.innerHTML = '';
-                testimonialItems.forEach((item, index) => {
-                    console.log(`Creating indicator for item ${index}:`, item.name);
-                    const indicator = document.createElement('span');
-                    indicator.className = 'carousel-dot';
-                    if (index === 0) indicator.classList.add('active');
-                    indicator.addEventListener('click', () => {
-                        currentTestimonialIndex = index;
-                        updateTestimonialCarousel();
-                    });
-                    indicators.appendChild(indicator);
-                });
-                
-                // 初始显示第一个评价
-                updateTestimonialCarousel();
-                
-                // 设置自动轮播
-                setInterval(() => {
-                    currentTestimonialIndex = (currentTestimonialIndex + 1) % testimonialItems.length;
-                    console.log("Auto-advancing to testimonial", currentTestimonialIndex);
-                    updateTestimonialCarousel();
-                }, 5000);
-            }
-            
-            // 更新轮播显示
-            function updateTestimonialCarousel() {
-                if (testimonialItems.length === 0) return;
-                
-                console.log("Updating carousel to show item", currentTestimonialIndex, "of", testimonialItems.length);
-                
-                const item = testimonialItems[currentTestimonialIndex];
-                console.log("Current testimonial:", item);
-                
-                const carousel = document.getElementById('testimonials-carousel');
-                
-                // 更新轮播内容
-                const testimonialContent = document.createElement('div');
-                testimonialContent.className = 'testimonial-content';
-                
-                // 检查是否有自定义头像
-                const avatarUrl = item.avatar || 'images/default-avatar.jpg';
-                console.log("Using avatar:", avatarUrl);
-                
-                testimonialContent.innerHTML = `
-                    <div class="testimonial-quote">
-                        <i class="fas fa-quote-left"></i>
-                    </div>
-                    <p>${item.quote}</p>
-                    <div class="client-info">
-                        <div class="client-image">
-                            <img src="${avatarUrl}" alt="${item.name}">
-                        </div>
-                        <div class="client-details">
-                            <h4>${item.name}</h4>
-                            <p>${item.position}</p>
-                        </div>
-                    </div>
-                `;
-                
-                // 替换现有内容
-                const existingContent = carousel.querySelector('.testimonial-content');
-                if (existingContent) {
-                    carousel.replaceChild(testimonialContent, existingContent);
-                } else {
-                    carousel.insertBefore(testimonialContent, carousel.firstChild);
-                }
-                
-                // 更新指示器
-                const dots = document.querySelectorAll('.carousel-dot');
-                console.log("Updating indicators, found", dots.length, "dots");
-                dots.forEach((dot, index) => {
-                    if (index === currentTestimonialIndex) {
-                        dot.classList.add('active');
-                    } else {
-                        dot.classList.remove('active');
-                    }
-                });
-            }
-            
-            // 开始加载配置
+            // 加载配置
             loadConfig();
         });
     </script>
