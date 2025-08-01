@@ -7,12 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- 模块化样式 -->
-    <link rel="stylesheet" href="admin/styles/core.css">
-    <link rel="stylesheet" href="admin/styles/forms.css">
-    <link rel="stylesheet" href="admin/styles/collapsible.css">
+    <link rel="stylesheet" href="styles/core.css">
+    <link rel="stylesheet" href="styles/forms.css">
+    <link rel="stylesheet" href="styles/collapsible.css">
     
     <!-- 模块加载器 -->
-    <script src="js/admin/loader.js"></script>
+    <script src="../js/admin/loader.js"></script>
 </head>
 <body>
     <div class="admin-container">
@@ -172,8 +172,27 @@
             showMessage('auth-messages', '正在验证...', 'info');
 
             try {
+                // 等待模块加载完成
                 if (!window.enhancedAdminConfig) {
-                    throw new Error('配置管理模块未加载');
+                    showMessage('auth-messages', '配置管理模块正在加载中，请稍候...', 'info');
+                    // 等待模块加载
+                    await new Promise(resolve => {
+                        const checkInterval = setInterval(() => {
+                            if (window.enhancedAdminConfig) {
+                                clearInterval(checkInterval);
+                                resolve();
+                            }
+                        }, 100);
+                        // 10秒超时
+                        setTimeout(() => {
+                            clearInterval(checkInterval);
+                            resolve();
+                        }, 10000);
+                    });
+                }
+
+                if (!window.enhancedAdminConfig) {
+                    throw new Error('配置管理模块加载失败，请刷新页面重试');
                 }
 
                 const isValid = await window.enhancedAdminConfig.validateCredentials(username, password);
@@ -229,6 +248,10 @@
             showMessage('editor-messages', '正在加载配置...', 'info');
 
             try {
+                if (!window.enhancedAdminConfig) {
+                    throw new Error('配置管理模块未加载');
+                }
+                
                 const config = await window.enhancedAdminConfig.getConfig(configType);
                 currentConfigData = config;
                 
@@ -255,6 +278,11 @@
         async function saveConfig() {
             if (!currentConfigType || !userCredentials) {
                 showMessage('editor-messages', '没有可保存的配置', 'error');
+                return;
+            }
+
+            if (!window.enhancedAdminConfig) {
+                showMessage('editor-messages', '配置管理模块未加载，请刷新页面', 'error');
                 return;
             }
 

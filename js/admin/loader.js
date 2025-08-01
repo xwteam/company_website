@@ -7,30 +7,58 @@ class AdminModuleLoader {
     constructor() {
         this.loadedModules = new Set();
         this.loadingPromises = new Map();
+        this.basePath = this.detectBasePath();
+    }
+
+    // 自动检测基础路径
+    detectBasePath() {
+        const currentScript = document.currentScript;
+        if (currentScript) {
+            const scriptPath = currentScript.src;
+            if (scriptPath.includes('/admin/')) {
+                // 从admin目录调用，需要返回上级目录
+                return '../';
+            }
+        }
+        // 从根目录调用
+        return '';
+    }
+
+    // 解析相对路径
+    resolvePath(path) {
+        if (path.startsWith('js/admin/')) {
+            return this.basePath + path;
+        }
+        if (path.startsWith('js/')) {
+            return this.basePath + path;
+        }
+        return path;
     }
 
     // 加载JavaScript模块
     async loadScript(src) {
-        if (this.loadedModules.has(src)) {
+        const resolvedSrc = this.resolvePath(src);
+        
+        if (this.loadedModules.has(resolvedSrc)) {
             return Promise.resolve();
         }
 
-        if (this.loadingPromises.has(src)) {
-            return this.loadingPromises.get(src);
+        if (this.loadingPromises.has(resolvedSrc)) {
+            return this.loadingPromises.get(resolvedSrc);
         }
 
         const promise = new Promise((resolve, reject) => {
             const script = document.createElement('script');
-            script.src = src;
+            script.src = resolvedSrc;
             script.onload = () => {
-                this.loadedModules.add(src);
+                this.loadedModules.add(resolvedSrc);
                 resolve();
             };
-            script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+            script.onerror = () => reject(new Error(`Failed to load script: ${resolvedSrc}`));
             document.head.appendChild(script);
         });
 
-        this.loadingPromises.set(src, promise);
+        this.loadingPromises.set(resolvedSrc, promise);
         return promise;
     }
 
