@@ -129,6 +129,21 @@ class AdminModuleLoader {
             await this.loadScript('js/config-fallback.js');
             console.log('✅ 配置管理库加载完成');
 
+            // 4.1 等待配置管理器初始化完成
+            if (window.fallbackConfigManager) {
+                console.log('🔍 检查API连接状态...');
+                try {
+                    const apiAvailable = await window.fallbackConfigManager.checkApiAvailability();
+                    if (!apiAvailable) {
+                        console.warn('⚠️ API不可用，管理功能可能受限');
+                    } else {
+                        console.log('✅ API连接正常');
+                    }
+                } catch (error) {
+                    console.warn('⚠️ API状态检查失败:', error.message);
+                }
+            }
+
             // 5. 触发初始化完成事件
             document.dispatchEvent(new CustomEvent('adminModulesLoaded'));
             console.log('🎉 管理面板模块初始化完成！');
