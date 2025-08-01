@@ -22,11 +22,34 @@ const CONFIG_FILES = {
     'footer': 'config/footer.json'
 };
 
-// 简单的API密钥验证（通过环境变量配置）
+// 用户名密码验证（通过环境变量配置）
+function validateAuth(request) {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
+        return false;
+    }
+    
+    try {
+        // 解码 Base64 编码的用户名:密码
+        const encoded = authHeader.slice(6); // 去掉 "Basic "
+        const decoded = atob(encoded);
+        const [username, password] = decoded.split(':');
+        
+        // 从环境变量获取有效的用户名密码
+        const validUsername = process.env.ADMIN_USERNAME || 'admin';
+        const validPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        
+        return username === validUsername && password === validPassword;
+    } catch (error) {
+        return false;
+    }
+}
+
+// 兼容旧的API密钥验证（可选）
 function validateApiKey(request) {
     const apiKey = request.headers.get('X-API-Key');
-    const validKey = process.env.API_SECRET || 'default-secret-key';
-    return apiKey === validKey;
+    const validKey = process.env.API_SECRET;
+    return validKey && apiKey === validKey;
 }
 
 // Gitee API调用函数
@@ -99,11 +122,11 @@ export default {
         }
 
         try {
-            // 验证API密钥（保护接口安全）
-            if (!validateApiKey(request)) {
+            // 验证身份（支持用户名密码或API密钥）
+            if (!validateAuth(request) && !validateApiKey(request)) {
                 return setCorsHeaders(new Response(JSON.stringify({ 
                     error: 'Unauthorized',
-                    message: 'Invalid API key'
+                    message: 'Invalid credentials'
                 }), { 
                     status: 401,
                     headers: { 'Content-Type': 'application/json' }
