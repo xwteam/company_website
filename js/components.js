@@ -92,14 +92,10 @@ class ComponentLoader {
         }
     }
     
-    // 加载并应用页脚配置
+    // 加载并应用页脚配置（KV优先，降级到JSON）
     async loadFooterConfig() {
         try {
-            const response = await fetch('config/footer.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const footerConfig = await response.json();
+            const footerConfig = await window.loadConfig('footer');
             this.applyFooterConfig(footerConfig);
             return true;
         } catch (error) {
