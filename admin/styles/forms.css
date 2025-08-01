@@ -36,6 +36,7 @@
 
 /* 输入框样式 */
 input[type="text"],
+input[type="password"],
 input[type="url"],
 input[type="email"],
 input[type="tel"],
@@ -58,6 +59,47 @@ select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 密码输入容器 */
+.password-input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.password-input-container input {
+    padding-right: 45px;
+    margin-bottom: 0;
+}
+
+/* 密码切换按钮 */
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+.password-toggle:focus {
+    outline: none;
+    color: var(--primary-color);
 }
 
 input[readonly] {

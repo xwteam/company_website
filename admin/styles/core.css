@@ -274,6 +274,8 @@ body {
     padding: 0.75rem 1rem;
     border-radius: 6px;
     margin-bottom: 0.5rem;
+    white-space: pre-line;
+    line-height: 1.5;
 }
 
 .alert-success {
