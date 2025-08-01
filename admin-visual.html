@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可视化配置管理中心 - Brand</title>
+    <link rel="stylesheet" href="css/fontawesome/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .auth-section {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .main-panel {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-body {
+            display: flex;
+            min-height: 70vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding: 20px;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-height: 70vh;
+        }
+
+        .config-list {
+            list-style: none;
+        }
+
+        .config-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .config-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .config-item.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .config-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-group h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group h5 {
+            color: #6c757d;
+            margin: 15px 0 10px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            margin-top: 12px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .array-editor {
+            margin-top: 15px;
+        }
+
+        .array-container {
+            margin-bottom: 15px;
+        }
+
+        .array-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .item-controls {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background: #c82333;
+        }
+
+        .item-content {
+            padding: 15px;
+        }
+
+        .item-content label {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .add-item {
+            width: 100%;
+            justify-content: center;
+            border: 2px dashed #dee2e6;
+            background: transparent;
+            color: #6c757d;
+        }
+
+        .add-item:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .action-buttons {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px 30px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #cce7ff;
+            border: 1px solid #b3d9ff;
+            color: #004085;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .json-editor {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            min-height: 400px;
+            width: 100%;
+            resize: vertical;
+        }
+
+        .editor-mode-toggle {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            background: white;
+            color: #6c757d;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .panel-body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+            
+            .content-area {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-palette"></i> 可视化配置管理中心</h1>
+            <p>用表单轻松编辑网站配置，告别复杂的JSON</p>
+        </div>
+
+        <!-- 登录区域 -->
+        <div id="auth-section" class="auth-section">
+            <h2><i class="fas fa-lock"></i> 管理员登录</h2>
+            <div id="auth-messages"></div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">用户名</label>
+                <input type="text" id="username" placeholder="admin" value="admin" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">密码</label>
+                <input type="password" id="password" placeholder="admin123" value="admin123" style="width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 6px;">
+            </div>
+            
+            <button onclick="authenticate()" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> 登录管理后台
+            </button>
+        </div>
+
+        <!-- 主面板 -->
+        <div id="main-panel" class="main-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-edit"></i> 配置编辑器</h2>
+                <div>
+                    <span id="current-user">欢迎，admin</span>
+                    <button onclick="logout()" class="btn btn-warning" style="margin-left: 15px;">
+                        <i class="fas fa-sign-out-alt"></i> 退出
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <!-- 侧边栏 -->
+                <div class="sidebar">
+                    <h3 style="margin-bottom: 15px; color: #495057;">
+                        <i class="fas fa-list"></i> 配置文件
+                    </h3>
+                    <ul class="config-list">
+                        <li class="config-item" onclick="selectConfig('index')" data-config="index">
+                            <i class="fas fa-home"></i>
+                            <span>首页配置</span>
+                        </li>
+                        <li class="config-item" onclick="selectConfig('products')" data-config="products">
+                            <i class="fas fa-box"></i>
+                            <span>产品配置</span>
+                        </li>
+                        <li class="config-item" onclick="selectConfig('services')" data-config="services">
+                            <i class="fas fa-tools"></i>
+                            <span>服务配置</span>
+                        </li>
+                        <li class="config-item" onclick="selectConfig('partners')" data-config="partners">
+                            <i class="fas fa-handshake"></i>
+                            <span>合作伙伴</span>
+                        </li>
+                        <li class="config-item" onclick="selectConfig('about')" data-config="about">
+                            <i class="fas fa-info-circle"></i>
+                            <span>关于我们</span>
+                        </li>
+                        <li class="config-item" onclick="selectConfig('contact')" data-config="contact">
+                            <i class="fas fa-phone"></i>
+                            <span>联系我们</span>
+                        </li>
+                        <li class="config-item" onclick="selectConfig('footer')" data-config="footer">
+                            <i class="fas fa-anchor"></i>
+                            <span>页脚配置</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 内容区域 -->
+                <div class="content-area">
+                    <div id="editor-placeholder" style="text-align: center; padding: 60px 20px; color: #6c757d;">
+                        <i class="fas fa-arrow-left" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <h3>选择一个配置文件开始编辑</h3>
+                        <p>从左侧选择要编辑的配置文件，系统会自动生成对应的表单</p>
+                    </div>
+
+                    <div id="editor-content" class="hidden">
+                        <div id="editor-messages"></div>
+                        
+                        <div class="editor-mode-toggle">
+                            <span style="font-weight: 600; color: #495057;">编辑模式：</span>
+                            <button class="mode-btn active" id="form-mode-btn" onclick="switchMode('form')">
+                                <i class="fas fa-edit"></i> 表单编辑
+                            </button>
+                            <button class="mode-btn" id="json-mode-btn" onclick="switchMode('json')">
+                                <i class="fas fa-code"></i> JSON编辑
+                            </button>
+                        </div>
+
+                        <form id="config-form">
+                            <div id="form-container">
+                                <!-- 表单内容将在这里动态生成 -->
+                            </div>
+                            
+                            <div id="json-container" class="hidden">
+                                <textarea id="json-editor" class="json-editor" placeholder="JSON配置内容..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="action-buttons hidden" id="action-buttons">
+                <button type="button" onclick="previewChanges()" class="btn btn-secondary">
+                    <i class="fas fa-eye"></i> 预览更改
+                </button>
+                <button type="button" onclick="resetForm()" class="btn btn-warning">
+                    <i class="fas fa-undo"></i> 重置
+                </button>
+                <button type="button" onclick="saveConfig()" class="btn btn-success">
+                    <i class="fas fa-save"></i> 保存配置
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载必要的脚本 -->
+    <script src="js/config-fallback.js"></script>
+    <script src="js/form-editor.js"></script>
+    <script>
+        let currentConfigKey = null;
+        let currentConfig = null;
+        let currentMode = 'form';
+        let userCredentials = null;
+
+        // 身份验证
+        async function authenticate() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showMessage('auth-messages', '请输入用户名和密码', 'error');
+                return;
+            }
+
+            showMessage('auth-messages', '正在验证...', 'info');
+
+            try {
+                const isValid = await window.enhancedAdminConfig.validateCredentials(username, password);
+                if (isValid) {
+                    userCredentials = `Basic ${btoa(`${username}:${password}`)}`;
+                    document.getElementById('current-user').textContent = `欢迎，${username}`;
+                    showLoginSuccess();
+                } else {
+                    showMessage('auth-messages', '用户名或密码错误', 'error');
+                }
+            } catch (error) {
+                // 降级到本地模式
+                if (username === 'admin' && password === 'admin123') {
+                    userCredentials = 'local-mode';
+                    showLoginSuccess();
+                    showMessage('editor-messages', '⚠️ API不可用，使用本地模式（功能受限）', 'warning');
+                } else {
+                    showMessage('auth-messages', '本地模式下请使用：admin / admin123', 'error');
+                }
+            }
+        }
+
+        // 显示登录成功
+        function showLoginSuccess() {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('main-panel').style.display = 'block';
+        }
+
+        // 选择配置文件
+        async function selectConfig(configKey) {
+            // 更新UI状态
+            document.querySelectorAll('.config-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-config="${configKey}"]`).classList.add('active');
+
+            // 显示加载状态
+            showMessage('editor-messages', '正在加载配置...', 'info');
+            document.getElementById('editor-placeholder').style.display = 'none';
+            document.getElementById('editor-content').classList.remove('hidden');
+            document.getElementById('action-buttons').classList.remove('hidden');
+
+            try {
+                // 加载配置数据
+                const config = await window.loadConfig(configKey);
+                currentConfigKey = configKey;
+                currentConfig = config;
+
+                // 生成表单
+                generateConfigForm();
+                showMessage('editor-messages', '配置加载成功', 'success');
+            } catch (error) {
+                showMessage('editor-messages', `配置加载失败: ${error.message}`, 'error');
+                console.error('Config load error:', error);
+            }
+        }
+
+        // 生成配置表单
+        function generateConfigForm() {
+            if (!currentConfig || !currentConfigKey) return;
+
+            const formContainer = document.getElementById('form-container');
+            const jsonEditor = document.getElementById('json-editor');
+
+            try {
+                // 生成表单HTML
+                const formHTML = window.configFormEditor.generateForm(currentConfigKey, currentConfig);
+                formContainer.innerHTML = formHTML;
+
+                // 设置JSON编辑器内容
+                jsonEditor.value = JSON.stringify(currentConfig, null, 2);
+
+                // 切换到表单模式
+                switchMode('form');
+            } catch (error) {
+                console.error('Form generation error:', error);
+                showMessage('editor-messages', `表单生成失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 切换编辑模式
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // 更新按钮状态
+            document.getElementById('form-mode-btn').classList.toggle('active', mode === 'form');
+            document.getElementById('json-mode-btn').classList.toggle('active', mode === 'json');
+            
+            // 显示/隐藏对应容器
+            document.getElementById('form-container').classList.toggle('hidden', mode !== 'form');
+            document.getElementById('json-container').classList.toggle('hidden', mode !== 'json');
+        }
+
+        // 保存配置
+        async function saveConfig() {
+            if (!currentConfigKey) {
+                showMessage('editor-messages', '请先选择一个配置文件', 'warning');
+                return;
+            }
+
+            showMessage('editor-messages', '正在保存配置...', 'info');
+
+            try {
+                let configData;
+
+                if (currentMode === 'form') {
+                    // 从表单获取数据
+                    const formData = new FormData(document.getElementById('config-form'));
+                    configData = window.configFormEditor.formDataToConfig(formData);
+                } else {
+                    // 从JSON编辑器获取数据
+                    const jsonContent = document.getElementById('json-editor').value;
+                    configData = JSON.parse(jsonContent);
+                }
+
+                // 验证配置数据
+                if (!configData || typeof configData !== 'object') {
+                    throw new Error('配置数据格式错误');
+                }
+
+                if (userCredentials === 'local-mode') {
+                    // 本地模式 - 只更新内存中的配置
+                    currentConfig = configData;
+                    showMessage('editor-messages', '✅ 本地保存成功（仅内存中）', 'success');
+                } else {
+                    // 在线模式 - 保存到服务器
+                    const result = await window.enhancedAdminConfig.saveConfig(
+                        currentConfigKey, 
+                        configData, 
+                        userCredentials
+                    );
+                    
+                    if (result.success) {
+                        currentConfig = configData;
+                        let message = '✅ 保存成功！';
+                        if (result.kv.success && result.gitee.success) {
+                            message += ' KV存储和Gitee都已更新。';
+                        } else if (result.kv.success) {
+                            message += ' KV存储已更新，网站立即生效。';
+                        }
+                        showMessage('editor-messages', message, 'success');
+                    } else {
+                        throw new Error('保存失败');
+                    }
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                if (error instanceof SyntaxError) {
+                    showMessage('editor-messages', `JSON格式错误: ${error.message}`, 'error');
+                } else {
+                    showMessage('editor-messages', `保存失败: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // 预览更改
+        function previewChanges() {
+            if (!currentConfigKey) return;
+
+            try {
+                let configData;
+                
+                if (currentMode === 'form') {
+                    const formData = new FormData(document.getElementById('config-form'));
+                    configData = window.configFormEditor.formDataToConfig(formData);
+                } else {
+                    const jsonContent = document.getElementById('json-editor').value;
+                    configData = JSON.parse(jsonContent);
+                }
+
+                // 在新窗口显示预览
+                const previewWindow = window.open('', '_blank', 'width=800,height=600');
+                previewWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>配置预览 - ${currentConfigKey}</title>
+                        <style>
+                            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; }
+                            .header { background: #667eea; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+                            pre { background: #f8f9fa; padding: 20px; border-radius: 8px; overflow: auto; }
+                            .changed { background: #fff3cd; padding: 2px 6px; border-radius: 4px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>配置预览: ${currentConfigKey}.json</h1>
+                            <p>以下是您即将保存的配置内容</p>
+                        </div>
+                        <pre>${JSON.stringify(configData, null, 2)}</pre>
+                    </body>
+                    </html>
+                `);
+            } catch (error) {
+                showMessage('editor-messages', `预览失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 重置表单
+        function resetForm() {
+            if (!currentConfig) return;
+            
+            if (confirm('确定要重置所有更改吗？未保存的修改将会丢失。')) {
+                generateConfigForm();
+                showMessage('editor-messages', '表单已重置', 'info');
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出管理后台吗？')) {
+                userCredentials = null;
+                currentConfigKey = null;
+                currentConfig = null;
+                
+                document.getElementById('auth-section').style.display = 'block';
+                document.getElementById('main-panel').style.display = 'none';
+                document.getElementById('editor-placeholder').style.display = 'block';
+                document.getElementById('editor-content').classList.add('hidden');
+                document.getElementById('action-buttons').classList.add('hidden');
+                
+                // 重置表单
+                document.getElementById('username').value = 'admin';
+                document.getElementById('password').value = 'admin123';
+                
+                // 清除选中状态
+                document.querySelectorAll('.config-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                showMessage('auth-messages', '已安全退出', 'info');
+            }
+        }
+
+        // 显示消息
+        function showMessage(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            const alertClass = `alert-${type === 'error' ? 'error' : type}`;
+            const iconClass = {
+                'success': 'fas fa-check-circle',
+                'error': 'fas fa-exclamation-circle',
+                'warning': 'fas fa-exclamation-triangle',
+                'info': 'fas fa-info-circle'
+            }[type] || 'fas fa-info-circle';
+
+            container.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i class="${iconClass}"></i>
+                    <div>${message}</div>
+                </div>
+            `;
+
+            // 成功消息3秒后自动清除
+            if (type === 'success') {
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 3000);
+            }
+        }
+
+        // 页面加载时的事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enter键快捷登录
+            document.getElementById('username').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('password').focus();
+                }
+            });
+            
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    authenticate();
+                }
+            });
+
+            // 检查是否已登录
+            const savedCredentials = window.enhancedAdminConfig ? window.enhancedAdminConfig.getUsername() : null;
+            if (savedCredentials) {
+                // 尝试自动登录
+                window.enhancedAdminConfig.listConfigs().then(() => {
+                    userCredentials = 'auto';
+                    document.getElementById('current-user').textContent = `欢迎，${savedCredentials}`;
+                    showLoginSuccess();
+                }).catch(() => {
+                    // 自动登录失败，清除凭据
+                    if (window.enhancedAdminConfig.logout) {
+                        window.enhancedAdminConfig.logout();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

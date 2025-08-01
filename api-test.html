@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 连接测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+        }
+        button:hover { background: #0056b3; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 API 连接测试工具</h1>
+        <p>用于诊断API接口连接问题的测试工具</p>
+
+        <div id="results"></div>
+
+        <h2>测试选项</h2>
+        <button onclick="testBasicAPI()">测试基础API</button>
+        <button onclick="testConfigAPI()">测试配置API</button>
+        <button onclick="testAuthAPI()">测试认证API</button>
+        <button onclick="runAllTests()">运行所有测试</button>
+        <button onclick="clearResults()">清除结果</button>
+
+        <h2>手动测试</h2>
+        <div>
+            <label>用户名：</label>
+            <input type="text" id="username" value="admin" style="margin: 5px; padding: 5px;">
+        </div>
+        <div>
+            <label>密码：</label>
+            <input type="password" id="password" value="admin123" style="margin: 5px; padding: 5px;">
+        </div>
+        <button onclick="testManualAuth()">手动测试认证</button>
+    </div>
+
+    <script>
+        let testCount = 0;
+
+        function addResult(title, status, content) {
+            testCount++;
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-item ${status}`;
+            div.innerHTML = `
+                <h3>测试 ${testCount}: ${title}</h3>
+                <pre>${content}</pre>
+                <small>时间: ${new Date().toLocaleString()}</small>
+            `;
+            results.appendChild(div);
+            div.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function testBasicAPI() {
+            try {
+                addResult('基础API测试', 'info', '正在测试 /api/test 接口...');
+                
+                const response = await fetch('/api/test', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const responseText = await response.text();
+                let content = `状态码: ${response.status}\n`;
+                content += `Content-Type: ${response.headers.get('content-type')}\n\n`;
+                
+                try {
+                    const data = JSON.parse(responseText);
+                    content += `响应数据:\n${JSON.stringify(data, null, 2)}`;
+                    addResult('基础API测试', 'success', content);
+                } catch (e) {
+                    content += `响应内容 (非JSON):\n${responseText}`;
+                    addResult('基础API测试', 'error', content);
+                }
+            } catch (error) {
+                addResult('基础API测试', 'error', `请求失败: ${error.message}`);
+            }
+        }
+
+        async function testConfigAPI() {
+            try {
+                addResult('配置API测试', 'info', '正在测试 /api/config/list 接口...');
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+
+                const response = await fetch('/api/config/list', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authHeader
+                    }
+                });
+
+                const responseText = await response.text();
+                let content = `状态码: ${response.status}\n`;
+                content += `Content-Type: ${response.headers.get('content-type')}\n\n`;
+                
+                try {
+                    const data = JSON.parse(responseText);
+                    content += `响应数据:\n${JSON.stringify(data, null, 2)}`;
+                    addResult('配置API测试', response.ok ? 'success' : 'error', content);
+                } catch (e) {
+                    content += `响应内容 (非JSON):\n${responseText}`;
+                    addResult('配置API测试', 'error', content);
+                }
+            } catch (error) {
+                addResult('配置API测试', 'error', `请求失败: ${error.message}`);
+            }
+        }
+
+        async function testAuthAPI() {
+            try {
+                addResult('认证API测试', 'info', '正在测试认证功能...');
+                
+                // 测试无认证
+                let response = await fetch('/api/config/list', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                let content = `无认证测试:\n状态码: ${response.status} (应该是401)\n\n`;
+                
+                // 测试错误认证
+                response = await fetch('/api/config/list', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa('wrong:wrong')
+                    }
+                });
+                
+                content += `错误认证测试:\n状态码: ${response.status} (应该是401)\n\n`;
+                
+                // 测试正确认证
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                response = await fetch('/api/config/list', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Basic ${btoa(`${username}:${password}`)}`
+                    }
+                });
+                
+                content += `正确认证测试:\n状态码: ${response.status} (应该是200)`;
+                
+                addResult('认证API测试', 'info', content);
+            } catch (error) {
+                addResult('认证API测试', 'error', `请求失败: ${error.message}`);
+            }
+        }
+
+        async function testManualAuth() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                addResult('手动认证测试', 'error', '请输入用户名和密码');
+                return;
+            }
+            
+            await testConfigAPI();
+        }
+
+        async function runAllTests() {
+            clearResults();
+            addResult('开始测试', 'info', '运行所有API测试...');
+            
+            await testBasicAPI();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testAuthAPI();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testConfigAPI();
+            
+            addResult('测试完成', 'success', '所有测试已完成，请查看上面的结果');
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            testCount = 0;
+        }
+
+        // 页面加载时显示当前环境信息
+        window.addEventListener('load', function() {
+            const info = `当前环境信息:
+域名: ${window.location.origin}
+路径: ${window.location.pathname}
+用户代理: ${navigator.userAgent}
+            `;
+            addResult('环境信息', 'info', info);
+        });
+    </script>
+</body>
+</html>
