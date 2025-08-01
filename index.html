@@ -455,16 +455,47 @@
                                 }
                                 .testimonial-content {
                                     background-color: transparent;
+                                    text-align: center;
+                                    max-width: 700px;
+                                    margin: 0 auto;
+                                }
+                                .testimonial-content::before {
+                                    content: '';
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    bottom: 0;
+                                    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+                                    z-index: -1;
+                                    border-radius: 8px;
                                 }
                                 .testimonial-container {
                                     background-color: transparent;
                                     box-shadow: none;
+                                    max-width: 800px;
+                                    width: 100%;
+                                    margin-left: auto;
+                                    margin-right: auto;
+                                }
+                                .testimonials-carousel {
+                                    display: flex;
+                                    justify-content: center;
+                                    width: 100%;
+                                }
+                                .carousel-indicators {
+                                    display: flex;
+                                    justify-content: center;
+                                    margin-top: 30px;
+                                    width: 100%;
                                 }
                                 .quote-icon {
                                     font-size: 36px;
                                     color: var(--primary-color);
                                     opacity: 0.3;
                                     margin-bottom: 15px;
+                                    text-align: center;
+                                    display: block;
                                 }
                                 .testimonial-content .quote {
                                     font-size: 18px;
@@ -472,6 +503,12 @@
                                     font-style: italic;
                                     margin-bottom: 30px;
                                     color: #333;
+                                    text-align: center;
+                                }
+                                .client-info {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
                                 }
                                 @keyframes fadeIn {
                                     from {
