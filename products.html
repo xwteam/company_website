@@ -107,6 +107,7 @@
     <!-- 页脚容器 -->
     <div id="footer-container"></div>
 
+    <script src="js/secure-config.js"></script>
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
     
@@ -119,11 +120,10 @@
         let itemsPerPage = 9; // 每页显示的产品数量
         let activeFilter = 'all'; // 当前激活的筛选器
         
-        // 加载products配置文件
+        // 加载products配置文件（KV优先，降级到JSON）
         async function loadProductsConfig() {
             try {
-                const response = await fetch('config/products.json');
-                const config = await response.json();
+                const config = await window.loadConfig('products');
                 
                 // 更新页面标题
                 if (config['page-header']) {

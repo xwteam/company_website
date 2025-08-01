@@ -121,6 +121,7 @@
     <!-- 页脚容器 -->
     <div id="footer-container"></div>
 
+    <script src="js/secure-config.js"></script>
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
     
@@ -169,14 +170,10 @@
                 showStatus(message, 'success');
             }
             
-            // 加载配置文件
+            // 加载配置文件（KV优先，降级到JSON）
             async function loadConfig() {
                 try {
-                    const response = await fetch('config/index.json');
-                    if (!response.ok) {
-                        throw new Error(`HTTP错误: ${response.status}`);
-                    }
-                    const config = await response.json();
+                    const config = await window.loadConfig('index');
                     applyConfig(config);
                     // 配置加载成功，无需显示提示
                 } catch (error) {

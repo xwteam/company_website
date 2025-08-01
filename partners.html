@@ -84,14 +84,14 @@
     <!-- 页脚容器 -->
     <div id="footer-container"></div>
 
+    <script src="js/secure-config.js"></script>
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
     <script>
-        // 加载partners配置文件
+        // 加载partners配置文件（KV优先，降级到JSON）
         async function loadPartnersConfig() {
             try {
-                const response = await fetch('config/partners.json');
-                const config = await response.json();
+                const config = await window.loadConfig('partners');
                 
                 // 更新页面标题
                 if (config['page-header']) {
