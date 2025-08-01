@@ -579,22 +579,39 @@
             showMessage('auth-messages', '正在验证...', 'info');
 
             try {
+                // 检查必要的依赖是否加载
+                if (!window.enhancedAdminConfig) {
+                    throw new Error('管理配置模块未加载');
+                }
+
                 const isValid = await window.enhancedAdminConfig.validateCredentials(username, password);
                 if (isValid) {
+                    // 检查是否使用了降级模式
+                    const fallbackMode = window.enhancedAdminConfig.getFallbackMode ? window.enhancedAdminConfig.getFallbackMode() : false;
+                    
                     userCredentials = `Basic ${btoa(`${username}:${password}`)}`;
                     document.getElementById('current-user').textContent = `欢迎，${username}`;
                     showLoginSuccess();
+                    
+                    if (fallbackMode) {
+                        showMessage('editor-messages', '⚠️ API不可用，使用本地模式（功能受限）', 'warning');
+                    } else {
+                        showMessage('editor-messages', '✅ 连接正常，所有功能可用', 'success');
+                    }
                 } else {
-                    showMessage('auth-messages', '用户名或密码错误', 'error');
+                    showMessage('auth-messages', '用户名或密码错误，请检查后重试', 'error');
                 }
             } catch (error) {
-                // 降级到本地模式
+                console.error('登录验证失败:', error);
+                
+                // 最后的降级方案
                 if (username === 'admin' && password === 'admin123') {
                     userCredentials = 'local-mode';
+                    document.getElementById('current-user').textContent = `欢迎，${username}`;
                     showLoginSuccess();
-                    showMessage('editor-messages', '⚠️ API不可用，使用本地模式（功能受限）', 'warning');
+                    showMessage('editor-messages', '⚠️ 系统异常，使用紧急本地模式（功能受限）', 'warning');
                 } else {
-                    showMessage('auth-messages', '本地模式下请使用：admin / admin123', 'error');
+                    showMessage('auth-messages', `登录失败: ${error.message}。紧急模式请使用 admin / admin123`, 'error');
                 }
             }
         }
