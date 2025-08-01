@@ -216,8 +216,10 @@
         top: 70px;
         left: 0;
         right: 0;
-        background-color: var(--bg-color);
-        box-shadow: var(--box-shadow);
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         padding: 20px;
         transform: translateY(-150%);
         transition: transform 0.3s ease;
@@ -379,6 +381,21 @@
     .faq-item {
         padding: 25px;
     }
+    
+    /* 地图响应式样式 */
+    .map-container {
+        height: 300px;
+        border-radius: 12px;
+    }
+    
+    .marker-pin {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .marker-pin i {
+        font-size: 14px;
+    }
 }
 
 /* 超小型设备 (竖向手机, 576px 以下) */
@@ -528,6 +545,30 @@
     .faq-item h3 {
         font-size: 1.2rem;
     }
+    
+    /* 地图样式优化 */
+    .map-container {
+        height: 250px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+    
+    .marker-pin {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .marker-pin i {
+        font-size: 12px;
+    }
+    
+    .map-popup h3 {
+        font-size: 14px;
+    }
+    
+    .map-popup p {
+        font-size: 12px;
+    }
 } 
 
 /* 响应式客户评价 */
@@ -589,5 +630,148 @@
         width: 10px;
         height: 10px;
         margin: 0 5px;
+    }
+}
+
+/* 分页响应式样式 */
+@media (max-width: 992px) {
+    .pagination-container {
+        margin-top: 50px;
+        padding: 25px 20px;
+        border-radius: 12px;
+    }
+    
+    .page-btn {
+        padding: 10px 20px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+    
+    .page-number {
+        min-width: 44px;
+        height: 44px;
+        padding: 8px 14px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pagination {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .pagination-container {
+        margin-top: 40px;
+        padding: 20px 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .page-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+        border-radius: 8px;
+        box-shadow: 0 3px 12px rgba(64, 123, 255, 0.25);
+    }
+    
+    .page-btn:hover:not(:disabled) {
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 6px 20px rgba(64, 123, 255, 0.35);
+    }
+    
+    .page-numbers {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+    }
+    
+    .page-number {
+        padding: 8px 12px;
+        font-size: 13px;
+        min-width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+    }
+    
+    .page-number:hover {
+        transform: translateY(-1px) scale(1.03);
+        box-shadow: 0 4px 15px rgba(64, 123, 255, 0.2);
+    }
+    
+    .page-number.active {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(64, 123, 255, 0.35);
+    }
+    
+    .page-ellipsis {
+        font-size: 14px;
+        height: 40px;
+        padding: 0 6px;
+    }
+    
+    .pagination-info {
+        font-size: 13px;
+        padding: 10px 16px;
+        border-radius: 6px;
+    }
+}
+
+@media (max-width: 576px) {
+    .pagination {
+        gap: 12px;
+    }
+    
+    .pagination-container {
+        margin-top: 30px;
+        padding: 15px 10px;
+        border-radius: 8px;
+    }
+    
+    .page-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+        gap: 4px;
+        border-radius: 6px;
+        box-shadow: 0 2px 10px rgba(64, 123, 255, 0.2);
+    }
+    
+    .page-btn:hover:not(:disabled) {
+        transform: translateY(-1px) scale(1.02);
+    }
+    
+    .page-numbers {
+        gap: 3px;
+    }
+    
+    .page-number {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 36px;
+        height: 36px;
+        border-radius: 6px;
+    }
+    
+    .page-number:hover {
+        transform: translateY(-1px) scale(1.02);
+    }
+    
+    .page-number.active {
+        transform: scale(1.03);
+    }
+    
+    .page-ellipsis {
+        font-size: 12px;
+        height: 36px;
+        padding: 0 4px;
+    }
+    
+    .pagination-info {
+        font-size: 12px;
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 4px;
     }
 } 

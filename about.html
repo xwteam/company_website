@@ -18,15 +18,14 @@
         <div class="container">
             <div class="about-hero-content">
                 <div class="about-hero-text">
-                    <h1>Crafting digital experiences with purpose</h1>
-                    <p>We're a team of designers, developers, and strategists passionate about creating meaningful digital experiences.</p>
-                    <div class="cta-buttons">
-                        <a href="contact.html" class="btn primary">Work With Us</a>
-                        <a href="products.html" class="btn secondary">View Our Products</a>
+                    <h1 id="hero-title">Crafting digital experiences with purpose</h1>
+                    <p id="hero-description">We're a team of designers, developers, and strategists passionate about creating meaningful digital experiences.</p>
+                    <div class="cta-buttons" id="hero-buttons">
+                        <!-- 动态生成按钮 -->
                     </div>
                 </div>
                 <div class="about-hero-image">
-                    <img src="images/about-hero.jpg" alt="Team working together">
+                    <img id="hero-image" src="images/about-hero.jpg" alt="Team working together">
                 </div>
             </div>
         </div>
@@ -35,62 +34,12 @@
     <!-- 公司故事 -->
     <section class="our-story">
         <div class="container">
-            <h2>Our Story</h2>
-            <p class="section-description">From humble beginnings to becoming a leading creative agency</p>
+            <h2 id="story-title">Our Story</h2>
+            <p class="section-description" id="story-description">From humble beginnings to becoming a leading creative agency</p>
             
             <!-- 时间线 - 开始 -->
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-badge">2016</div>
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <img src="images/timeline-1.jpg" alt="The Beginning">
-                        </div>
-                        <div class="timeline-text">
-                            <h3>The Beginning</h3>
-                            <p>Brand was founded with a vision to create digital experiences that truly matter. Starting with just 3 people, we focused on crafting meaningful work for clients who shared our values.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item reverse">
-                    <div class="timeline-badge">2018</div>
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <img src="images/timeline-2.jpg" alt="Growing Our Expertise">
-                        </div>
-                        <div class="timeline-text">
-                            <h3>Growing Our Expertise</h3>
-                            <p>As our client base grew, so did our team and capabilities. We expanded our services to include brand strategy and digital marketing, allowing us to deliver more effective end-to-end solutions.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item">
-                    <div class="timeline-badge">2020</div>
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <img src="images/timeline-3.jpg" alt="International Recognition">
-                        </div>
-                        <div class="timeline-text">
-                            <h3>International Recognition</h3>
-                            <p>Our work began to be recognized with multiple industry awards. We began working with international clients and established our reputation as a forward-thinking creative practice.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="timeline-item reverse">
-                    <div class="timeline-badge">2023</div>
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <img src="images/timeline-4.jpg" alt="Where We Are Today">
-                        </div>
-                        <div class="timeline-text">
-                            <h3>Where We Are Today</h3>
-                            <p>Today, Brand is a team of 30+ creative thinkers and strategists dedicated to helping brands navigate the digital landscape. We continue to create, innovate, and push the boundaries of what's possible.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="timeline" id="timeline-container">
+                <!-- 动态生成时间线 -->
             </div>
             <!-- 时间线 - 结束 -->
         </div>
@@ -99,41 +48,11 @@
     <!-- 价值观 -->
     <section class="our-values">
         <div class="container">
-            <h2>Our Values</h2>
-            <p class="section-description">The principles that guide our work and relationships</p>
+            <h2 id="values-title">Our Values</h2>
+            <p class="section-description" id="values-description">The principles that guide our work and relationships</p>
             
-            <div class="values-grid">
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-award"></i>
-                    </div>
-                    <h3>Excellence</h3>
-                    <p>We're committed to delivering exceptional quality in everything we do. We strive for excellence in execution.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Collaboration</h3>
-                    <p>We believe the best work happens when we collaborate openly with our clients and each other.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Innovation</h3>
-                    <p>We continuously explore new approaches to create forward-thinking solutions.</p>
-                </div>
-                
-                <div class="value-card">
-                    <div class="value-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>Purpose</h3>
-                    <p>We choose to work on products that create meaningful impact and align with our values.</p>
-                </div>
+            <div class="values-grid" id="values-grid">
+                <!-- 动态生成价值观 -->
             </div>
         </div>
     </section>
@@ -141,53 +60,11 @@
     <!-- 团队 -->
     <section class="our-team">
         <div class="container">
-            <h2>Our Team</h2>
-            <p class="section-description">Meet the talented individuals behind our creative solutions</p>
+            <h2 id="team-title">Our Team</h2>
+            <p class="section-description" id="team-description">Meet the talented individuals behind our creative solutions</p>
             
-            <div class="team-grid">
-                <div class="team-member">
-                    <div class="member-image">
-                        <img src="images/team-1.jpg" alt="Alex Morgan">
-                    </div>
-                    <div class="member-info">
-                        <h3>Alex Morgan</h3>
-                        <div class="position">Creative Director</div>
-                        <p class="bio">With over 12 years in design and branding, Alex brings creativity and strategic thinking to every product.</p>
-                    </div>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-image">
-                        <img src="images/team-2.jpg" alt="Jamie Wilson">
-                    </div>
-                    <div class="member-info">
-                        <h3>Jamie Wilson</h3>
-                        <div class="position">Lead Developer</div>
-                        <p class="bio">Jamie brings technical excellence and innovation to every product with deep expertise in modern technologies.</p>
-                    </div>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-image">
-                        <img src="images/team-3.jpg" alt="Taylor Kim">
-                    </div>
-                    <div class="member-info">
-                        <h3>Taylor Kim</h3>
-                        <div class="position">UX Designer</div>
-                        <p class="bio">A passionate designer with an eye for detail and a focus on creating intuitive user experiences.</p>
-                    </div>
-                </div>
-                
-                <div class="team-member">
-                    <div class="member-image">
-                        <img src="images/team-4.jpg" alt="Morgan Rivera">
-                    </div>
-                    <div class="member-info">
-                        <h3>Morgan Rivera</h3>
-                        <div class="position">Strategy Director</div>
-                        <p class="bio">Morgan crafts compelling brand strategies that connect businesses with their audiences.</p>
-                    </div>
-                </div>
+            <div class="team-grid" id="team-grid">
+                <!-- 动态生成团队成员 -->
             </div>
         </div>
     </section>
@@ -195,11 +72,10 @@
     <!-- 加入我们 -->
     <section class="join-us blue-bg">
         <div class="container">
-            <h2>Join us on our creative journey</h2>
-            <p>Whether you're looking to collaborate or join our team, we'd love to hear from you.</p>
-            <div class="join-buttons">
-                <a href="contact.html" class="btn primary light">Get in Touch</a>
-                <a href="careers.html" class="btn secondary light">View Careers</a>
+            <h2 id="join-title">Join us on our creative journey</h2>
+            <p id="join-description">Whether you're looking to collaborate or join our team, we'd love to hear from you.</p>
+            <div class="join-buttons" id="join-buttons">
+                <!-- 动态生成按钮 -->
             </div>
         </div>
     </section>
@@ -209,5 +85,143 @@
 
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // 加载about配置文件
+        async function loadAboutConfig() {
+            try {
+                const response = await fetch('config/about.json');
+                const config = await response.json();
+                
+                // 更新英雄区域
+                if (config['hero-section']) {
+                    const hero = config['hero-section'];
+                    document.getElementById('hero-title').textContent = hero.title;
+                    document.getElementById('hero-description').textContent = hero.description;
+                    document.getElementById('hero-image').src = hero.image;
+                    generateButtons('hero-buttons', hero.buttons);
+                }
+                
+                // 更新公司故事
+                if (config['our-story']) {
+                    const story = config['our-story'];
+                    document.getElementById('story-title').textContent = story.title;
+                    document.getElementById('story-description').textContent = story.description;
+                    generateTimeline(story.timeline);
+                }
+                
+                // 更新价值观
+                if (config['our-values']) {
+                    const values = config['our-values'];
+                    document.getElementById('values-title').textContent = values.title;
+                    document.getElementById('values-description').textContent = values.description;
+                    generateValues(values.values);
+                }
+                
+                // 更新团队
+                if (config['our-team']) {
+                    const team = config['our-team'];
+                    document.getElementById('team-title').textContent = team.title;
+                    document.getElementById('team-description').textContent = team.description;
+                    generateTeam(team.members);
+                }
+                
+                // 更新加入我们
+                if (config['join-us']) {
+                    const join = config['join-us'];
+                    document.getElementById('join-title').textContent = join.title;
+                    document.getElementById('join-description').textContent = join.description;
+                    generateButtons('join-buttons', join.buttons);
+                }
+                
+            } catch (error) {
+                console.error('加载about配置文件失败:', error);
+            }
+        }
+        
+        // 生成按钮
+        function generateButtons(containerId, buttons) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            buttons.forEach(button => {
+                const buttonElement = document.createElement('a');
+                buttonElement.href = button.url;
+                buttonElement.className = button.class;
+                buttonElement.textContent = button.text;
+                container.appendChild(buttonElement);
+            });
+        }
+        
+        // 生成时间线
+        function generateTimeline(timeline) {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+            
+            timeline.forEach(item => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = item.reverse ? 'timeline-item reverse' : 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="timeline-badge">${item.year}</div>
+                    <div class="timeline-content">
+                        <div class="timeline-image">
+                            <img src="${item.image}" alt="${item.title}">
+                        </div>
+                        <div class="timeline-text">
+                            <h3>${item.title}</h3>
+                            <p>${item.description}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(timelineItem);
+            });
+        }
+        
+        // 生成价值观
+        function generateValues(values) {
+            const grid = document.getElementById('values-grid');
+            grid.innerHTML = '';
+            
+            values.forEach(value => {
+                const valueCard = document.createElement('div');
+                valueCard.className = 'value-card';
+                valueCard.innerHTML = `
+                    <div class="value-icon">
+                        <i class="${value.icon}"></i>
+                    </div>
+                    <h3>${value.title}</h3>
+                    <p>${value.description}</p>
+                `;
+                grid.appendChild(valueCard);
+            });
+        }
+        
+        // 生成团队成员
+        function generateTeam(members) {
+            const grid = document.getElementById('team-grid');
+            grid.innerHTML = '';
+            
+            members.forEach(member => {
+                const teamMember = document.createElement('div');
+                teamMember.className = 'team-member';
+                teamMember.innerHTML = `
+                    <div class="member-image">
+                        <img src="${member.image}" alt="${member.name}">
+                    </div>
+                    <div class="member-info">
+                        <h3>${member.name}</h3>
+                        <div class="position">${member.position}</div>
+                        <p class="bio">${member.bio}</p>
+                    </div>
+                `;
+                grid.appendChild(teamMember);
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载配置
+            loadAboutConfig();
+        });
+    </script>
 </body>
 </html> 

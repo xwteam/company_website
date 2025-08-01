@@ -166,12 +166,15 @@ header {
     right: 0;
     z-index: 1000;
     padding: 20px 0;
-    transition: var(--transition);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(0px);
 }
 
 header.scrolled {
-    background-color: var(--bg-color);
-    box-shadow: var(--box-shadow);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding: 15px 0;
 }
 
@@ -185,6 +188,12 @@ header .container {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+/* 滚动时logo的额外对比度 */
+header.scrolled .logo a {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 nav ul {
@@ -200,6 +209,12 @@ nav ul li a {
     color: var(--text-color);
     font-weight: 500;
     position: relative;
+    transition: all 0.3s ease;
+}
+
+/* 滚动时导航链接的额外对比度 */
+header.scrolled nav ul li a {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 nav ul li a:hover,
@@ -236,6 +251,12 @@ nav ul li a.active::after {
 .header-cta .btn {
     padding: 8px 16px;
     font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+/* 滚动时header按钮的额外样式 */
+header.scrolled .header-cta .btn {
+    box-shadow: 0 4px 12px rgba(64, 123, 255, 0.25);
 }
 
 /* 英雄区域 */
@@ -331,6 +352,13 @@ nav ul li a.active::after {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
+}
+
+/* Section CTA 样式 */
+.section-cta {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 40px;
 }
 
 .project-card {
@@ -1767,17 +1795,115 @@ input.error, textarea.error {
     gap: 15px;
 }
 
-.contact-image {
+/* 地图容器样式 */
+.contact-map {
     margin-top: 30px;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
 }
 
-.contact-image img {
+.map-container {
     width: 100%;
-    height: auto;
-    display: block;
+    height: 350px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+/* 自定义地图标记样式 */
+.custom-marker {
+    background: transparent;
+    border: none;
+}
+
+.marker-pin {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(64, 123, 255, 0.4);
+    position: relative;
+}
+
+.marker-pin::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.marker-pin i {
+    color: white;
+    font-size: 16px;
+    transform: rotate(45deg);
+    z-index: 1;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* 地图弹出框样式 */
+.leaflet-popup-content-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.leaflet-popup-tip {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.map-popup {
+    padding: 5px;
+    font-family: 'Inter', sans-serif;
+}
+
+.map-popup h3 {
+    margin: 0 0 12px 0;
+    color: var(--primary-color);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.map-popup p {
+    margin: 8px 0;
+    color: var(--text-color);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.map-popup i {
+    color: var(--primary-color);
+    font-size: 12px;
+    width: 16px;
+    text-align: center;
 }
 
 .faq-section {
@@ -1846,4 +1972,166 @@ input.error, textarea.error {
 .indicator.active {
     background-color: var(--primary-color);
     transform: scale(1.2);
+}
+
+/* 分页样式 */
+.pagination-container {
+    margin-top: 60px;
+    text-align: center;
+    padding: 30px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(64, 123, 255, 0.3);
+}
+
+.page-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.page-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, #5a6acf 100%);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(64, 123, 255, 0.4);
+}
+
+.page-btn:active:not(:disabled) {
+    transform: translateY(-1px) scale(1.02);
+    transition: all 0.1s ease;
+}
+
+.page-btn:disabled {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+    color: #a0aec0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.page-numbers {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.page-number {
+    background: white;
+    color: var(--text-color);
+    border: 2px solid #e2e8f0;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.page-number::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.page-number:hover::before {
+    opacity: 0.1;
+}
+
+.page-number:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(64, 123, 255, 0.25);
+}
+
+.page-number.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(64, 123, 255, 0.4);
+    z-index: 1;
+}
+
+.page-number.active::before {
+    opacity: 0;
+}
+
+.page-ellipsis {
+    color: #718096;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    user-select: none;
+}
+
+.pagination-info {
+    color: #718096;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin-top: 10px;
 } 

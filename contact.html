@@ -8,6 +8,54 @@
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/fontawesome/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 地图库 - 支持中国地区访问优化 -->
+    <link rel="stylesheet" href="css/libs/leaflet/leaflet.min.css">
+    
+    <!-- 优先尝试使用完整版Leaflet，如果失败则使用中国友好版本 -->
+    <script>
+        // 检测地图服务可用性
+        const loadMapLibrary = async () => {
+            try {
+                // 先尝试加载官方Leaflet（如果网络条件好）
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                script.onerror = () => {
+                    console.log('官方Leaflet加载失败，使用中国优化版本');
+                    loadChinaFriendlyMap();
+                };
+                script.onload = () => {
+                    console.log('官方Leaflet加载成功');
+                    window.mapLibraryLoaded = 'leaflet';
+                };
+                
+                document.head.appendChild(script);
+                
+                // 超时后使用备用方案
+                setTimeout(() => {
+                    if (!window.L) {
+                        loadChinaFriendlyMap();
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                loadChinaFriendlyMap();
+            }
+        };
+        
+        const loadChinaFriendlyMap = () => {
+            const script = document.createElement('script');
+            script.src = 'js/libs/leaflet/free-map-solution.js';
+            script.onload = () => {
+                window.mapLibraryLoaded = 'free-solution';
+                console.log('免费地图解决方案加载成功');
+            };
+            document.head.appendChild(script);
+        };
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', loadMapLibrary);
+    </script>
 </head>
 <body>
     <!-- 导航栏容器 -->
@@ -16,8 +64,8 @@
     <!-- 联系标题 -->
     <section class="contact-header">
         <div class="container">
-            <h1>Get in Touch</h1>
-            <p>We'd love to hear from you. Let's start a conversation about your next project.</p>
+            <h1 id="page-title">Get in Touch</h1>
+            <p id="page-description">We'd love to hear from you. Let's start a conversation about your next project.</p>
         </div>
     </section>
 
@@ -26,91 +74,32 @@
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-form-container">
-                    <h2>Send us a message</h2>
+                    <h2 id="form-title">Send us a message</h2>
                     
-                    <form class="contact-form">
-                        <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Your name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Your email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <input type="tel" id="phone" name="phone" placeholder="Phone (Optional)">
-                        </div>
-                        
-                        <div class="form-group">
-                            <input type="text" id="company" name="company" placeholder="Your company (Optional)">
-                        </div>
-                        
-                        <div class="form-group full-width">
-                            <textarea id="message" name="message" rows="5" placeholder="Tell us about your project or inquiry" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn primary">Send Message</button>
+                    <form class="contact-form" id="contact-form">
+                        <!-- 动态生成表单字段 -->
                     </form>
                 </div>
                 
                 <div class="contact-info">
-                    <h2>Contact Information</h2>
+                    <h2 id="info-title">Contact Information</h2>
                     
-                    <div class="info-item">
-                        <div class="icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="details">
-                            <h3>Email</h3>
-                            <p>hello@brand.com</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="icon">
-                            <i class="fas fa-phone-alt"></i>
-                        </div>
-                        <div class="details">
-                            <h3>Phone</h3>
-                            <p>+1 (415) 555-5555</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="details">
-                            <h3>Address</h3>
-                            <p>123 Design Street</p>
-                            <p>San Francisco, CA 94103</p>
-                            <p>United States</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="details">
-                            <h3>Working Hours</h3>
-                            <p>Monday - Friday: 9am - 6pm</p>
-                            <p>Saturday: 10am - 2pm</p>
-                        </div>
+                    <div id="contact-info-items">
+                        <!-- 动态生成联系信息项目 -->
                     </div>
                     
                     <div class="social-links">
-                        <h3>Follow Us</h3>
-                        <div class="links">
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <h3 id="social-title">Follow Us</h3>
+                        <div class="links" id="social-links">
+                            <!-- 动态生成社交链接 -->
                         </div>
                     </div>
                     
-                    <div class="contact-image">
-                        <img src="images/contact-office.jpg" alt="Our office">
-                    </div>
+                        <div class="contact-map">
+        <div id="company-map" class="map-container">
+            <!-- 地图将在这里动态加载 -->
+        </div>
+    </div>
                 </div>
             </div>
         </div>
@@ -119,39 +108,11 @@
     <!-- 常见问题 -->
     <section class="faq-section">
         <div class="container">
-            <h2>Frequently Asked Questions</h2>
-            <p class="section-description">Have questions? We've got answers.</p>
+            <h2 id="faq-title">Frequently Asked Questions</h2>
+            <p class="section-description" id="faq-description">Have questions? We've got answers.</p>
             
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h3>What services do you offer?</h3>
-                    <p>We offer a comprehensive range of services including brand identity design, web development, UX design, and digital marketing. Each service is tailored to meet the specific needs of your business.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>How much do your services cost?</h3>
-                    <p>Our pricing is customized based on the scope and requirements of each project. We provide detailed proposals after understanding your specific needs during an initial consultation.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>How long does a typical project take?</h3>
-                    <p>Project timelines vary depending on complexity and scope. A simple website might take 4-6 weeks while a comprehensive brand identity and web development project might take 8-12 weeks. We'll provide a timeline estimate during our initial discussions.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>Do you work with clients internationally?</h3>
-                    <p>Yes, we work with clients globally. Our collaborative process and tools enable us to work effectively with clients regardless of location. We've successfully completed projects with clients across North America, Europe, and Asia.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>What is your project process?</h3>
-                    <p>Our process includes discovery, strategy, development, design, and development, and launch. We maintain clear communication throughout and involve you at key decision points to ensure the final product aligns with your vision.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3>Do you provide ongoing support after project completion?</h3>
-                    <p>Yes, we offer various support and maintenance packages to keep your digital assets performing optimally. We can discuss the right support option for your needs during our project planning.</p>
-                </div>
+            <div class="faq-grid" id="faq-grid">
+                <!-- 动态生成FAQ项目 -->
             </div>
         </div>
     </section>
@@ -161,5 +122,274 @@
 
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // 加载contact配置文件
+        async function loadContactConfig() {
+            try {
+                const response = await fetch('config/contact.json');
+                const config = await response.json();
+                
+                // 更新页面标题
+                if (config['page-header']) {
+                    const header = config['page-header'];
+                    document.getElementById('page-title').textContent = header.title;
+                    document.getElementById('page-description').textContent = header.description;
+                }
+                
+                // 生成联系表单
+                if (config['contact-form']) {
+                    const form = config['contact-form'];
+                    document.getElementById('form-title').textContent = form.title;
+                    generateContactForm(form.fields, form.submitButton);
+                }
+                
+                // 生成联系信息
+                if (config['contact-info']) {
+                    const info = config['contact-info'];
+                    document.getElementById('info-title').textContent = info.title;
+                    generateContactInfo(info.items);
+                    generateSocialLinks(info.social);
+                    // 初始化地图（使用地图数据或默认值）
+                    initializeMap(info.map || {});
+                }
+                
+                // 生成FAQ
+                if (config['faq-section']) {
+                    const faq = config['faq-section'];
+                    document.getElementById('faq-title').textContent = faq.title;
+                    document.getElementById('faq-description').textContent = faq.description;
+                    generateFAQ(faq.faqs);
+                }
+                
+            } catch (error) {
+                console.error('加载contact配置文件失败:', error);
+            }
+        }
+        
+        // 生成联系表单
+        function generateContactForm(fields, submitButtonText) {
+            const form = document.getElementById('contact-form');
+            form.innerHTML = '';
+            
+            fields.forEach(field => {
+                const formGroup = document.createElement('div');
+                formGroup.className = field.fullWidth ? 'form-group full-width' : 'form-group';
+                
+                if (field.type === 'textarea') {
+                    formGroup.innerHTML = `
+                        <textarea 
+                            id="${field.id}" 
+                            name="${field.name}" 
+                            rows="${field.rows || 5}" 
+                            placeholder="${field.placeholder}"
+                            ${field.required ? 'required' : ''}
+                        ></textarea>
+                    `;
+                } else {
+                    formGroup.innerHTML = `
+                        <input 
+                            type="${field.type}" 
+                            id="${field.id}" 
+                            name="${field.name}" 
+                            placeholder="${field.placeholder}"
+                            ${field.required ? 'required' : ''}
+                        >
+                    `;
+                }
+                
+                form.appendChild(formGroup);
+            });
+            
+            // 添加提交按钮
+            const submitButton = document.createElement('button');
+            submitButton.type = 'submit';
+            submitButton.className = 'btn primary';
+            submitButton.textContent = submitButtonText;
+            form.appendChild(submitButton);
+        }
+        
+        // 生成联系信息
+        function generateContactInfo(items) {
+            const container = document.getElementById('contact-info-items');
+            container.innerHTML = '';
+            
+            items.forEach(item => {
+                const infoItem = document.createElement('div');
+                infoItem.className = 'info-item';
+                
+                const detailsHtml = item.details.map(detail => `<p>${detail}</p>`).join('');
+                
+                infoItem.innerHTML = `
+                    <div class="icon">
+                        <i class="${item.icon}"></i>
+                    </div>
+                    <div class="details">
+                        <h3>${item.title}</h3>
+                        ${detailsHtml}
+                    </div>
+                `;
+                
+                container.appendChild(infoItem);
+            });
+        }
+        
+        // 生成社交链接
+        function generateSocialLinks(social) {
+            document.getElementById('social-title').textContent = social.title;
+            
+            const linksContainer = document.getElementById('social-links');
+            linksContainer.innerHTML = '';
+            
+            social.links.forEach(link => {
+                const linkElement = document.createElement('a');
+                linkElement.href = link.url;
+                linkElement.innerHTML = `<i class="${link.icon}"></i>`;
+                linksContainer.appendChild(linkElement);
+            });
+        }
+        
+        // 初始化地图
+        function initializeMap(mapData) {
+            // 设置默认坐标
+            const defaultLat = mapData.latitude || 40.7128;
+            const defaultLng = mapData.longitude || -74.0060;
+            const defaultZoom = mapData.zoom || 15;
+            
+            // 等待地图库加载完成
+            const waitForMapLibrary = () => {
+                if (window.mapLibraryLoaded) {
+                    createMap();
+                } else {
+                    setTimeout(waitForMapLibrary, 100);
+                }
+            };
+            
+            const createMap = () => {
+                if (window.mapLibraryLoaded === 'leaflet' && window.L) {
+                    // 使用官方Leaflet
+                    createLeafletMap();
+                } else if (window.mapLibraryLoaded === 'free-solution' && window.FreeMapSolution) {
+                    // 使用免费地图解决方案
+                    createFreeMap();
+                } else {
+                    // 最后的备用方案
+                    createSimpleFallback();
+                }
+            };
+            
+            const createLeafletMap = () => {
+                try {
+                    // 创建地图实例
+                    const map = L.map('company-map').setView([defaultLat, defaultLng], defaultZoom);
+                    
+                    // 添加地图瓦片层
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors',
+                        maxZoom: 19
+                    }).addTo(map);
+                    
+                    // 创建自定义图标
+                    const companyIcon = L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div class="marker-pin"><i class="fas fa-building"></i></div>',
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40],
+                        popupAnchor: [0, -40]
+                    });
+                    
+                    // 添加公司位置标记
+                    const marker = L.marker([defaultLat, defaultLng], {icon: companyIcon}).addTo(map);
+                    
+                    // 添加弹出信息
+                    const popupContent = createPopupContent(mapData);
+                    marker.bindPopup(popupContent);
+                    
+                    // 地图加载完成后的回调
+                    map.whenReady(function() {
+                        setTimeout(function() {
+                            map.invalidateSize();
+                        }, 100);
+                    });
+                    
+                } catch (error) {
+                    console.error('Leaflet地图创建失败:', error);
+                    createFreeMap();
+                }
+            };
+            
+            const createFreeMap = () => {
+                try {
+                    const map = new FreeMapSolution('company-map', {
+                        lat: defaultLat,
+                        lng: defaultLng,
+                        zoom: defaultZoom,
+                        title: mapData.title,
+                        address: mapData.address,
+                        phone: mapData.phone,
+                        hours: mapData.hours
+                    });
+                    
+                } catch (error) {
+                    console.error('免费地图方案创建失败:', error);
+                    createSimpleFallback();
+                }
+            };
+            
+            const createSimpleFallback = () => {
+                // 最简单的备用方案
+                const container = document.getElementById('company-map');
+                container.innerHTML = `
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: inherit;">
+                        <div style="text-align: center; padding: 40px;">
+                            <i class="fas fa-map-marked-alt" style="font-size: 48px; color: #007bff; margin-bottom: 16px;"></i>
+                            <h3 style="margin: 16px 0; color: #333;">地图位置</h3>
+                            <p style="color: #666; margin: 8px 0;">纬度: ${defaultLat}</p>
+                            <p style="color: #666; margin: 8px 0;">经度: ${defaultLng}</p>
+                            <button onclick="window.open('https://www.google.com/maps?q=${defaultLat},${defaultLng}', '_blank')" 
+                                    style="margin-top: 16px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                在地图中查看
+                            </button>
+                        </div>
+                    </div>
+                `;
+            };
+            
+            const createPopupContent = (data) => {
+                return `
+                    <div class="map-popup">
+                        <h3>${data.title || 'Brand Company'}</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> ${data.address || '123 Design Street, Creative City, 10001'}</p>
+                        <p><i class="fas fa-phone"></i> ${data.phone || '+1 (234) 567-890'}</p>
+                        <p><i class="fas fa-clock"></i> ${data.hours || 'Mon-Fri: 9:00-18:00'}</p>
+                    </div>
+                `;
+            };
+            
+            // 开始等待并创建地图
+            waitForMapLibrary();
+        }
+        
+        // 生成FAQ
+        function generateFAQ(faqs) {
+            const grid = document.getElementById('faq-grid');
+            grid.innerHTML = '';
+            
+            faqs.forEach(faq => {
+                const faqItem = document.createElement('div');
+                faqItem.className = 'faq-item';
+                faqItem.innerHTML = `
+                    <h3>${faq.question}</h3>
+                    <p>${faq.answer}</p>
+                `;
+                grid.appendChild(faqItem);
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载配置
+            loadContactConfig();
+        });
+    </script>
 </body>
 </html> 

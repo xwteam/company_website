@@ -18,20 +18,16 @@
         <!-- 项目标题 -->
         <section class="projects-header">
             <div class="container">
-                <h1>Our Products</h1>
-                <p>Explore our portfolio of products across various industries and categories.</p>
+                <h1 id="page-title">Our Products</h1>
+                <p id="page-description">Explore our portfolio of products across various industries and categories.</p>
             </div>
         </section>
 
         <!-- 项目筛选 -->
         <section class="project-filters">
             <div class="container">
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="web">Electronics</button>
-                    <button class="filter-btn" data-filter="brand">Home Goods</button>
-                    <button class="filter-btn" data-filter="mobile">Fashion</button>
-                    <button class="filter-btn" data-filter="digital">Accessories</button>
+                <div class="filter-buttons" id="filter-buttons">
+                    <!-- 动态生成筛选按钮 -->
                 </div>
             </div>
         </section>
@@ -39,108 +35,28 @@
         <!-- 项目列表 -->
         <section class="projects-list">
             <div class="container">
-                <div class="projects-grid">
-                    <!-- 项目1 -->
-                    <div class="project-card" data-category="web">
-                        <div class="project-image">
-                            <img src="images/project-1.jpg" alt="Smart Home System">
+                <div class="projects-grid" id="products-grid">
+                    <!-- 动态生成产品卡片 -->
+                </div>
+                
+                <!-- 分页控件 -->
+                <div class="pagination-container" id="pagination-container" style="display: none;">
+                    <div class="pagination">
+                        <button class="page-btn prev-btn" id="prev-btn">
+                            <i class="fas fa-chevron-left"></i> 上一页
+                        </button>
+                        
+                        <div class="page-numbers" id="page-numbers">
+                            <!-- 动态生成页码 -->
                         </div>
-                        <div class="project-content">
-                            <div class="project-category">Electronics</div>
-                            <h3>Smart Home System</h3>
-                            <p>Comprehensive home automation system with advanced controls and energy efficiency features.</p>
-                            <div class="project-tags">
-                                <span>IoT</span>
-                                <span>Energy Saving</span>
-                                <span>Smart Control</span>
-                                <span>Premium</span>
-                            </div>
-                        </div>
+                        
+                        <button class="page-btn next-btn" id="next-btn">
+                            下一页 <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                     
-                    <!-- 项目2 -->
-                    <div class="project-card" data-category="brand">
-                        <div class="project-image">
-                            <img src="images/project-2.jpg" alt="Eco Friendly Kitchenware">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-category">Home Goods</div>
-                            <h3>Eco Friendly Kitchenware</h3>
-                            <p>Complete kitchenware collection made from sustainable materials with modern design aesthetics.</p>
-                            <div class="project-tags">
-                                <span>Sustainable</span>
-                                <span>Kitchen</span>
-                                <span>Eco-friendly</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 项目3 -->
-                    <div class="project-card" data-category="mobile">
-                        <div class="project-image">
-                            <img src="images/project-3.jpg" alt="Active Wear Collection">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-category">Fashion</div>
-                            <h3>Active Wear Collection</h3>
-                            <p>Premium sportswear made with moisture-wicking fabrics and ergonomic designs for maximum comfort.</p>
-                            <div class="project-tags">
-                                <span>Athletic</span>
-                                <span>Performance</span>
-                                <span>Comfort</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 项目4 -->
-                    <div class="project-card" data-category="brand">
-                        <div class="project-image">
-                            <img src="images/project-4.jpg" alt="Artisan Coffee Set">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-category">Home Goods</div>
-                            <h3>Artisan Coffee Set</h3>
-                            <p>Handcrafted coffee brewing equipment and accessories for the perfect home brewing experience.</p>
-                            <div class="project-tags">
-                                <span>Handcrafted</span>
-                                <span>Premium</span>
-                                <span>Gourmet</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 项目5 -->
-                    <div class="project-card" data-category="web">
-                        <div class="project-image">
-                            <img src="images/project-5.jpg" alt="Travel Tech Accessories">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-category">Electronics</div>
-                            <h3>Travel Tech Accessories</h3>
-                            <p>Essential tech accessories for travelers including adapters, power banks, and compact audio devices.</p>
-                            <div class="project-tags">
-                                <span>Travel</span>
-                                <span>Portable</span>
-                                <span>Tech</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 项目6 -->
-                    <div class="project-card" data-category="digital">
-                        <div class="project-image">
-                            <img src="images/project-6.jpg" alt="Designer Watch Collection">
-                        </div>
-                        <div class="project-content">
-                            <div class="project-category">Accessories</div>
-                            <h3>Designer Watch Collection</h3>
-                            <p>Luxury timepieces combining traditional craftsmanship with modern design elements.</p>
-                            <div class="project-tags">
-                                <span>Luxury</span>
-                                <span>Timepieces</span>
-                                <span>Fashion</span>
-                            </div>
-                        </div>
+                    <div class="pagination-info">
+                        <span id="pagination-info">显示第 1-9 项，共 15 项</span>
                     </div>
                 </div>
             </div>
@@ -149,20 +65,18 @@
         <!-- 特色项目 -->
         <section class="featured-project">
             <div class="container">
-                <div class="featured-label">Featured Product</div>
+                <div class="featured-label" id="featured-label">Featured Product</div>
                 <div class="featured-content">
                     <div class="featured-text">
-                        <h2>Smart Home Ecosystem</h2>
-                        <p>A complete smart home solution with integrated devices, intuitive controls, and energy management features for modern living.</p>
-                        <ul class="featured-results">
-                            <li><i class="fas fa-check"></i> Up to 30% energy savings</li>
-                            <li><i class="fas fa-check"></i> Compatible with all major smart home platforms</li>
-                            <li><i class="fas fa-check"></i> Award-winning design and user experience</li>
+                        <h2 id="featured-title">Smart Home Ecosystem</h2>
+                        <p id="featured-description">A complete smart home solution with integrated devices, intuitive controls, and energy management features for modern living.</p>
+                        <ul class="featured-results" id="featured-features">
+                            <!-- 动态生成特性列表 -->
                         </ul>
-                        <a href="#" class="btn primary">Get in Touch</a>
+                        <a href="contact.html" class="btn primary" id="featured-button">Get in Touch</a>
                     </div>
                     <div class="featured-image">
-                        <img src="images/featured-project.jpg" alt="Smart Home Ecosystem">
+                        <img id="featured-image" src="images/featured-project.jpg" alt="Smart Home Ecosystem">
                     </div>
                 </div>
             </div>
@@ -171,29 +85,11 @@
         <!-- 项目流程 -->
         <section class="our-process">
             <div class="container">
-                <h2>Our Process</h2>
-                <p class="section-description">How we develop each product to ensure exceptional quality</p>
+                <h2 id="process-title">Our Process</h2>
+                <p class="section-description" id="process-description">How we develop each product to ensure exceptional quality</p>
                 
-                <div class="process-grid">
-                    <div class="process-item">
-                        <h3>Research</h3>
-                        <p>We start by understanding market needs, consumer preferences, and industry trends through in-depth research and analysis.</p>
-                    </div>
-                    
-                    <div class="process-item">
-                        <h3>Design</h3>
-                        <p>Based on our findings, we develop comprehensive product designs that balance aesthetics, functionality, and user experience.</p>
-                    </div>
-                    
-                    <div class="process-item">
-                        <h3>Production</h3>
-                        <p>Our manufacturing partners bring the designs to life with strict quality control and sustainable practices.</p>
-                    </div>
-                    
-                    <div class="process-item">
-                        <h3>Distribution</h3>
-                        <p>We ensure efficient delivery to global markets while maintaining product integrity and customer satisfaction.</p>
-                    </div>
+                <div class="process-grid" id="process-grid">
+                    <!-- 动态生成流程步骤 -->
                 </div>
             </div>
         </section>
@@ -201,9 +97,9 @@
         <!-- 联系我们 -->
         <section class="contact-cta blue-bg">
             <div class="container">
-                <h2>Let's discuss your product needs</h2>
-                <p>Ready to explore our product offerings? We'd love to help you find the perfect solutions.</p>
-                <a href="contact.html" class="btn primary light">Get in Touch</a>
+                <h2 id="cta-title">Let's discuss your product needs</h2>
+                <p id="cta-description">Ready to explore our product offerings? We'd love to help you find the perfect solutions.</p>
+                <a href="contact.html" class="btn primary light" id="cta-button">Get in Touch</a>
             </div>
         </section>
     </main>
@@ -215,10 +111,274 @@
     <script src="js/main.js"></script>
     
     <script>
-        // 项目筛选功能
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const projectCards = document.querySelectorAll('.project-card');
+        // 全局变量
+        let filterBtns = [];
+        let allProducts = []; // 存储所有产品数据
+        let filteredProducts = []; // 存储筛选后的产品数据
+        let currentPage = 1; // 当前页码
+        let itemsPerPage = 9; // 每页显示的产品数量
+        let activeFilter = 'all'; // 当前激活的筛选器
+        
+        // 加载products配置文件
+        async function loadProductsConfig() {
+            try {
+                const response = await fetch('config/products.json');
+                const config = await response.json();
+                
+                // 更新页面标题
+                if (config['page-header']) {
+                    const header = config['page-header'];
+                    document.getElementById('page-title').textContent = header.title;
+                    document.getElementById('page-description').textContent = header.description;
+                }
+                
+                // 生成筛选按钮
+                if (config.filters) {
+                    generateFilterButtons(config.filters);
+                }
+                
+                // 存储产品数据并初始化显示
+                if (config.products) {
+                    allProducts = config.products;
+                    filteredProducts = [...allProducts];
+                    updateProductDisplay();
+                }
+                
+                // 更新特色产品
+                if (config['featured-product']) {
+                    updateFeaturedProduct(config['featured-product']);
+                }
+                
+                // 更新流程
+                if (config['our-process']) {
+                    updateProcess(config['our-process']);
+                }
+                
+                // 更新联系CTA
+                if (config['contact-cta']) {
+                    updateContactCTA(config['contact-cta']);
+                }
+                
+                // 初始化筛选和分页功能
+                initializeFiltering();
+                initializePagination();
+                
+            } catch (error) {
+                console.error('加载products配置文件失败:', error);
+            }
+        }
+        
+        // 生成筛选按钮
+        function generateFilterButtons(filters) {
+            const container = document.getElementById('filter-buttons');
+            container.innerHTML = '';
+            
+            filters.forEach(filter => {
+                const button = document.createElement('button');
+                button.className = filter.active ? 'filter-btn active' : 'filter-btn';
+                button.setAttribute('data-filter', filter.value);
+                button.textContent = filter.label;
+                container.appendChild(button);
+            });
+        }
+        
+        // 根据筛选条件过滤产品
+        function filterProducts(filterValue) {
+            activeFilter = filterValue;
+            currentPage = 1; // 重置到第一页
+            
+            if (filterValue === 'all') {
+                filteredProducts = [...allProducts];
+            } else {
+                filteredProducts = allProducts.filter(product => product.category === filterValue);
+            }
+            
+            updateProductDisplay();
+        }
+        
+        // 更新产品显示（包括分页）
+        function updateProductDisplay() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentProducts = filteredProducts.slice(startIndex, endIndex);
+            
+            // 生成当前页的产品
+            generateProducts(currentProducts);
+            
+            // 更新分页控件
+            updatePagination();
+        }
+        
+        // 生成产品列表
+        function generateProducts(products) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'project-card';
+                productCard.setAttribute('data-category', product.category);
+                
+                const tagsHtml = product.tags.map(tag => `<span>${tag}</span>`).join('');
+                
+                productCard.innerHTML = `
+                    <div class="project-image">
+                        <img src="${product.image}" alt="${product.title}">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-category">${product.categoryLabel}</div>
+                        <h3>${product.title}</h3>
+                        <p>${product.description}</p>
+                        <div class="project-tags">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(productCard);
+            });
+        }
+        
+        // 更新特色产品
+        function updateFeaturedProduct(featured) {
+            document.getElementById('featured-label').textContent = featured.label;
+            document.getElementById('featured-title').textContent = featured.title;
+            document.getElementById('featured-description').textContent = featured.description;
+            document.getElementById('featured-image').src = featured.image;
+            document.getElementById('featured-button').textContent = featured.buttonText;
+            
+            const featuresContainer = document.getElementById('featured-features');
+            featuresContainer.innerHTML = '';
+            
+            featured.features.forEach(feature => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-check"></i> ${feature}`;
+                featuresContainer.appendChild(li);
+            });
+        }
+        
+        // 更新流程
+        function updateProcess(process) {
+            document.getElementById('process-title').textContent = process.title;
+            document.getElementById('process-description').textContent = process.description;
+            
+            const grid = document.getElementById('process-grid');
+            grid.innerHTML = '';
+            
+            process.steps.forEach(step => {
+                const processItem = document.createElement('div');
+                processItem.className = 'process-item';
+                processItem.innerHTML = `
+                    <h3>${step.title}</h3>
+                    <p>${step.description}</p>
+                `;
+                grid.appendChild(processItem);
+            });
+        }
+        
+        // 更新联系CTA
+        function updateContactCTA(cta) {
+            document.getElementById('cta-title').textContent = cta.title;
+            document.getElementById('cta-description').textContent = cta.description;
+            document.getElementById('cta-button').textContent = cta.buttonText;
+        }
+        
+        // 更新分页控件
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+            const paginationContainer = document.getElementById('pagination-container');
+            const pageNumbers = document.getElementById('page-numbers');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const paginationInfo = document.getElementById('pagination-info');
+            
+            // 如果总页数小于等于1，隐藏分页控件
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            paginationContainer.style.display = 'block';
+            
+            // 更新上一页下一页按钮状态
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+            
+            // 生成页码按钮 - 优化显示逻辑
+            pageNumbers.innerHTML = '';
+            
+            // 分页显示策略：最多显示7个页码按钮
+            // 格式：[1] ... [当前页-1] [当前页] [当前页+1] ... [最后页]
+            const maxVisiblePages = 7;
+            
+            if (totalPages <= maxVisiblePages) {
+                // 总页数少于等于7页时，显示所有页码
+                for (let i = 1; i <= totalPages; i++) {
+                    createPageButton(i, i === currentPage);
+                }
+            } else {
+                // 总页数超过7页时，使用省略号策略
+                
+                // 始终显示第1页
+                createPageButton(1, currentPage === 1);
+                
+                // 如果当前页离第1页较远，显示省略号
+                if (currentPage > 4) {
+                    createEllipsis();
+                }
+                
+                // 显示当前页附近的页码
+                const startPage = Math.max(2, currentPage - 1);
+                const endPage = Math.min(totalPages - 1, currentPage + 1);
+                
+                for (let i = startPage; i <= endPage; i++) {
+                    createPageButton(i, i === currentPage);
+                }
+                
+                // 如果当前页离最后一页较远，显示省略号
+                if (currentPage < totalPages - 3) {
+                    createEllipsis();
+                }
+                
+                // 始终显示最后一页（如果最后一页不是第1页）
+                if (totalPages > 1) {
+                    createPageButton(totalPages, currentPage === totalPages);
+                }
+            }
+            
+            // 更新分页信息
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, filteredProducts.length);
+            paginationInfo.textContent = `显示第 ${startItem}-${endItem} 项，共 ${filteredProducts.length} 项`;
+        }
+        
+        // 创建页码按钮
+        function createPageButton(pageNumber, isActive) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = isActive ? 'page-number active' : 'page-number';
+            pageBtn.textContent = pageNumber;
+            pageBtn.addEventListener('click', () => goToPage(pageNumber));
+            document.getElementById('page-numbers').appendChild(pageBtn);
+        }
+        
+        // 创建省略号
+        function createEllipsis() {
+            const ellipsis = document.createElement('span');
+            ellipsis.className = 'page-ellipsis';
+            ellipsis.textContent = '...';
+            document.getElementById('page-numbers').appendChild(ellipsis);
+        }
+        
+        // 跳转到指定页面
+        function goToPage(page) {
+            if (page < 1 || page > Math.ceil(filteredProducts.length / itemsPerPage)) return;
+            currentPage = page;
+            updateProductDisplay();
+        }
+        
+        // 初始化筛选功能
+        function initializeFiltering() {
+            filterBtns = document.querySelectorAll('.filter-btn');
             
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -228,22 +388,34 @@
                     this.classList.add('active');
                     
                     const filterValue = this.getAttribute('data-filter');
-                    
-                    projectCards.forEach(card => {
-                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                            card.style.display = 'block';
-                            setTimeout(() => {
-                                card.classList.add('fade-in');
-                            }, 10);
-                        } else {
-                            card.classList.remove('fade-in');
-                            setTimeout(() => {
-                                card.style.display = 'none';
-                            }, 300);
-                        }
-                    });
+                    filterProducts(filterValue);
                 });
             });
+        }
+        
+        // 初始化分页功能
+        function initializePagination() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    goToPage(currentPage - 1);
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    goToPage(currentPage + 1);
+                }
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载配置
+            loadProductsConfig();
         });
     </script>
 </body>

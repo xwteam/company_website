@@ -1,0 +1,189 @@
+{
+  "page-header": {
+    "title": "Our Products",
+    "description": "Explore our portfolio of products across various industries and categories."
+  },
+  "filters": [
+    {"label": "all", "value": "all", "active": true},
+    {"label": "electronics", "value": "electronics"},
+    {"label": "home-goods", "value": "home-goods"},
+    {"label": "fashion", "value": "fashion"},
+    {"label": "accessories", "value": "accessories"}
+  ],
+  "products": [
+    {
+      "item": "1703876521000",
+      "category": "electronics",
+      "categoryLabel": "Electronics",
+      "title": "Smart Home System",
+      "description": "Comprehensive home automation system with advanced controls and energy efficiency features.",
+      "image": "images/project-1.jpg",
+      "tags": ["IoT", "Energy Saving", "Smart Control", "Premium"]
+    },
+    {
+      "item": "1703876522000",
+      "category": "home-goods",
+      "categoryLabel": "Home Goods",
+      "title": "Eco Friendly Kitchenware",
+      "description": "Complete kitchenware collection made from sustainable materials with modern design aesthetics.",
+      "image": "images/project-2.jpg",
+      "tags": ["Sustainable", "Kitchen", "Eco-friendly"]
+    },
+    {
+      "item": "1703876523000",
+      "category": "fashion",
+      "categoryLabel": "Fashion",
+      "title": "Active Wear Collection",
+      "description": "Premium sportswear made with moisture-wicking fabrics and ergonomic designs for maximum comfort.",
+      "image": "images/project-3.jpg",
+      "tags": ["Athletic", "Performance", "Comfort"]
+    },
+    {
+      "item": "1703876524000",
+      "category": "home-goods",
+      "categoryLabel": "Home Goods",
+      "title": "Artisan Coffee Set",
+      "description": "Handcrafted coffee brewing equipment and accessories for the perfect home brewing experience.",
+      "image": "images/project-4.jpg",
+      "tags": ["Handcrafted", "Premium", "Gourmet"]
+    },
+    {
+      "item": "1703876525000",
+      "category": "electronics",
+      "categoryLabel": "Electronics",
+      "title": "Travel Tech Accessories",
+      "description": "Essential tech accessories for travelers including adapters, power banks, and compact audio devices.",
+      "image": "images/project-5.jpg",
+      "tags": ["Travel", "Portable", "Tech"]
+    },
+    {
+      "item": "1703876526000",
+      "category": "accessories",
+      "categoryLabel": "Accessories",
+      "title": "Designer Watch Collection",
+      "description": "Luxury timepieces combining traditional craftsmanship with modern design elements.",
+      "image": "images/project-6.jpg",
+      "tags": ["Luxury", "Timepieces", "Fashion"]
+    },
+    {
+      "item": "1703876527000",
+      "category": "electronics",
+      "categoryLabel": "Electronics",
+      "title": "Wireless Earbuds Pro",
+      "description": "Professional-grade wireless earbuds with noise cancellation and premium sound quality.",
+      "image": "images/project-1.jpg",
+      "tags": ["Audio", "Wireless", "Premium", "Noise Cancellation"]
+    },
+    {
+      "item": "1703876528000",
+      "category": "home-goods",
+      "categoryLabel": "Home Goods",
+      "title": "Smart Garden Kit",
+      "description": "Indoor smart garden system with automated watering and LED grow lights for fresh herbs and vegetables.",
+      "image": "images/project-2.jpg",
+      "tags": ["Smart", "Garden", "Indoor", "Automated"]
+    },
+    {
+      "item": "1703876529000",
+      "category": "fashion",
+      "categoryLabel": "Fashion",
+      "title": "Premium Leather Handbag",
+      "description": "Handcrafted leather handbag with modern design and multiple compartments for organization.",
+      "image": "images/project-3.jpg",
+      "tags": ["Leather", "Handcrafted", "Premium", "Fashion"]
+    },
+    {
+      "item": "1703876530000",
+      "category": "accessories",
+      "categoryLabel": "Accessories",
+      "title": "Titanium Sunglasses",
+      "description": "Ultra-lightweight titanium sunglasses with polarized lenses and scratch-resistant coating.",
+      "image": "images/project-4.jpg",
+      "tags": ["Titanium", "Polarized", "Lightweight", "Premium"]
+    },
+    {
+      "item": "1703876531000",
+      "category": "electronics",
+      "categoryLabel": "Electronics",
+      "title": "Portable Power Station",
+      "description": "High-capacity portable power station for outdoor adventures and emergency backup power.",
+      "image": "images/project-5.jpg",
+      "tags": ["Portable", "Power", "Outdoor", "Emergency"]
+    },
+    {
+      "item": "1703876532000",
+      "category": "home-goods",
+      "categoryLabel": "Home Goods",
+      "title": "Bamboo Dinnerware Set",
+      "description": "Sustainable bamboo dinnerware set with elegant design and eco-friendly materials.",
+      "image": "images/project-6.jpg",
+      "tags": ["Bamboo", "Sustainable", "Eco-friendly", "Elegant"]
+    },
+    {
+      "item": "1703876533000",
+      "category": "fashion",
+      "categoryLabel": "Fashion",
+      "title": "Merino Wool Sweater",
+      "description": "Premium merino wool sweater with soft texture and temperature-regulating properties.",
+      "image": "images/project-1.jpg",
+      "tags": ["Merino Wool", "Premium", "Soft", "Temperature Control"]
+    },
+    {
+      "item": "1703876534000",
+      "category": "accessories",
+      "categoryLabel": "Accessories",
+      "title": "Carbon Fiber Wallet",
+      "description": "Minimalist carbon fiber wallet with RFID blocking technology and slim profile.",
+      "image": "images/project-2.jpg",
+      "tags": ["Carbon Fiber", "RFID Blocking", "Minimalist", "Slim"]
+    },
+    {
+      "item": "1703876535000",
+      "category": "electronics",
+      "categoryLabel": "Electronics",
+      "title": "4K Action Camera",
+      "description": "Professional 4K action camera with image stabilization and waterproof housing.",
+      "image": "images/project-3.jpg",
+      "tags": ["4K", "Action", "Stabilization", "Waterproof"]
+    }
+  ],
+  "featured-product": {
+    "label": "Featured Product",
+    "title": "Smart Home Ecosystem",
+    "description": "A complete smart home solution with integrated devices, intuitive controls, and energy management features for modern living.",
+    "image": "images/featured-project.jpg",
+    "features": [
+      "Up to 30% energy savings",
+      "Compatible with all major smart home platforms",
+      "Award-winning design and user experience"
+    ],
+    "buttonText": "Get in Touch"
+  },
+  "our-process": {
+    "title": "Our Process",
+    "description": "How we develop each product to ensure exceptional quality",
+    "steps": [
+      {
+        "title": "Research",
+        "description": "We start by understanding market needs, consumer preferences, and industry trends through in-depth research and analysis."
+      },
+      {
+        "title": "Design",
+        "description": "Based on our findings, we develop comprehensive product designs that balance aesthetics, functionality, and user experience."
+      },
+      {
+        "title": "Production",
+        "description": "Our manufacturing partners bring the designs to life with strict quality control and sustainable practices."
+      },
+      {
+        "title": "Distribution",
+        "description": "We ensure efficient delivery to global markets while maintaining product integrity and customer satisfaction."
+      }
+    ]
+  },
+  "contact-cta": {
+    "title": "Let's discuss your product needs",
+    "description": "Ready to explore our product offerings? We'd love to help you find the perfect solutions.",
+    "buttonText": "Get in Touch"
+  }
+}
