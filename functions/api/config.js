@@ -145,8 +145,10 @@ export async function onRequest(context) {
                 } else if (method === 'DELETE') {
                     return await handleDeleteConfig(configKey, env);
                 }
-            } else if (pathname === '/api/config/list') {
-                return await handleListConfigs(env);
+            } else if (pathname === '/api/configs') {
+                if (method === 'GET') {
+                    return await handleListConfigs(env);
+                }
             } else if (pathname === '/api/config/sync') {
                 return await handleSyncToGitee(request, env);
             }
