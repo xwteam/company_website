@@ -1793,6 +1793,25 @@ input.error, textarea.error {
 .contact-info .social-links .links {
     display: flex;
     gap: 15px;
+    align-items: center;
+}
+
+.contact-info .social-links .links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #4a90e2 100%);
+    color: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    font-size: 18px;
+}
+
+.contact-info .social-links .links a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(64, 123, 255, 0.3);
 }
 
 /* 地图容器样式 */
@@ -1819,14 +1838,15 @@ input.error, textarea.error {
 .marker-pin {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(64, 123, 255, 0.4);
+    box-shadow: 0 4px 16px rgba(231, 76, 60, 0.5);
     position: relative;
+    border: 2px solid #ffffff;
 }
 
 .marker-pin::before {

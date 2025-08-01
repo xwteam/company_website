@@ -1,41 +1,36 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 移动端菜单切换
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    const nav = document.querySelector('nav');
-    
-    if (mobileMenuToggle && nav) {
-        mobileMenuToggle.addEventListener('click', function() {
-            nav.classList.toggle('active');
-            const isActive = nav.classList.contains('active');
-            mobileMenuToggle.innerHTML = isActive ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-        });
-    }
-    
-    // 点击导航链接后关闭移动菜单
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                nav.classList.remove('active');
-                mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
+    // 移动端菜单初始化现在由 components.js 处理
+    // 在组件加载完成后再进行菜单相关操作
+    document.addEventListener('componentsLoaded', function() {
+        // 组件加载完成，移动端菜单已初始化
     });
     
-    // 滚动时导航栏效果
-    const header = document.querySelector('header');
+    // 滚动时导航栏效果（等待组件加载完成后初始化）
+    let header = null;
     let lastScrollTop = 0;
     
+    document.addEventListener('componentsLoaded', function() {
+        header = document.querySelector('header');
+        // Header元素已找到，滚动效果已初始化
+    });
+    
     window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        // 确保header元素已加载
+        if (!header) {
+            header = document.querySelector('header');
         }
         
-        lastScrollTop = scrollTop;
+        if (header) {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            lastScrollTop = scrollTop;
+        }
     });
     
     // 滚动到指定区域的平滑效果

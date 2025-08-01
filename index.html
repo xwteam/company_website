@@ -178,7 +178,7 @@
                     }
                     const config = await response.json();
                     applyConfig(config);
-                    showSuccess('配置加载成功！');
+                    // 配置加载成功，无需显示提示
                 } catch (error) {
                     console.error('加载配置文件失败:', error);
                     showError('加载配置文件失败，请检查浏览器控制台了解详情');

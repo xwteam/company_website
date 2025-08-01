@@ -45,6 +45,44 @@ class ComponentLoader {
         }
     }
     
+    // 初始化移动端菜单
+    initializeMobileMenu() {
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const nav = document.querySelector('nav');
+        
+        if (mobileMenuToggle && nav) {
+            // 移除之前的事件监听器（如果存在）
+            const newToggle = mobileMenuToggle.cloneNode(true);
+            mobileMenuToggle.parentNode.replaceChild(newToggle, mobileMenuToggle);
+            
+            // 添加新的事件监听器
+            newToggle.addEventListener('click', function() {
+                nav.classList.toggle('active');
+                const isActive = nav.classList.contains('active');
+                newToggle.innerHTML = isActive ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+            
+            // 点击导航链接后关闭移动菜单
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        nav.classList.remove('active');
+                        newToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            });
+            
+            // 点击菜单外部区域关闭菜单
+            document.addEventListener('click', function(event) {
+                if (!nav.contains(event.target) && !newToggle.contains(event.target)) {
+                    nav.classList.remove('active');
+                    newToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+        }
+    }
+    
     // 设置当前年份
     setCurrentYear() {
         const yearElement = document.getElementById('current-year');
@@ -98,7 +136,7 @@ class ComponentLoader {
             }
         }
         
-        console.log('页脚配置应用成功');
+        // 页脚配置应用完成
     }
     
     // 初始化所有组件
@@ -113,6 +151,9 @@ class ComponentLoader {
             if (headerLoaded) {
                 // 设置导航栏激活状态
                 this.setActiveNavigation();
+                
+                // 初始化移动端菜单
+                this.initializeMobileMenu();
             }
             
             if (footerLoaded) {
@@ -123,7 +164,7 @@ class ComponentLoader {
                 await this.loadFooterConfig();
             }
             
-            console.log('组件加载完成:', { header: headerLoaded, footer: footerLoaded });
+            // 组件加载完成
             
             // 触发自定义事件，通知组件加载完成
             document.dispatchEvent(new CustomEvent('componentsLoaded', {

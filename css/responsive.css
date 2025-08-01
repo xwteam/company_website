@@ -213,16 +213,30 @@
     
     nav {
         position: fixed;
-        top: 70px;
+        top: 74px;
         left: 0;
         right: 0;
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-top: none;
         padding: 20px;
         transform: translateY(-150%);
-        transition: transform 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 999;
+    }
+    
+    /* 滚动状态下的移动导航增强效果 */
+    header.scrolled nav {
+        top: 64px;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-top: none;
     }
     
     nav.active {
