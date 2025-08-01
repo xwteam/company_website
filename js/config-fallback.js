@@ -141,14 +141,14 @@ class FallbackConfigManager {
         }
     }
 
-    // 验证用户凭据
+    // 验证用户凭据（安全版本）
     async validateCredentials(username, password) {
         // 首先检查API是否可用
         const apiAvailable = await this.checkApiAvailability();
         if (!apiAvailable) {
-            console.warn('⚠️ API不可用，使用本地验证');
-            // API不可用时，使用本地验证
-            return username === 'admin' && password === 'admin123';
+            console.warn('⚠️ API不可用，验证功能受限');
+            // API不可用时，拒绝验证（安全策略）
+            throw new Error('服务器连接失败，无法验证身份');
         }
 
         try {
@@ -156,9 +156,9 @@ class FallbackConfigManager {
             const result = await this.adminListConfigs(credentials);
             return result.success === true;
         } catch (error) {
-            console.error('⚠️ API验证失败，尝试本地验证:', error.message);
-            // API验证失败时，降级到本地验证
-            return username === 'admin' && password === 'admin123';
+            console.error('⚠️ API验证失败:', error.message);
+            // API验证失败时，返回false而不是降级
+            return false;
         }
     }
 

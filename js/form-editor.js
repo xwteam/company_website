@@ -378,6 +378,195 @@ class ConfigFormEditor {
         `;
     }
 
+    // 生成合作伙伴配置表单
+    generatePartnersForm(config) {
+        return `
+            <div class="form-section">
+                <h3><i class="fas fa-handshake"></i> 合作伙伴配置</h3>
+                
+                <!-- 页面头部 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 页面头部
+                    </h4>
+                    <div class="group-content">
+                        <label>页面标题</label>
+                        <input type="text" name="page-header.title" value="${config['page-header']?.title || ''}" placeholder="合作伙伴页面标题">
+                        
+                        <label>页面描述</label>
+                        <textarea name="page-header.description" rows="2" placeholder="页面描述">${config['page-header']?.description || ''}</textarea>
+                    </div>
+                </div>
+
+                <!-- 合作伙伴列表 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 合作伙伴列表
+                    </h4>
+                    <div class="group-content">
+                        <div class="array-editor" data-field="partners">
+                            <label>合作伙伴</label>
+                            <div class="array-container">
+                                ${this.generatePartnerItems(config.partners || [])}
+                            </div>
+                            <button type="button" class="btn btn-secondary add-item" onclick="addPartnerItem(this)">
+                                <i class="fas fa-plus"></i> 添加合作伙伴
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 合作流程 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 合作流程
+                    </h4>
+                    <div class="group-content">
+                        <label>标题</label>
+                        <input type="text" name="partnership-approach.title" value="${config['partnership-approach']?.title || ''}" placeholder="合作流程标题">
+                        
+                        <label>描述</label>
+                        <textarea name="partnership-approach.description" rows="2" placeholder="合作流程描述">${config['partnership-approach']?.description || ''}</textarea>
+                        
+                        <div class="array-editor" data-field="partnership-approach.steps">
+                            <label>合作步骤</label>
+                            <div class="array-container">
+                                ${this.generateApproachSteps(config['partnership-approach']?.steps || [])}
+                            </div>
+                            <button type="button" class="btn btn-secondary add-item" onclick="addApproachStep(this)">
+                                <i class="fas fa-plus"></i> 添加步骤
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 合作优势 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 合作优势
+                    </h4>
+                    <div class="group-content">
+                        <div class="array-editor" data-field="partnership-benefits">
+                            <label>合作优势</label>
+                            <div class="array-container">
+                                ${this.generateBenefitItems(config['partnership-benefits'] || [])}
+                            </div>
+                            <button type="button" class="btn btn-secondary add-item" onclick="addBenefitItem(this)">
+                                <i class="fas fa-plus"></i> 添加优势
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // 生成关于我们配置表单
+    generateAboutForm(config) {
+        return `
+            <div class="form-section">
+                <h3><i class="fas fa-info-circle"></i> 关于我们配置</h3>
+                
+                <!-- 英雄区域 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 英雄区域
+                    </h4>
+                    <div class="group-content">
+                        <label>标题</label>
+                        <input type="text" name="hero-section.title" value="${config['hero-section']?.title || ''}" placeholder="关于我们标题">
+                        
+                        <label>描述</label>
+                        <textarea name="hero-section.description" rows="3" placeholder="关于我们描述">${config['hero-section']?.description || ''}</textarea>
+                    </div>
+                </div>
+
+                <!-- 公司故事 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 公司故事
+                    </h4>
+                    <div class="group-content">
+                        <label>标题</label>
+                        <input type="text" name="our-story.title" value="${config['our-story']?.title || ''}" placeholder="公司故事标题">
+                        
+                        <label>内容</label>
+                        <textarea name="our-story.content" rows="5" placeholder="公司故事内容">${config['our-story']?.content || ''}</textarea>
+                        
+                        <label>图片</label>
+                        <input type="url" name="our-story.image" value="${config['our-story']?.image || ''}" placeholder="故事配图URL">
+                        
+                        <div class="array-editor" data-field="our-story.timeline">
+                            <label>发展时间线</label>
+                            <div class="array-container">
+                                ${this.generateTimelineItems(config['our-story']?.timeline || [])}
+                            </div>
+                            <button type="button" class="btn btn-secondary add-item" onclick="addTimelineItem(this)">
+                                <i class="fas fa-plus"></i> 添加时间节点
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 企业价值观 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 企业价值观
+                    </h4>
+                    <div class="group-content">
+                        <div class="array-editor" data-field="our-values">
+                            <label>价值观</label>
+                            <div class="array-container">
+                                ${this.generateValueItems(config['our-values'] || [])}
+                            </div>
+                            <button type="button" class="btn btn-secondary add-item" onclick="addValueItem(this)">
+                                <i class="fas fa-plus"></i> 添加价值观
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 团队成员 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 团队成员
+                    </h4>
+                    <div class="group-content">
+                        <div class="array-editor" data-field="our-team">
+                            <label>团队成员</label>
+                            <div class="array-container">
+                                ${this.generateTeamItems(config['our-team'] || [])}
+                            </div>
+                            <button type="button" class="btn btn-secondary add-item" onclick="addTeamItem(this)">
+                                <i class="fas fa-plus"></i> 添加团队成员
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加入我们 -->
+                <div class="form-group collapsible-group">
+                    <h4 class="group-header" onclick="toggleGroup(this)">
+                        <i class="fas fa-chevron-down"></i> 加入我们
+                    </h4>
+                    <div class="group-content">
+                        <label>标题</label>
+                        <input type="text" name="join-us.title" value="${config['join-us']?.title || ''}" placeholder="加入我们标题">
+                        
+                        <label>描述</label>
+                        <textarea name="join-us.description" rows="3" placeholder="加入我们描述">${config['join-us']?.description || ''}</textarea>
+                        
+                        <label>按钮文字</label>
+                        <input type="text" name="join-us.button.text" value="${config['join-us']?.button?.text || ''}" placeholder="按钮文字">
+                        
+                        <label>按钮链接</label>
+                        <input type="text" name="join-us.button.link" value="${config['join-us']?.button?.link || ''}" placeholder="按钮链接">
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     // 辅助方法：生成服务项目
     generateServiceItems(items) {
         return items.map((item, index) => `
@@ -433,18 +622,21 @@ class ConfigFormEditor {
     // 辅助方法：生成筛选项目
     generateFilterItems(items) {
         return items.map((item, index) => `
-            <div class="array-item" data-index="${index}">
+            <div class="array-item collapsible" data-index="${index}">
                 <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">分类 #${index + 1}: ${item.label || '新分类'}</span>
                     <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="item-content">
-                    <label>分类名称</label>
-                    <input type="text" name="filters[${index}].label" value="${item.label || ''}" placeholder="分类名称" onchange="syncFilterValue(this)">
+                    <label>分类名称 (名称和值会自动同步)</label>
+                    <input type="text" name="filters[${index}].label" value="${item.label || ''}" placeholder="分类名称" onchange="syncFilterValue(this); updateItemTitle(this);">
                     
-                    <label>分类值</label>
-                    <input type="text" name="filters[${index}].value" value="${item.value || ''}" placeholder="分类值（自动同步）" readonly>
+                    <input type="hidden" name="filters[${index}].value" value="${item.value || ''}" class="filter-value-hidden">
                 </div>
             </div>
         `).join('');
@@ -453,15 +645,22 @@ class ConfigFormEditor {
     // 辅助方法：生成产品项目
     generateProductItems(items) {
         return items.map((item, index) => `
-            <div class="array-item" data-index="${index}">
+            <div class="array-item collapsible" data-index="${index}">
                 <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">产品 #${index + 1}: ${item.title || '新产品'}</span>
                     <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="item-content">
+                    <label>产品ID (时间戳)</label>
+                    <input type="text" name="products[${index}].item" value="${item.item || Date.now()}" readonly>
+                    
                     <label>产品名称</label>
-                    <input type="text" name="products[${index}].title" value="${item.title || ''}" placeholder="产品名称">
+                    <input type="text" name="products[${index}].title" value="${item.title || ''}" placeholder="产品名称" onchange="updateItemTitle(this)">
                     
                     <label>产品分类</label>
                     <input type="text" name="products[${index}].category" value="${item.category || ''}" placeholder="产品分类">
@@ -471,9 +670,6 @@ class ConfigFormEditor {
                     
                     <label>产品描述</label>
                     <textarea name="products[${index}].description" rows="2" placeholder="产品描述">${item.description || ''}</textarea>
-                    
-                    <label>产品ID (时间戳)</label>
-                    <input type="text" name="products[${index}].item" value="${item.item || Date.now()}" readonly>
                 </div>
             </div>
         `).join('');
@@ -588,6 +784,177 @@ class ConfigFormEditor {
         `).join('');
     }
 
+    // 辅助方法：生成合作伙伴项目
+    generatePartnerItems(items) {
+        return items.map((item, index) => `
+            <div class="array-item collapsible" data-index="${index}">
+                <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">合作伙伴 #${index + 1}: ${item.name || '新合作伙伴'}</span>
+                    <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="item-content">
+                    <label>公司名称</label>
+                    <input type="text" name="partners[${index}].name" value="${item.name || ''}" placeholder="合作伙伴名称" onchange="updateItemTitle(this)">
+                    
+                    <label>公司LOGO</label>
+                    <input type="url" name="partners[${index}].logo" value="${item.logo || ''}" placeholder="LOGO URL">
+                    
+                    <label>合作描述</label>
+                    <textarea name="partners[${index}].description" rows="2" placeholder="合作描述">${item.description || ''}</textarea>
+                    
+                    <label>网站链接</label>
+                    <input type="url" name="partners[${index}].website" value="${item.website || ''}" placeholder="https://partner.com">
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 辅助方法：生成合作流程步骤
+    generateApproachSteps(items) {
+        return items.map((item, index) => `
+            <div class="array-item collapsible" data-index="${index}">
+                <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">步骤 #${index + 1}: ${item.title || '新步骤'}</span>
+                    <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="item-content">
+                    <label>步骤标题</label>
+                    <input type="text" name="partnership-approach.steps[${index}].title" value="${item.title || ''}" placeholder="步骤标题" onchange="updateItemTitle(this)">
+                    
+                    <label>步骤描述</label>
+                    <textarea name="partnership-approach.steps[${index}].description" rows="2" placeholder="步骤描述">${item.description || ''}</textarea>
+                    
+                    <label>步骤图标</label>
+                    <input type="text" name="partnership-approach.steps[${index}].icon" value="${item.icon || ''}" placeholder="fas fa-handshake">
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 辅助方法：生成合作优势项目
+    generateBenefitItems(items) {
+        return items.map((item, index) => `
+            <div class="array-item collapsible" data-index="${index}">
+                <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">优势 #${index + 1}: ${item.title || '新优势'}</span>
+                    <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="item-content">
+                    <label>优势标题</label>
+                    <input type="text" name="partnership-benefits[${index}].title" value="${item.title || ''}" placeholder="优势标题" onchange="updateItemTitle(this)">
+                    
+                    <label>优势描述</label>
+                    <textarea name="partnership-benefits[${index}].description" rows="2" placeholder="优势描述">${item.description || ''}</textarea>
+                    
+                    <label>优势图标</label>
+                    <input type="text" name="partnership-benefits[${index}].icon" value="${item.icon || ''}" placeholder="fas fa-star">
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 辅助方法：生成时间线项目
+    generateTimelineItems(items) {
+        return items.map((item, index) => `
+            <div class="array-item collapsible" data-index="${index}">
+                <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">时间节点 #${index + 1}: ${item.year || '新节点'}</span>
+                    <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="item-content">
+                    <label>年份</label>
+                    <input type="text" name="our-story.timeline[${index}].year" value="${item.year || ''}" placeholder="2024" onchange="updateItemTitle(this)">
+                    
+                    <label>事件标题</label>
+                    <input type="text" name="our-story.timeline[${index}].title" value="${item.title || ''}" placeholder="重要事件">
+                    
+                    <label>事件描述</label>
+                    <textarea name="our-story.timeline[${index}].description" rows="2" placeholder="事件详情">${item.description || ''}</textarea>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 辅助方法：生成价值观项目
+    generateValueItems(items) {
+        return items.map((item, index) => `
+            <div class="array-item collapsible" data-index="${index}">
+                <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">价值观 #${index + 1}: ${item.title || '新价值观'}</span>
+                    <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="item-content">
+                    <label>价值观名称</label>
+                    <input type="text" name="our-values[${index}].title" value="${item.title || ''}" placeholder="价值观名称" onchange="updateItemTitle(this)">
+                    
+                    <label>价值观描述</label>
+                    <textarea name="our-values[${index}].description" rows="2" placeholder="价值观描述">${item.description || ''}</textarea>
+                    
+                    <label>价值观图标</label>
+                    <input type="text" name="our-values[${index}].icon" value="${item.icon || ''}" placeholder="fas fa-heart">
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 辅助方法：生成团队成员项目
+    generateTeamItems(items) {
+        return items.map((item, index) => `
+            <div class="array-item collapsible" data-index="${index}">
+                <div class="item-controls">
+                    <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <span class="item-title">团队成员 #${index + 1}: ${item.name || '新成员'}</span>
+                    <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="item-content">
+                    <label>姓名</label>
+                    <input type="text" name="our-team[${index}].name" value="${item.name || ''}" placeholder="姓名" onchange="updateItemTitle(this)">
+                    
+                    <label>职位</label>
+                    <input type="text" name="our-team[${index}].position" value="${item.position || ''}" placeholder="职位">
+                    
+                    <label>头像</label>
+                    <input type="url" name="our-team[${index}].avatar" value="${item.avatar || ''}" placeholder="头像URL">
+                    
+                    <label>个人简介</label>
+                    <textarea name="our-team[${index}].bio" rows="2" placeholder="个人简介">${item.bio || ''}</textarea>
+                    
+                    <label>社交链接</label>
+                    <input type="url" name="our-team[${index}].social" value="${item.social || ''}" placeholder="LinkedIn或其他社交链接">
+                </div>
+            </div>
+        `).join('');
+    }
+
     // 根据配置文件类型生成对应表单
     generateForm(configKey, config) {
         this.currentConfig = config;
@@ -605,12 +972,9 @@ class ConfigFormEditor {
             case 'footer':
                 return this.generateFooterForm(config);
             case 'partners':
+                return this.generatePartnersForm(config);
             case 'about':
-                return `<div class="form-section">
-                    <h3><i class="fas fa-file"></i> ${configKey} 配置</h3>
-                    <p>此配置文件的可视化编辑器正在开发中，请暂时使用JSON编辑模式。</p>
-                    <textarea name="raw-json" class="json-editor" rows="20">${JSON.stringify(config, null, 2)}</textarea>
-                </div>`;
+                return this.generateAboutForm(config);
             default:
                 return `<div class="form-section">
                     <h3><i class="fas fa-file"></i> 通用配置</h3>
@@ -634,11 +998,17 @@ class ConfigFormEditor {
                 }
             }
             
-            this.setNestedValue(config, key, value);
+            // 跳过空值以避免覆盖隐藏字段的值
+            if (value !== '') {
+                this.setNestedValue(config, key, value);
+            }
         }
         
         // 处理数组字段的特殊格式转换
         this.processArrayFields(config);
+        
+        // 确保过滤器的label和value同步
+        this.syncFilterLabelsAndValues(config);
         
         return config;
     }
@@ -703,6 +1073,21 @@ class ConfigFormEditor {
             config.services.forEach(service => {
                 if (service.features && typeof service.features === 'string') {
                     service.features = service.features.split(',').map(f => f.trim()).filter(f => f);
+                }
+            });
+        }
+    }
+
+    // 同步过滤器的label和value
+    syncFilterLabelsAndValues(config) {
+        if (config.filters && Array.isArray(config.filters)) {
+            config.filters.forEach(filter => {
+                if (filter.label && !filter.value) {
+                    // 如果有label但没有value，自动生成value
+                    filter.value = filter.label.toLowerCase().replace(/\s+/g, '-');
+                } else if (filter.label && filter.value !== filter.label.toLowerCase().replace(/\s+/g, '-')) {
+                    // 确保value与label同步
+                    filter.value = filter.label.toLowerCase().replace(/\s+/g, '-');
                 }
             });
         }
@@ -869,8 +1254,337 @@ window.removeArrayItem = function(button) {
 
 window.syncFilterValue = function(input) {
     const value = input.value.toLowerCase().replace(/\s+/g, '-');
+    // 对于新的筛选项目，同步到隐藏字段
+    const hiddenInput = input.closest('.item-content').querySelector('.filter-value-hidden');
+    if (hiddenInput) {
+        hiddenInput.value = value;
+    }
+    // 向后兼容旧的筛选项目
     const valueInput = input.closest('.item-content').querySelector('input[name$=".value"]');
     if (valueInput) {
         valueInput.value = value;
     }
+};
+
+// 更新项目标题
+window.updateItemTitle = function(input) {
+    const titleSpan = input.closest('.array-item').querySelector('.item-title');
+    if (titleSpan) {
+        const itemNumber = titleSpan.textContent.split(':')[0];
+        titleSpan.textContent = `${itemNumber}: ${input.value || '新项目'}`;
+    }
+};
+
+// 切换数组项目的展开/收缩
+window.toggleArrayItem = function(button) {
+    const arrayItem = button.closest('.array-item');
+    const content = arrayItem.querySelector('.item-content');
+    const icon = button.querySelector('i');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.className = 'fas fa-chevron-down';
+        arrayItem.classList.remove('collapsed');
+    } else {
+        content.style.display = 'none';
+        icon.className = 'fas fa-chevron-right';
+        arrayItem.classList.add('collapsed');
+    }
+};
+
+// 切换分组的展开/收缩
+window.toggleGroup = function(header) {
+    const group = header.closest('.collapsible-group');
+    const content = group.querySelector('.group-content');
+    const icon = header.querySelector('i');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.className = 'fas fa-chevron-down';
+        group.classList.remove('collapsed');
+    } else {
+        content.style.display = 'none';
+        icon.className = 'fas fa-chevron-right';
+        group.classList.add('collapsed');
+    }
+};
+
+// Partners配置专用的辅助函数
+window.addPartnerItem = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item collapsible';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <span class="item-title">合作伙伴 #${index + 1}: 新合作伙伴</span>
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>公司名称</label>
+            <input type="text" name="partners[${index}].name" placeholder="合作伙伴名称" onchange="updateItemTitle(this)">
+            
+            <label>公司LOGO</label>
+            <input type="url" name="partners[${index}].logo" placeholder="LOGO URL">
+            
+            <label>合作描述</label>
+            <textarea name="partners[${index}].description" rows="2" placeholder="合作描述"></textarea>
+            
+            <label>网站链接</label>
+            <input type="url" name="partners[${index}].website" placeholder="https://partner.com">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addApproachStep = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item collapsible';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <span class="item-title">步骤 #${index + 1}: 新步骤</span>
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>步骤标题</label>
+            <input type="text" name="partnership-approach.steps[${index}].title" placeholder="步骤标题" onchange="updateItemTitle(this)">
+            
+            <label>步骤描述</label>
+            <textarea name="partnership-approach.steps[${index}].description" rows="2" placeholder="步骤描述"></textarea>
+            
+            <label>步骤图标</label>
+            <input type="text" name="partnership-approach.steps[${index}].icon" placeholder="fas fa-handshake">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addBenefitItem = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item collapsible';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <span class="item-title">优势 #${index + 1}: 新优势</span>
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>优势标题</label>
+            <input type="text" name="partnership-benefits[${index}].title" placeholder="优势标题" onchange="updateItemTitle(this)">
+            
+            <label>优势描述</label>
+            <textarea name="partnership-benefits[${index}].description" rows="2" placeholder="优势描述"></textarea>
+            
+            <label>优势图标</label>
+            <input type="text" name="partnership-benefits[${index}].icon" placeholder="fas fa-star">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+// About配置专用的辅助函数
+window.addTimelineItem = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item collapsible';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <span class="item-title">时间节点 #${index + 1}: 新节点</span>
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>年份</label>
+            <input type="text" name="our-story.timeline[${index}].year" placeholder="2024" onchange="updateItemTitle(this)">
+            
+            <label>事件标题</label>
+            <input type="text" name="our-story.timeline[${index}].title" placeholder="重要事件">
+            
+            <label>事件描述</label>
+            <textarea name="our-story.timeline[${index}].description" rows="2" placeholder="事件详情"></textarea>
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addValueItem = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item collapsible';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <span class="item-title">价值观 #${index + 1}: 新价值观</span>
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>价值观名称</label>
+            <input type="text" name="our-values[${index}].title" placeholder="价值观名称" onchange="updateItemTitle(this)">
+            
+            <label>价值观描述</label>
+            <textarea name="our-values[${index}].description" rows="2" placeholder="价值观描述"></textarea>
+            
+            <label>价值观图标</label>
+            <input type="text" name="our-values[${index}].icon" placeholder="fas fa-heart">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addTeamItem = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item collapsible';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-collapse" onclick="toggleArrayItem(this)">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <span class="item-title">团队成员 #${index + 1}: 新成员</span>
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>姓名</label>
+            <input type="text" name="our-team[${index}].name" placeholder="姓名" onchange="updateItemTitle(this)">
+            
+            <label>职位</label>
+            <input type="text" name="our-team[${index}].position" placeholder="职位">
+            
+            <label>头像</label>
+            <input type="url" name="our-team[${index}].avatar" placeholder="头像URL">
+            
+            <label>个人简介</label>
+            <textarea name="our-team[${index}].bio" rows="2" placeholder="个人简介"></textarea>
+            
+            <label>社交链接</label>
+            <input type="url" name="our-team[${index}].social" placeholder="LinkedIn或其他社交链接">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+// 其他需要的辅助函数
+window.addNavigationLink = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>链接文本</label>
+            <input type="text" name="links.navigation[${index}].text" placeholder="首页">
+            
+            <label>链接地址</label>
+            <input type="text" name="links.navigation[${index}].url" placeholder="index.html">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addServiceLink = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>服务名称</label>
+            <input type="text" name="links.services[${index}].text" placeholder="服务名称">
+            
+            <label>服务链接</label>
+            <input type="text" name="links.services[${index}].url" placeholder="services.html">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addLegalLink = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>链接名称</label>
+            <input type="text" name="legal.links[${index}].text" placeholder="隐私政策">
+            
+            <label>链接地址</label>
+            <input type="text" name="legal.links[${index}].url" placeholder="privacy.html">
+        </div>
+    `;
+    container.appendChild(newItem);
+};
+
+window.addDetailedServiceItem = function(button) {
+    const container = button.previousElementSibling;
+    const index = container.children.length;
+    const newItem = document.createElement('div');
+    newItem.className = 'array-item';
+    newItem.innerHTML = `
+        <div class="item-controls">
+            <button type="button" class="btn-remove" onclick="removeArrayItem(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="item-content">
+            <label>服务名称</label>
+            <input type="text" name="services[${index}].title" placeholder="服务名称">
+            
+            <label>服务图标</label>
+            <input type="text" name="services[${index}].icon" placeholder="fas fa-cog">
+            
+            <label>服务描述</label>
+            <textarea name="services[${index}].description" rows="2" placeholder="服务描述"></textarea>
+            
+            <label>服务特色 (逗号分隔)</label>
+            <input type="text" name="services[${index}].features" placeholder="特色1, 特色2, 特色3">
+        </div>
+    `;
+    container.appendChild(newItem);
 };
