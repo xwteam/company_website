@@ -9,7 +9,7 @@ class SecureConfigManager {
         this.baseUrl = this.getBaseUrl();
         this.cache = new Map();
         this.cacheTimeout = 5 * 60 * 1000; // 5分钟缓存
-        this.apiKey = null; // API密钥通过管理界面设置，不在代码中硬编码
+        this.credentials = null; // 用户凭据通过管理界面设置，不在代码中硬编码
     }
 
     // 获取当前域名的API基础URL
@@ -20,31 +20,72 @@ class SecureConfigManager {
         return '';
     }
 
-    // 设置API密钥（仅管理员使用）
-    setApiKey(key) {
-        this.apiKey = key;
+    // 设置登录凭据（仅管理员使用）
+    setCredentials(username, password) {
+        const encoded = btoa(`${username}:${password}`);
+        this.credentials = {
+            username: username,
+            authHeader: `Basic ${encoded}`
+        };
+        
         // 存储到sessionStorage，页面关闭后自动清除
         if (typeof window !== 'undefined') {
-            window.sessionStorage.setItem('admin_api_key', key);
+            window.sessionStorage.setItem('admin_credentials', JSON.stringify({
+                username: username,
+                authHeader: `Basic ${encoded}`
+            }));
         }
     }
 
-    // 获取API密钥
-    getApiKey() {
-        if (this.apiKey) return this.apiKey;
+    // 获取认证头
+    getAuthHeader() {
+        if (this.credentials) return this.credentials.authHeader;
         
         if (typeof window !== 'undefined') {
-            return window.sessionStorage.getItem('admin_api_key');
+            const stored = window.sessionStorage.getItem('admin_credentials');
+            if (stored) {
+                const credentials = JSON.parse(stored);
+                this.credentials = credentials;
+                return credentials.authHeader;
+            }
         }
         return null;
     }
 
-    // 清除API密钥
-    clearApiKey() {
-        this.apiKey = null;
+    // 获取用户名
+    getUsername() {
+        if (this.credentials) return this.credentials.username;
+        
         if (typeof window !== 'undefined') {
-            window.sessionStorage.removeItem('admin_api_key');
+            const stored = window.sessionStorage.getItem('admin_credentials');
+            if (stored) {
+                const credentials = JSON.parse(stored);
+                return credentials.username;
+            }
         }
+        return null;
+    }
+
+    // 清除登录凭据
+    clearCredentials() {
+        this.credentials = null;
+        if (typeof window !== 'undefined') {
+            window.sessionStorage.removeItem('admin_credentials');
+        }
+    }
+
+    // 兼容旧的API密钥方法
+    setApiKey(key) {
+        // 将API密钥转换为用户名密码格式（向后兼容）
+        this.setCredentials('api_key', key);
+    }
+
+    getApiKey() {
+        return this.getAuthHeader();
+    }
+
+    clearApiKey() {
+        this.clearCredentials();
     }
 
     // 读取配置（KV优先，降级到JSON文件）
@@ -61,8 +102,8 @@ class SecureConfigManager {
 
             let config = null;
 
-            // 1. 尝试从KV存储读取（需要API密钥）
-            if (this.getApiKey()) {
+            // 1. 尝试从KV存储读取（需要登录凭据）
+            if (this.getAuthHeader()) {
                 try {
                     config = await this.getConfigFromKV(configKey);
                     if (config) {
@@ -98,14 +139,14 @@ class SecureConfigManager {
         const response = await fetch(`${this.baseUrl}/api/config/${configKey}`, {
             method: 'GET',
             headers: {
-                'X-API-Key': this.getApiKey(),
+                'Authorization': this.getAuthHeader(),
                 'Content-Type': 'application/json'
             }
         });
 
         if (!response.ok) {
             if (response.status === 401) {
-                throw new Error('API密钥无效或已过期');
+                throw new Error('用户名或密码无效');
             }
             throw new Error(`KV API错误: ${response.status}`);
         }
@@ -125,15 +166,15 @@ class SecureConfigManager {
 
     // 保存配置到KV存储（仅管理员）
     async saveConfig(configKey, configData, syncToGitee = true) {
-        const apiKey = this.getApiKey();
-        if (!apiKey) {
-            throw new Error('需要管理员权限');
+        const authHeader = this.getAuthHeader();
+        if (!authHeader) {
+            throw new Error('需要管理员权限，请先登录');
         }
 
         const response = await fetch(`${this.baseUrl}/api/config/${configKey}`, {
             method: 'PUT',
             headers: {
-                'X-API-Key': apiKey,
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(configData)
@@ -141,7 +182,7 @@ class SecureConfigManager {
 
         if (!response.ok) {
             if (response.status === 401) {
-                throw new Error('API密钥无效或已过期');
+                throw new Error('用户名或密码无效');
             }
             throw new Error(`保存失败: ${response.status}`);
         }
@@ -156,15 +197,15 @@ class SecureConfigManager {
 
     // 删除配置
     async deleteConfig(configKey) {
-        const apiKey = this.getApiKey();
-        if (!apiKey) {
-            throw new Error('需要管理员权限');
+        const authHeader = this.getAuthHeader();
+        if (!authHeader) {
+            throw new Error('需要管理员权限，请先登录');
         }
 
         const response = await fetch(`${this.baseUrl}/api/config/${configKey}`, {
             method: 'DELETE',
             headers: {
-                'X-API-Key': apiKey,
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             }
         });
@@ -181,15 +222,15 @@ class SecureConfigManager {
 
     // 列出所有配置
     async listConfigs() {
-        const apiKey = this.getApiKey();
-        if (!apiKey) {
-            throw new Error('需要管理员权限');
+        const authHeader = this.getAuthHeader();
+        if (!authHeader) {
+            throw new Error('需要管理员权限，请先登录');
         }
 
         const response = await fetch(`${this.baseUrl}/api/config/list`, {
             method: 'GET',
             headers: {
-                'X-API-Key': apiKey,
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             }
         });
@@ -203,15 +244,15 @@ class SecureConfigManager {
 
     // 同步所有配置到Gitee
     async syncToGitee() {
-        const apiKey = this.getApiKey();
-        if (!apiKey) {
-            throw new Error('需要管理员权限');
+        const authHeader = this.getAuthHeader();
+        if (!authHeader) {
+            throw new Error('需要管理员权限，请先登录');
         }
 
         const response = await fetch(`${this.baseUrl}/api/config/sync`, {
             method: 'POST',
             headers: {
-                'X-API-Key': apiKey,
+                'Authorization': authHeader,
                 'Content-Type': 'application/json'
             }
         });
@@ -236,13 +277,14 @@ class SecureConfigManager {
         this.cache.clear();
     }
 
-    // 验证API密钥是否有效
-    async validateApiKey(apiKey) {
+    // 验证用户名密码是否有效
+    async validateCredentials(username, password) {
         try {
+            const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
             const response = await fetch(`${this.baseUrl}/api/config/list`, {
                 method: 'GET',
                 headers: {
-                    'X-API-Key': apiKey,
+                    'Authorization': authHeader,
                     'Content-Type': 'application/json'
                 }
             });
@@ -250,6 +292,11 @@ class SecureConfigManager {
         } catch (error) {
             return false;
         }
+    }
+
+    // 兼容旧的API密钥验证
+    async validateApiKey(apiKey) {
+        return await this.validateCredentials('api_key', apiKey);
     }
 }
 
@@ -268,12 +315,21 @@ window.loadConfig = async function(configKey) {
 
 // 管理员函数
 window.adminConfig = {
-    setApiKey: (key) => window.configManager.setApiKey(key),
+    // 新的用户名密码登录
+    login: (username, password) => window.configManager.setCredentials(username, password),
+    logout: () => window.configManager.clearCredentials(),
+    getUsername: () => window.configManager.getUsername(),
+    validateCredentials: (username, password) => window.configManager.validateCredentials(username, password),
+    
+    // 配置操作
     getConfig: (key) => window.configManager.getConfig(key),
     saveConfig: (key, data) => window.configManager.saveConfig(key, data),
     deleteConfig: (key) => window.configManager.deleteConfig(key),
     listConfigs: () => window.configManager.listConfigs(),
     syncToGitee: () => window.configManager.syncToGitee(),
     clearCache: () => window.configManager.clearCache(),
+    
+    // 兼容旧接口
+    setApiKey: (key) => window.configManager.setCredentials('api_key', key),
     validateApiKey: (key) => window.configManager.validateApiKey(key)
 };
