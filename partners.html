@@ -10,30 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 导航栏 -->
-    <header>
-        <div class="container">
-            <div class="logo">
-                <a href="index.html">Brand</a>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Products</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="partners.html" class="active">Partners</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
-            <div class="mobile-menu-toggle">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="header-cta">
-                <a href="contact.html" class="btn primary">Get in Touch</a>
-            </div>
-        </div>
-    </header>
+    <!-- 导航栏容器 -->
+    <div id="header-container"></div>
 
     <!-- 页面内容 -->
     <main>
@@ -241,65 +219,10 @@
         </section>
     </main>
 
-    <!-- 页脚 -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>Brand</h3>
-                    <p>We create digital experiences that elevate your brand and inspire your audience.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-github"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-links">
-                    <div class="link-group">
-                        <h4>Navigation</h4>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="products.html">Products</a></li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="partners.html">Partners</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="contact.html">Contact</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="link-group">
-                        <h4>Services</h4>
-                        <ul>
-                            <li><a href="services.html#web-dev">Web Development</a></li>
-                            <li><a href="services.html#brand-identity">Brand Identity</a></li>
-                            <li><a href="services.html#ux-design">UX Design</a></li>
-                            <li><a href="services.html#digital-marketing">Digital Marketing</a></li>
-                            <li><a href="services.html#content">Content Creation</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="link-group">
-                        <h4>Contact</h4>
-                        <p>123 Design Street</p>
-                        <p>San Francisco, CA 94103</p>
-                        <p>hello@brand.com</p>
-                        <p>+1 (415) 555-5555</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 Brand. All rights reserved.</p>
-                <div class="legal-links">
-                    <a href="privacy.html">Privacy Policy</a>
-                    <a href="terms.html">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- 页脚容器 -->
+    <div id="footer-container"></div>
 
+    <script src="js/components.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html> 
