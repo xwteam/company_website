@@ -1,14 +1,10 @@
-/**
- * EdgeOne Pages KV存储 + Gitee API 双重保存系统
- * 安全的配置管理API接口
- */
+// 配置管理API处理器
+// 从原来的 config.js 分离出来的处理逻辑
 
-// Gitee API配置（通过环境变量保护敏感信息）
+// Gitee API配置
 const GITEE_CONFIG = {
     username: 'xwteam',
-    repo: 'company_website',
-    // 访问令牌通过EdgeOne环境变量获取，不在代码中暴露
-    // 在EdgeOne控制台配置环境变量: GITEE_TOKEN
+    repo: 'company_website'
 };
 
 // 配置文件映射
@@ -22,22 +18,20 @@ const CONFIG_FILES = {
     'footer': 'config/footer.json'
 };
 
-// 用户名密码验证（通过环境变量配置）
-function validateAuth(request) {
+// 用户名密码验证
+function validateAuth(request, env) {
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Basic ')) {
         return false;
     }
     
     try {
-        // 解码 Base64 编码的用户名:密码
-        const encoded = authHeader.slice(6); // 去掉 "Basic "
+        const encoded = authHeader.slice(6);
         const decoded = atob(encoded);
         const [username, password] = decoded.split(':');
         
-        // 从环境变量获取有效的用户名密码
-        const validUsername = process.env.ADMIN_USERNAME || 'admin';
-        const validPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const validUsername = env.ADMIN_USERNAME || 'admin';
+        const validPassword = env.ADMIN_PASSWORD || 'admin123';
         
         return username === validUsername && password === validPassword;
     } catch (error) {
@@ -45,16 +39,9 @@ function validateAuth(request) {
     }
 }
 
-// 兼容旧的API密钥验证（可选）
-function validateApiKey(request) {
-    const apiKey = request.headers.get('X-API-Key');
-    const validKey = process.env.API_SECRET;
-    return validKey && apiKey === validKey;
-}
-
-// Gitee API调用函数
-async function updateGiteeFile(filename, content, commitMessage) {
-    const token = process.env.GITEE_TOKEN;
+// Gitee API调用
+async function updateGiteeFile(filename, content, commitMessage, env) {
+    const token = env.GITEE_TOKEN;
     if (!token) {
         throw new Error('Gitee token not configured');
     }
@@ -62,7 +49,6 @@ async function updateGiteeFile(filename, content, commitMessage) {
     const apiUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.username}/${GITEE_CONFIG.repo}/contents/${filename}`;
     
     try {
-        // 首先获取文件当前的SHA值
         const getResponse = await fetch(apiUrl + '?access_token=' + token);
         let currentSha = null;
         
@@ -71,22 +57,19 @@ async function updateGiteeFile(filename, content, commitMessage) {
             currentSha = fileInfo.sha;
         }
 
-        // 准备更新请求
         const updateData = {
             access_token: token,
             message: commitMessage || `Update ${filename} via admin panel`,
-            content: btoa(JSON.stringify(content, null, 2)), // Base64编码
+            content: btoa(JSON.stringify(content, null, 2)),
         };
 
         if (currentSha) {
-            updateData.sha = currentSha; // 更新现有文件
+            updateData.sha = currentSha;
         }
 
         const response = await fetch(apiUrl, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updateData)
         });
 
@@ -102,75 +85,60 @@ async function updateGiteeFile(filename, content, commitMessage) {
     }
 }
 
-// CORS处理
+// CORS响应头
 function setCorsHeaders(response) {
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
+    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key');
     return response;
 }
 
-// EdgeOne Pages Functions 入口
-export async function onRequest(context) {
+// 主要的配置请求处理器
+export async function handleConfigRequest(context) {
     const { request, env } = context;
-        const url = new URL(request.url);
-        const method = request.method;
-        const pathname = url.pathname;
+    const url = new URL(request.url);
+    const pathname = url.pathname;
+    const method = request.method;
 
-        // 处理CORS预检请求
-        if (method === 'OPTIONS') {
-            return setCorsHeaders(new Response(null, { status: 200 }));
-        }
-
-        try {
-            // 验证身份（支持用户名密码或API密钥）
-            if (!validateAuth(request) && !validateApiKey(request)) {
-                return setCorsHeaders(new Response(JSON.stringify({ 
-                    error: 'Unauthorized',
-                    message: 'Invalid credentials'
-                }), { 
-                    status: 401,
-                    headers: { 'Content-Type': 'application/json' }
-                }));
-            }
-
-            // 路由处理
-            if (pathname.startsWith('/api/config/')) {
-                const configKey = pathname.split('/').pop();
-                
-                if (method === 'GET') {
-                    return await handleGetConfig(configKey, env);
-                } else if (method === 'POST' || method === 'PUT') {
-                    return await handleSaveConfig(configKey, request, env);
-                } else if (method === 'DELETE') {
-                    return await handleDeleteConfig(configKey, env);
-                }
-            } else if (pathname === '/api/config/list') {
-                return await handleListConfigs(env);
-            } else if (pathname === '/api/config/sync') {
-                return await handleSyncToGitee(request, env);
-            }
-
+    try {
+        // 验证身份
+        if (!validateAuth(request, env)) {
             return setCorsHeaders(new Response(JSON.stringify({ 
-                error: 'Not Found',
-                message: 'API endpoint not found'
+                error: 'Unauthorized',
+                message: 'Invalid credentials'
             }), { 
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-
-        } catch (error) {
-            console.error('API Error:', error);
-            return setCorsHeaders(new Response(JSON.stringify({ 
-                error: 'Internal Server Error',
-                message: error.message
-            }), { 
-                status: 500,
+                status: 401,
                 headers: { 'Content-Type': 'application/json' }
             }));
         }
+
+        // 路由处理
+        if (pathname.match(/\/api\/config\/[^\/]+$/)) {
+            const configKey = pathname.split('/').pop();
+            
+            if (method === 'GET') {
+                return await handleGetConfig(configKey, env);
+            } else if (method === 'PUT') {
+                return await handleSaveConfig(configKey, request, env);
+            } else if (method === 'DELETE') {
+                return await handleDeleteConfig(configKey, env);
+            }
+        } else if (pathname === '/api/config/list') {
+            return await handleListConfigs(env);
+        } else if (pathname === '/api/config/sync') {
+            return await handleSyncToGitee(request, env);
+        }
+
+        return setCorsHeaders(new Response(JSON.stringify({ 
+            error: 'Not Found',
+            message: 'API endpoint not found'
+        }), { 
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+        }));
+
     } catch (error) {
-        console.error('Request processing error:', error);
+        console.error('Config API Error:', error);
         return setCorsHeaders(new Response(JSON.stringify({ 
             error: 'Internal Server Error',
             message: error.message
@@ -184,7 +152,6 @@ export async function onRequest(context) {
 // 获取配置
 async function handleGetConfig(configKey, env) {
     try {
-        // 优先从KV存储读取
         const kvKey = `config-${configKey}`;
         const kvData = await env.stella.get(kvKey);
         
@@ -200,7 +167,6 @@ async function handleGetConfig(configKey, env) {
             }));
         }
 
-        // KV中没有数据，返回提示
         return setCorsHeaders(new Response(JSON.stringify({
             success: false,
             message: 'Configuration not found in KV storage',
@@ -215,7 +181,7 @@ async function handleGetConfig(configKey, env) {
     }
 }
 
-// 保存配置（双重保存：KV + Gitee）
+// 保存配置
 async function handleSaveConfig(configKey, request, env) {
     try {
         const configData = await request.json();
@@ -231,7 +197,7 @@ async function handleSaveConfig(configKey, request, env) {
         let kvError = null;
         let giteeError = null;
 
-        // 1. 保存到KV存储（优先，立即生效）
+        // 保存到KV
         try {
             await env.stella.put(kvKey, JSON.stringify(configData));
             kvSuccess = true;
@@ -240,26 +206,19 @@ async function handleSaveConfig(configKey, request, env) {
             console.error('KV save error:', error);
         }
 
-        // 2. 同步到Gitee（备份+版本控制）
+        // 同步到Gitee
         try {
-            await updateGiteeFile(filename, configData, `Update ${configKey} config via admin panel`);
+            await updateGiteeFile(filename, configData, `Update ${configKey} config via admin panel`, env);
             giteeSuccess = true;
         } catch (error) {
             giteeError = error.message;
             console.error('Gitee sync error:', error);
         }
 
-        // 返回保存结果
         const result = {
             success: kvSuccess || giteeSuccess,
-            kv: {
-                success: kvSuccess,
-                error: kvError
-            },
-            gitee: {
-                success: giteeSuccess,
-                error: giteeError
-            },
+            kv: { success: kvSuccess, error: kvError },
+            gitee: { success: giteeSuccess, error: giteeError },
             timestamp: new Date().toISOString()
         };
 
@@ -292,7 +251,7 @@ async function handleDeleteConfig(configKey, env) {
     }
 }
 
-// 列出所有配置
+// 列出配置
 async function handleListConfigs(env) {
     try {
         const configs = {};
@@ -328,7 +287,7 @@ async function handleListConfigs(env) {
     }
 }
 
-// 手动同步所有配置到Gitee
+// 同步到Gitee
 async function handleSyncToGitee(request, env) {
     try {
         const results = {};
@@ -339,7 +298,7 @@ async function handleSyncToGitee(request, env) {
                 const data = await env.stella.get(kvKey);
                 if (data) {
                     const configData = JSON.parse(data);
-                    await updateGiteeFile(filename, configData, `Sync ${key} config to Gitee`);
+                    await updateGiteeFile(filename, configData, `Sync ${key} config to Gitee`, env);
                     results[key] = { success: true };
                 } else {
                     results[key] = { success: false, message: 'No data in KV' };
