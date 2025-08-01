@@ -51,15 +51,14 @@ class ComponentLoader {
         const nav = document.querySelector('nav');
         
         if (mobileMenuToggle && nav) {
-            // 移除之前的事件监听器（如果存在）
-            const newToggle = mobileMenuToggle.cloneNode(true);
-            mobileMenuToggle.parentNode.replaceChild(newToggle, mobileMenuToggle);
-            
-            // 添加新的事件监听器
-            newToggle.addEventListener('click', function() {
+            // 添加点击事件监听器
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 nav.classList.toggle('active');
                 const isActive = nav.classList.contains('active');
-                newToggle.innerHTML = isActive ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                mobileMenuToggle.innerHTML = isActive ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
             });
             
             // 点击导航链接后关闭移动菜单
@@ -68,16 +67,18 @@ class ComponentLoader {
                 link.addEventListener('click', function() {
                     if (window.innerWidth <= 768) {
                         nav.classList.remove('active');
-                        newToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
                     }
                 });
             });
             
             // 点击菜单外部区域关闭菜单
             document.addEventListener('click', function(event) {
-                if (!nav.contains(event.target) && !newToggle.contains(event.target)) {
-                    nav.classList.remove('active');
-                    newToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                if (!nav.contains(event.target) && !mobileMenuToggle.contains(event.target)) {
+                    if (nav.classList.contains('active')) {
+                        nav.classList.remove('active');
+                        mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
                 }
             });
         }

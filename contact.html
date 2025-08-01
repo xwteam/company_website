@@ -279,10 +279,10 @@
             
             const createLeafletMap = () => {
                 try {
-                    // 创建地图实例
+                    // 创建地图实例（使用GCJ02坐标，适用于中国地区）
                     const map = L.map('company-map').setView([defaultLat, defaultLng], defaultZoom);
                     
-                    // 添加地图瓦片层
+                    // 添加地图瓦片层 - 使用OpenStreetMap
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '© OpenStreetMap contributors',
                         maxZoom: 19

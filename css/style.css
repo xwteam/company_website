@@ -1829,6 +1829,19 @@ input.error, textarea.error {
     position: relative;
 }
 
+/* 地图控件z-index调整，避免遮挡导航栏 */
+.leaflet-control-container {
+    z-index: 500 !important;
+}
+
+.leaflet-control-zoom {
+    z-index: 500 !important;
+}
+
+.leaflet-control {
+    z-index: 500 !important;
+}
+
 /* 自定义地图标记样式 */
 .custom-marker {
     background: transparent;

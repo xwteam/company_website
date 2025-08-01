@@ -80,12 +80,12 @@
     },
     "map": {
       "title": "Brand Company",
-      "latitude": 40.7128,
-      "longitude": -74.0060,
+      "latitude": 21.77298725,
+      "longitude": 111.91456246,
       "zoom": 15,
-      "address": "123 Design Street, Creative City, 10001",
-      "phone": "+1 (234) 567-890",
-      "hours": "Mon-Fri: 9:00-18:00"
+      "address": "中国广东省某市某区某街道123号",
+      "phone": "+86 138 0000 0000",
+      "hours": "周一至周五: 9:00-18:00"
     }
   },
   "faq-section": {
