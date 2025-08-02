@@ -384,10 +384,34 @@ export async function onRequest(context) {
                 timestamp: new Date().toISOString(),
                 availableEndpoints: [
                     '/api/test',
+                    '/api/debug',
                     '/api/configs',
                     '/api/config/{key}',
                     '/api/config/sync'
                 ]
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            }));
+        } else if (pathSegments[0] === 'debug') {
+            // /api/debug - 无需认证的调试端点
+            return setCorsHeaders(new Response(JSON.stringify({
+                success: true,
+                message: '调试端点工作正常',
+                timestamp: new Date().toISOString(),
+                environment: {
+                    adminUsername: env.ADMIN_USERNAME ? 'Set' : 'Missing',
+                    adminPassword: env.ADMIN_PASSWORD ? 'Set' : 'Missing',
+                    giteeToken: env.GITEE_TOKEN ? 'Set' : 'Missing'
+                },
+                request: {
+                    method: method,
+                    pathname: pathname,
+                    segments: pathSegments,
+                    hasAuthHeader: request.headers.get('Authorization') ? true : false,
+                    authHeaderType: request.headers.get('Authorization') ? 
+                        request.headers.get('Authorization').split(' ')[0] : 'None'
+                }
             }), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
