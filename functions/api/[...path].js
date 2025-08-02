@@ -397,6 +397,10 @@ export async function onRequest(context) {
                     method: method,
                     pathname: pathname,
                     segments: pathSegments,
+                    segmentsLength: pathSegments.length,
+                    segmentsType: typeof pathSegments,
+                    rawParams: params,
+                    url: url.pathname,
                     hasAuthHeader: request.headers.get('Authorization') ? true : false,
                     authHeaderType: request.headers.get('Authorization') ? 
                         request.headers.get('Authorization').split(' ')[0] : 'None'
