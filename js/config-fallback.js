@@ -116,6 +116,17 @@ class FallbackConfigManager {
         }
     }
 
+    // 管理员专用：获取配置（带认证）
+    async getConfig(configKey, credentials) {
+        try {
+            // 使用API加载配置（管理员功能）
+            return await this.loadFromAPI(configKey, credentials);
+        } catch (error) {
+            console.error(`❌ 管理员配置加载失败: ${configKey}`, error);
+            throw new Error(`无法加载配置文件 ${configKey}: ${error.message}`);
+        }
+    }
+
     // 管理员功能（带认证）
     async adminListConfigs(credentials) {
         try {
