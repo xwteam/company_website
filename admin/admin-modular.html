@@ -195,19 +195,36 @@
             showMessage('auth-messages', '正在验证...', 'info');
 
             try {
+                // 详细的调试信息
+                console.log('🔍 开始登录验证流程...');
+                console.log('用户名:', username);
+                console.log('密码长度:', password ? password.length : 0);
+                
+                // 检查所有可能的配置管理器
+                console.log('window对象检查:');
+                console.log('- fallbackConfigManager:', typeof window.fallbackConfigManager);
+                console.log('- configManager:', typeof window.configManager);
+                console.log('- enhancedAdminConfig:', typeof window.enhancedAdminConfig);
+                console.log('- adminModuleLoader:', typeof window.adminModuleLoader);
+                
                 // 等待模块加载完成
                 if (!window.enhancedAdminConfig) {
                     showMessage('auth-messages', '配置管理模块正在加载中，请稍候...', 'info');
+                    console.log('⏳ 等待模块加载...');
+                    
                     // 等待模块加载
                     await new Promise(resolve => {
                         const checkInterval = setInterval(() => {
+                            console.log('检查模块状态:', typeof window.enhancedAdminConfig);
                             if (window.enhancedAdminConfig) {
+                                console.log('✅ 模块加载完成');
                                 clearInterval(checkInterval);
                                 resolve();
                             }
                         }, 100);
                         // 10秒超时
                         setTimeout(() => {
+                            console.log('⏰ 模块加载超时');
                             clearInterval(checkInterval);
                             resolve();
                         }, 10000);
@@ -215,23 +232,39 @@
                 }
 
                 if (!window.enhancedAdminConfig) {
+                    console.error('❌ 配置管理模块未加载');
                     throw new Error('配置管理模块加载失败，请刷新页面重试');
                 }
 
+                console.log('✅ 配置管理器已加载，可用方法:');
+                console.log('- validateCredentials:', typeof window.enhancedAdminConfig.validateCredentials);
+                console.log('- checkApiStatus:', typeof window.enhancedAdminConfig.checkApiStatus);
+
                 // 检查API状态并提供详细信息
                 if (window.enhancedAdminConfig.checkApiStatus) {
+                    console.log('🔍 检查API可用性...');
                     const apiStatus = await window.enhancedAdminConfig.checkApiStatus();
+                    console.log('API状态:', apiStatus);
                     if (!apiStatus) {
                         showMessage('auth-messages', '⚠️ API服务不可用，正在尝试验证...', 'warning');
                     }
                 }
 
+                console.log('🔑 开始验证凭据...');
                 const isValid = await window.enhancedAdminConfig.validateCredentials(username, password);
+                console.log('验证结果:', isValid);
+                
                 if (isValid) {
+                    console.log('✅ 登录成功');
                     userCredentials = `Basic ${btoa(`${username}:${password}`)}`;
                     document.getElementById('current-user').textContent = username;
+                    
+                    // 保存登录状态
+                    saveLoginState(username, userCredentials);
+                    
                     showLoginSuccess();
                 } else {
+                    console.log('❌ 凭据验证失败');
                     showMessage('auth-messages', '用户名或密码错误，请检查后重试', 'error');
                 }
             } catch (error) {
@@ -279,6 +312,9 @@
             userCredentials = null;
             currentConfigType = null;
             currentConfigData = null;
+            
+            // 清除保存的登录状态
+            clearLoginState();
             
             document.getElementById('auth-section').style.display = 'block';
             document.getElementById('main-workspace').style.display = 'none';
@@ -408,9 +444,43 @@
             }
         }
 
+        // 检查已保存的登录状态
+        function checkSavedLogin() {
+            const savedCredentials = localStorage.getItem('adminCredentials');
+            const savedUsername = localStorage.getItem('adminUsername');
+            
+            if (savedCredentials && savedUsername) {
+                console.log('🔄 发现已保存的登录状态，自动登录...');
+                userCredentials = savedCredentials;
+                document.getElementById('current-user').textContent = savedUsername;
+                showLoginSuccess();
+                updateConnectionStatus('已连接', 'success');
+                return true;
+            }
+            return false;
+        }
+
+        // 保存登录状态
+        function saveLoginState(username, credentials) {
+            localStorage.setItem('adminUsername', username);
+            localStorage.setItem('adminCredentials', credentials);
+        }
+
+        // 清除登录状态
+        function clearLoginState() {
+            localStorage.removeItem('adminUsername');
+            localStorage.removeItem('adminCredentials');
+        }
+
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
             updateConnectionStatus('正在初始化...', 'warning');
+            
+            // 检查是否有已保存的登录状态
+            if (!checkSavedLogin()) {
+                // 没有保存的登录状态，显示登录页面
+                updateConnectionStatus('未登录', 'error');
+            }
         });
     </script>
 </body>

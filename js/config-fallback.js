@@ -218,6 +218,10 @@ window.enhancedAdminConfig = {
         return await window.fallbackConfigManager.validateCredentials(username, password);
     },
     
+    async getConfig(configKey, credentials) {
+        return await window.fallbackConfigManager.getConfig(configKey, credentials);
+    },
+    
     async listConfigs(credentials) {
         return await window.fallbackConfigManager.adminListConfigs(credentials);
     },

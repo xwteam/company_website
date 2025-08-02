@@ -1,20 +1,12 @@
 /**
- * EdgeOne Pages Functions 动态路由处理器
- * 根据EdgeOne Pages文档，使用 [...path].js 处理所有 /api/* 路径
- * 
- * 路由映射：
- * - /api/test → 测试端点
- * - /api/configs → 配置列表
- * - /api/config/{key} → 单个配置操作
- * - /api/config/sync → Gitee同步
+ * EdgeOne Pages Functions 动态路由处理器 - 简化调试版本
+ * 用于确定EdgeOne Pages的确切参数传递方式
  */
 
-// Gitee API配置（通过环境变量保护敏感信息）
+// Gitee API配置
 const GITEE_CONFIG = {
     username: 'xwteam',
     repo: 'company_website',
-    // 访问令牌通过EdgeOne环境变量获取，不在代码中暴露
-    // 在EdgeOne控制台配置环境变量: GITEE_TOKEN
 };
 
 // 配置文件映射
@@ -39,7 +31,6 @@ function setCorsHeaders(response) {
 // Base64解码函数（EdgeOne Functions兼容）
 function base64Decode(str) {
     try {
-        // 首先尝试使用原生atob
         if (typeof atob !== 'undefined') {
             return atob(str);
         }
@@ -49,7 +40,6 @@ function base64Decode(str) {
         let result = '';
         let i = 0;
         
-        // 移除非Base64字符
         str = str.replace(/[^A-Za-z0-9+/]/g, '');
         
         while (i < str.length) {
@@ -76,7 +66,7 @@ function base64Decode(str) {
     }
 }
 
-// 用户名密码验证（通过环境变量配置）
+// 用户名密码验证
 function validateAuth(request, env) {
     const authHeader = request.headers.get('Authorization');
     
@@ -107,300 +97,68 @@ function validateApiKey(request, env) {
     return validKey && apiKey === validKey;
 }
 
-// Gitee API调用函数
-async function updateGiteeFile(filename, content, commitMessage, env) {
-    const token = env.GITEE_TOKEN;
-    if (!token) {
-        throw new Error('Gitee token not configured');
-    }
-
-    const apiUrl = `https://gitee.com/api/v5/repos/${GITEE_CONFIG.username}/${GITEE_CONFIG.repo}/contents/${filename}`;
-    
-    try {
-        // 首先获取文件当前的SHA值
-        const getResponse = await fetch(apiUrl + '?access_token=' + token);
-        let currentSha = null;
-        
-        if (getResponse.ok) {
-            const fileInfo = await getResponse.json();
-            currentSha = fileInfo.sha;
-        }
-
-        // 准备更新请求
-        const updateData = {
-            access_token: token,
-            message: commitMessage || `Update ${filename} via admin panel`,
-            content: btoa(JSON.stringify(content, null, 2)), // Base64编码
-        };
-
-        if (currentSha) {
-            updateData.sha = currentSha;
-        }
-
-        // 发送更新请求
-        const updateResponse = await fetch(apiUrl, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updateData)
-        });
-
-        if (!updateResponse.ok) {
-            const errorText = await updateResponse.text();
-            throw new Error(`Gitee API error: ${updateResponse.status} - ${errorText}`);
-        }
-
-        return await updateResponse.json();
-    } catch (error) {
-        console.error('Gitee update error:', error);
-        throw error;
-    }
-}
-
-// 处理获取配置
-async function handleGetConfig(configKey, env) {
-    try {
-        if (!CONFIG_FILES[configKey]) {
-            return setCorsHeaders(new Response(JSON.stringify({
-                error: 'Config not found',
-                message: `Configuration '${configKey}' does not exist`
-            }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-        }
-
-        // 优先从KV存储读取
-        const kvValue = await env.stella.get(configKey);
-        if (kvValue) {
-            return setCorsHeaders(new Response(kvValue, {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-        }
-
-        // 如果KV中没有，返回默认提示
-        return setCorsHeaders(new Response(JSON.stringify({
-            message: 'Config not found in KV storage',
-            suggestion: 'Please save the config first via admin panel'
-        }), {
-            status: 404,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-
-    } catch (error) {
-        console.error('Get config error:', error);
-        return setCorsHeaders(new Response(JSON.stringify({
-            error: 'Internal Server Error',
-            message: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-    }
-}
-
-// 处理保存配置
-async function handleSaveConfig(configKey, request, env) {
-    try {
-        if (!CONFIG_FILES[configKey]) {
-            return setCorsHeaders(new Response(JSON.stringify({
-                error: 'Config not found',
-                message: `Configuration '${configKey}' does not exist`
-            }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-        }
-
-        const configData = await request.json();
-
-        // 保存到KV存储
-        await env.stella.put(configKey, JSON.stringify(configData, null, 2));
-
-        // 同步到Gitee
-        const filename = CONFIG_FILES[configKey];
-        try {
-            await updateGiteeFile(filename, configData, `Update ${configKey} config via admin panel`, env);
-        } catch (giteeError) {
-            console.warn('Gitee sync failed, but KV saved successfully:', giteeError);
-        }
-
-        return setCorsHeaders(new Response(JSON.stringify({
-            success: true,
-            message: 'Configuration saved successfully',
-            timestamp: new Date().toISOString()
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-
-    } catch (error) {
-        console.error('Save config error:', error);
-        return setCorsHeaders(new Response(JSON.stringify({
-            error: 'Internal Server Error',
-            message: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-    }
-}
-
-// 处理删除配置
-async function handleDeleteConfig(configKey, env) {
-    try {
-        await env.stella.delete(configKey);
-
-        return setCorsHeaders(new Response(JSON.stringify({
-            success: true,
-            message: 'Configuration deleted successfully'
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-
-    } catch (error) {
-        console.error('Delete config error:', error);
-        return setCorsHeaders(new Response(JSON.stringify({
-            error: 'Internal Server Error',
-            message: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-    }
-}
-
-// 处理配置列表
-async function handleListConfigs(env) {
-    try {
-        const configs = {};
-        
-        for (const [key, filename] of Object.entries(CONFIG_FILES)) {
-            try {
-                const value = await env.stella.get(key);
-                configs[key] = value ? JSON.parse(value) : null;
-            } catch (error) {
-                console.warn(`Failed to load config ${key}:`, error);
-                configs[key] = null;
-            }
-        }
-
-        return setCorsHeaders(new Response(JSON.stringify({
-            success: true,
-            configs: configs,
-            timestamp: new Date().toISOString()
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-
-    } catch (error) {
-        console.error('List configs error:', error);
-        return setCorsHeaders(new Response(JSON.stringify({
-            error: 'Internal Server Error',
-            message: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-    }
-}
-
-// 处理Gitee同步
-async function handleSyncToGitee(request, env) {
-    try {
-        const { configs } = await request.json();
-        const results = [];
-
-        for (const [configKey, configData] of Object.entries(configs)) {
-            if (CONFIG_FILES[configKey]) {
-                try {
-                    const filename = CONFIG_FILES[configKey];
-                    await updateGiteeFile(filename, configData, `Sync ${configKey} config`, env);
-                    results.push({ config: configKey, status: 'success' });
-                } catch (error) {
-                    results.push({ config: configKey, status: 'error', error: error.message });
-                }
-            }
-        }
-
-        return setCorsHeaders(new Response(JSON.stringify({
-            success: true,
-            message: 'Gitee sync completed',
-            results: results
-        }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-
-    } catch (error) {
-        console.error('Gitee sync error:', error);
-        return setCorsHeaders(new Response(JSON.stringify({
-            error: 'Internal Server Error',
-            message: error.message
-        }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        }));
-    }
-}
-
 // EdgeOne Pages Functions 动态路由入口
 export async function onRequest(context) {
     const { request, env, params } = context;
     const url = new URL(request.url);
     const method = request.method;
     
-    // 从动态路由参数中获取路径
-    const pathSegments = params.path || [];
-    const pathname = '/api/' + pathSegments.join('/');
-
-    console.log('Dynamic router - Method:', method, 'Path:', pathname, 'Segments:', pathSegments);
-
+    // 详细的路径解析调试
+    console.log('=== EdgeOne Functions Debug ===');
+    console.log('Full context:', JSON.stringify({
+        url: url.href,
+        pathname: url.pathname,
+        method: method,
+        params: params
+    }));
+    
     // 处理CORS预检请求
     if (method === 'OPTIONS') {
         return setCorsHeaders(new Response(null, { status: 200 }));
     }
 
+    // 解析路径 - 直接从URL解析，不依赖params
+    const fullPath = url.pathname;
+    let pathAfterApi = '';
+    let segments = [];
+    
+    if (fullPath.startsWith('/api/')) {
+        pathAfterApi = fullPath.substring(5); // 移除 '/api/'
+        if (pathAfterApi) {
+            segments = pathAfterApi.split('/').filter(s => s.length > 0);
+        }
+    }
+    
+    console.log('Path parsing:', {
+        fullPath: fullPath,
+        pathAfterApi: pathAfterApi,
+        segments: segments,
+        segmentCount: segments.length
+    });
+
     try {
         // 处理无需认证的端点
-        if (pathSegments.length === 0) {
-            // /api/
-            return setCorsHeaders(new Response(JSON.stringify({
-                message: 'EdgeOne Pages Functions API',
-                version: '2.0.0',
-                timestamp: new Date().toISOString(),
-                availableEndpoints: [
-                    '/api/test',
-                    '/api/debug',
-                    '/api/configs',
-                    '/api/config/{key}',
-                    '/api/config/sync'
-                ]
-            }), {
-                status: 200,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-        } else if (pathSegments[0] === 'debug') {
-            // /api/debug - 无需认证的调试端点
+        if (segments.length === 1 && segments[0] === 'debug') {
+            console.log('Processing /api/debug endpoint');
             return setCorsHeaders(new Response(JSON.stringify({
                 success: true,
-                message: '调试端点工作正常',
+                message: '调试端点工作正常！',
                 timestamp: new Date().toISOString(),
+                debug: {
+                    url: url.href,
+                    pathname: url.pathname,
+                    method: method,
+                    params: params,
+                    pathAfterApi: pathAfterApi,
+                    segments: segments,
+                    segmentCount: segments.length
+                },
                 environment: {
                     adminUsername: env.ADMIN_USERNAME ? 'Set' : 'Missing',
                     adminPassword: env.ADMIN_PASSWORD ? 'Set' : 'Missing',
                     giteeToken: env.GITEE_TOKEN ? 'Set' : 'Missing'
                 },
                 request: {
-                    method: method,
-                    pathname: pathname,
-                    segments: pathSegments,
-                    segmentsLength: pathSegments.length,
-                    segmentsType: typeof pathSegments,
-                    rawParams: params,
-                    url: url.pathname,
                     hasAuthHeader: request.headers.get('Authorization') ? true : false,
                     authHeaderType: request.headers.get('Authorization') ? 
                         request.headers.get('Authorization').split(' ')[0] : 'None'
@@ -410,21 +168,9 @@ export async function onRequest(context) {
                 headers: { 'Content-Type': 'application/json' }
             }));
         }
-
-        // 验证身份（对于需要认证的端点）
-        if (!validateAuth(request, env) && !validateApiKey(request, env)) {
-            return setCorsHeaders(new Response(JSON.stringify({ 
-                error: 'Unauthorized',
-                message: 'Invalid credentials'
-            }), { 
-                status: 401,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-        }
-
-        // 处理需要认证的端点
-        if (pathSegments[0] === 'test') {
-            // /api/test
+        
+        if (segments.length === 1 && segments[0] === 'test') {
+            console.log('Processing /api/test endpoint (no auth required)');
             return setCorsHeaders(new Response(JSON.stringify({
                 success: true,
                 message: 'EdgeOne Functions API 工作正常！',
@@ -436,41 +182,78 @@ export async function onRequest(context) {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
             }));
-        } else if (pathSegments[0] === 'configs') {
-            // /api/configs
-            if (method === 'GET') {
-                return await handleListConfigs(env);
-            }
-        } else if (pathSegments[0] === 'config') {
-            if (pathSegments.length === 2) {
-                const configKey = pathSegments[1];
-                
-                if (configKey === 'sync') {
-                    // /api/config/sync
-                    return await handleSyncToGitee(request, env);
-                } else {
-                    // /api/config/{key}
-                    if (method === 'GET') {
-                        return await handleGetConfig(configKey, env);
-                    } else if (method === 'POST' || method === 'PUT') {
-                        return await handleSaveConfig(configKey, request, env);
-                    } else if (method === 'DELETE') {
-                        return await handleDeleteConfig(configKey, env);
-                    }
+        }
+        
+        // 处理根路径（无需认证）
+        if (segments.length === 0) {
+            console.log('Processing /api/ root endpoint');
+            return setCorsHeaders(new Response(JSON.stringify({
+                message: 'EdgeOne Pages Functions API',
+                version: '2.0.0',
+                timestamp: new Date().toISOString(),
+                availableEndpoints: [
+                    '/api/test',
+                    '/api/debug',
+                    '/api/configs',
+                    '/api/config/{key}',
+                    '/api/config/sync'
+                ],
+                debug: {
+                    receivedPath: fullPath,
+                    parsedSegments: segments
                 }
-            }
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            }));
+        }
+
+        // 验证身份（对于需要认证的端点）
+        console.log('Checking authentication for:', segments);
+        if (!validateAuth(request, env) && !validateApiKey(request, env)) {
+            console.log('Authentication failed');
+            return setCorsHeaders(new Response(JSON.stringify({ 
+                error: 'Unauthorized',
+                message: 'Invalid credentials',
+                debug: {
+                    path: fullPath,
+                    segments: segments,
+                    hasAuthHeader: request.headers.get('Authorization') ? true : false
+                }
+            }), { 
+                status: 401,
+                headers: { 'Content-Type': 'application/json' }
+            }));
+        }
+
+        console.log('Authentication successful');
+
+        // 处理需要认证的端点
+        
+        if (segments.length === 1 && segments[0] === 'configs') {
+            console.log('Processing /api/configs endpoint');
+            // 简化的配置列表返回
+            return setCorsHeaders(new Response(JSON.stringify({
+                success: true,
+                message: 'Configs endpoint working',
+                timestamp: new Date().toISOString(),
+                configs: CONFIG_FILES
+            }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            }));
         }
 
         // 404 - 路径未找到
+        console.log('No matching endpoint for:', segments);
         return setCorsHeaders(new Response(JSON.stringify({ 
             error: 'API路径未找到',
-            path: pathname,
-            segments: pathSegments,
+            path: fullPath,
+            segments: segments,
             availablePaths: [
                 '/api/test',
-                '/api/configs',
-                '/api/config/{key}',
-                '/api/config/sync'
+                '/api/debug',
+                '/api/configs'
             ]
         }), { 
             status: 404,
@@ -482,7 +265,7 @@ export async function onRequest(context) {
         return setCorsHeaders(new Response(JSON.stringify({ 
             error: 'Internal Server Error',
             message: error.message,
-            path: pathname
+            path: fullPath
         }), { 
             status: 500,
             headers: { 'Content-Type': 'application/json' }
