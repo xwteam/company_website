@@ -1,0 +1,121 @@
+{
+  "page-header": {
+    "title": "Get in Touch",
+    "description": "We'd love to hear from you. Let's start a conversation about your next project."
+  },
+  "contact-form": {
+    "title": "Send us a message",
+    "fields": [
+      {
+        "type": "text",
+        "id": "name",
+        "name": "name",
+        "placeholder": "Your name",
+        "required": true
+      },
+      {
+        "type": "email",
+        "id": "email",
+        "name": "email",
+        "placeholder": "Your email",
+        "required": true
+      },
+      {
+        "type": "tel",
+        "id": "phone",
+        "name": "phone",
+        "placeholder": "Phone (Optional)",
+        "required": false
+      },
+      {
+        "type": "text",
+        "id": "company",
+        "name": "company",
+        "placeholder": "Your company (Optional)",
+        "required": false
+      },
+      {
+        "type": "textarea",
+        "id": "message",
+        "name": "message",
+        "placeholder": "Tell us about your project or inquiry",
+        "rows": 5,
+        "required": true,
+        "fullWidth": true
+      }
+    ],
+    "submitButton": "Send Message"
+  },
+  "contact-info": {
+    "title": "Contact Information",
+    "items": [
+      {
+        "icon": "fas fa-envelope",
+        "title": "Email",
+        "details": ["hello@brand.com"]
+      },
+      {
+        "icon": "fas fa-phone-alt",
+        "title": "Phone",
+        "details": ["+1 (415) 555-5555"]
+      },
+      {
+        "icon": "fas fa-map-marker-alt",
+        "title": "Address",
+        "details": ["123 Design Street", "San Francisco, CA 94103", "United States"]
+      },
+      {
+        "icon": "fas fa-clock",
+        "title": "Working Hours",
+        "details": ["Monday - Friday: 9am - 6pm", "Saturday: 10am - 2pm"]
+      }
+    ],
+    "social": {
+      "title": "Follow Us",
+      "links": [
+        {"icon": "fab fa-instagram", "url": "#"},
+        {"icon": "fab fa-twitter", "url": "#"},
+        {"icon": "fab fa-linkedin-in", "url": "#"}
+      ]
+    },
+    "map": {
+      "title": "Brand Company",
+      "latitude": 21.77298725,
+      "longitude": 111.91456246,
+      "zoom": 15,
+      "address": "中国广东省某市某区某街道123号",
+      "phone": "+86 138 0000 0000",
+      "hours": "周一至周五: 9:00-18:00"
+    }
+  },
+  "faq-section": {
+    "title": "Frequently Asked Questions",
+    "description": "Have questions? We've got answers.",
+    "faqs": [
+      {
+        "question": "What services do you offer?",
+        "answer": "We offer a comprehensive range of services including brand identity design, web development, UX design, and digital marketing. Each service is tailored to meet the specific needs of your business."
+      },
+      {
+        "question": "How much do your services cost?",
+        "answer": "Our pricing is customized based on the scope and requirements of each project. We provide detailed proposals after understanding your specific needs during an initial consultation."
+      },
+      {
+        "question": "How long does a typical project take?",
+        "answer": "Project timelines vary depending on complexity and scope. A simple website might take 4-6 weeks while a comprehensive brand identity and web development project might take 8-12 weeks. We'll provide a timeline estimate during our initial discussions."
+      },
+      {
+        "question": "Do you work with clients internationally?",
+        "answer": "Yes, we work with clients globally. Our collaborative process and tools enable us to work effectively with clients regardless of location. We've successfully completed projects with clients across North America, Europe, and Asia."
+      },
+      {
+        "question": "What is your project process?",
+        "answer": "Our process includes discovery, strategy, development, design, and development, and launch. We maintain clear communication throughout and involve you at key decision points to ensure the final product aligns with your vision."
+      },
+      {
+        "question": "Do you provide ongoing support after project completion?",
+        "answer": "Yes, we offer various support and maintenance packages to keep your digital assets performing optimally. We can discuss the right support option for your needs during our project planning."
+      }
+    ]
+  }
+}

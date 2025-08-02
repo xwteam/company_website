@@ -1,0 +1,61 @@
+{
+  "hero-bg": "images/hero-bg.jpg",
+  "hero-content-title": "we do chicken right<br>KFC",
+  "hero-content-description": "Strategy-driven design and technology for forward-thinking brands",
+  "services-description": {
+    "title": "We combine strategy, design, and technology to create effective digital solutions",
+    "items": [
+      {
+        "id": "01",
+        "icon": "fas fa-globe",
+        "title": "Brand Identity",
+        "desc": "We create unique visual systems that embody your brand values"
+      },
+      {
+        "id": "02",
+        "icon": "fas fa-laptop-code",
+        "title": "Web Development",
+        "desc": "Custom website solutions built with cutting-edge technology"
+      },
+      {
+        "id": "03",
+        "icon": "fas fa-pencil-ruler",
+        "title": "UX Design",
+        "desc": "Human-centered design that creates intuitive experiences"
+      },
+      {
+        "id": "04",
+        "icon": "fas fa-chart-line",
+        "title": "Digital Marketing",
+        "desc": "Data-driven strategies to increase your visibility"
+      }
+    ]
+  },
+  "featured-products-description": "A selection of our quality products across categories",
+  "testimonials-description": {
+    "title": "Hear from the businesses we have helped transform",
+    "items": [
+      {
+        "id": "01",
+        "quote": "Brand helped us completely reimagine our digital presence.",
+        "name": "Sarah Johnson",
+        "position": "Marketing Director, TechNova",
+        "avatar": "https://randomuser.me/api/portraits/women/45.jpg"
+      },
+      {
+        "id": "02",
+        "quote": "Working with Brand was a game-changer for our company.",
+        "name": "Michael Chen",
+        "position": "CEO, GreenEarth Solutions",
+        "avatar": "https://randomuser.me/api/portraits/men/32.jpg"
+      },
+      {
+        "id": "03",
+        "quote": "The team at Brand brings both creativity and strategic thinking.",
+        "name": "Jessica Williams",
+        "position": "Operations Manager, Urban Dwellers",
+        "avatar": "https://randomuser.me/api/portraits/women/26.jpg"
+      }
+    ]
+  }
+}

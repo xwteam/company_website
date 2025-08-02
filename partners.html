@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partners - Brand</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/fontawesome/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏容器 -->
+    <div id="header-container"></div>
+
+    <!-- 页面内容 -->
+    <main>
+        <!-- 合作伙伴标题 -->
+        <section class="partners-header">
+            <div class="container">
+                <h1 id="page-title">Our Partners</h1>
+                <p id="page-description">We're proud to collaborate with forward-thinking organizations across various industries.</p>
+            </div>
+        </section>
+
+        <!-- 合作伙伴展示 -->
+        <section class="partners-showcase">
+            <div class="container">
+                <div class="partners-grid" id="partners-grid">
+                    <!-- 动态生成合作伙伴卡片 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作伙伴方法 -->
+        <section class="partnership-approach">
+            <div class="container">
+                <div class="approach-content">
+                    <div class="approach-text">
+                        <h2 id="approach-title">Our Partnership Approach</h2>
+                        <p id="approach-description">We believe that true partnerships are built on shared values, open communication, and mutual growth. Here's how we work with our partners.</p>
+                        
+                        <div class="approach-steps" id="approach-steps">
+                            <!-- 动态生成步骤 -->
+                        </div>
+                    </div>
+                    
+                    <div class="approach-image">
+                        <img id="approach-image" src="images/partnership-approach.jpg" alt="Our Partnership Approach">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作伙伴优势 -->
+        <section class="partnership-benefits">
+            <div class="container">
+                <h2 id="benefits-title">Partnership Benefits</h2>
+                <p class="section-description" id="benefits-description">What you can expect when you partner with Brand</p>
+                
+                <div class="benefits-grid" id="benefits-grid">
+                    <!-- 动态生成优势项目 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 成为合作伙伴 -->
+        <section class="become-partner blue-bg">
+            <div class="container">
+                <div class="become-content">
+                    <div class="become-text">
+                        <h2 id="become-title">Become a Partner</h2>
+                        <p id="become-description">Interested in partnering with Brand? Let's explore how we can create value together. Our partnership team is ready to discuss potential collaborations.</p>
+                        <a href="contact.html" class="btn primary light" id="become-button">Start the Conversation <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="become-image">
+                        <img id="become-image" src="images/become-partner.jpg" alt="Become a Partner">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚容器 -->
+    <div id="footer-container"></div>
+
+    <script src="js/components.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // 加载partners配置文件
+        async function loadPartnersConfig() {
+            try {
+                const response = await fetch('config/partners.json');
+                const config = await response.json();
+                
+                // 更新页面标题
+                if (config['page-header']) {
+                    document.getElementById('page-title').textContent = config['page-header'].title;
+                    document.getElementById('page-description').textContent = config['page-header'].description;
+                }
+                
+                // 生成合作伙伴列表
+                if (config.partners) {
+                    generatePartners(config.partners);
+                }
+                
+                // 更新合作方法
+                if (config['partnership-approach']) {
+                    const approach = config['partnership-approach'];
+                    document.getElementById('approach-title').textContent = approach.title;
+                    document.getElementById('approach-description').textContent = approach.description;
+                    document.getElementById('approach-image').src = approach.image;
+                    generateApproachSteps(approach.steps);
+                }
+                
+                // 更新合作优势
+                if (config['partnership-benefits']) {
+                    const benefits = config['partnership-benefits'];
+                    document.getElementById('benefits-title').textContent = benefits.title;
+                    document.getElementById('benefits-description').textContent = benefits.description;
+                    generateBenefits(benefits.benefits);
+                }
+                
+                // 更新成为合作伙伴
+                if (config['become-partner']) {
+                    const become = config['become-partner'];
+                    document.getElementById('become-title').textContent = become.title;
+                    document.getElementById('become-description').textContent = become.description;
+                    document.getElementById('become-image').src = become.image;
+                    
+                    const button = document.getElementById('become-button');
+                    button.innerHTML = `${become['button-text']} <i class="fas fa-arrow-right"></i>`;
+                }
+                
+            } catch (error) {
+                console.error('加载partners配置文件失败:', error);
+            }
+        }
+        
+        // 生成合作伙伴列表
+        function generatePartners(partners) {
+            const grid = document.getElementById('partners-grid');
+            grid.innerHTML = '';
+            
+            partners.forEach(partner => {
+                const partnerCard = document.createElement('div');
+                partnerCard.className = 'partner-card';
+                partnerCard.innerHTML = `
+                    <img src="${partner.image}" alt="${partner.name}">
+                    <div class="partner-content">
+                        <h3>${partner.name}</h3>
+                        <p>${partner.description}</p>
+                        <div class="partner-quote">
+                            <p>"${partner.quote}"</p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(partnerCard);
+            });
+        }
+        
+        // 生成合作方法步骤
+        function generateApproachSteps(steps) {
+            const container = document.getElementById('approach-steps');
+            container.innerHTML = '';
+            
+            steps.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'approach-step';
+                stepDiv.innerHTML = `
+                    <div class="step-number">${step.number}</div>
+                    <div class="step-content">
+                        <h3>${step.title}</h3>
+                        <p>${step.description}</p>
+                    </div>
+                `;
+                container.appendChild(stepDiv);
+            });
+        }
+        
+        // 生成合作优势
+        function generateBenefits(benefits) {
+            const grid = document.getElementById('benefits-grid');
+            grid.innerHTML = '';
+            
+            benefits.forEach(benefit => {
+                const benefitItem = document.createElement('div');
+                benefitItem.className = 'benefit-item';
+                benefitItem.innerHTML = `
+                    <div class="benefit-icon">
+                        <i class="${benefit.icon}"></i>
+                    </div>
+                    <h3>${benefit.title}</h3>
+                    <p>${benefit.description}</p>
+                `;
+                grid.appendChild(benefitItem);
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载配置
+            loadPartnersConfig();
+        });
+    </script>
+</body>
+</html> 
