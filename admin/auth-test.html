@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>身份验证测试工具</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #007bff; text-align: center; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #0056b3; }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 身份验证测试工具</h1>
+        
+        <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" placeholder="输入您的管理员用户名">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">密码</label>
+            <input type="password" id="password" placeholder="输入您的管理员密码">
+        </div>
+        
+        <div style="text-align: center;">
+            <button onclick="testAuth()">🧪 测试身份验证</button>
+            <button onclick="testBase64()">🔤 测试Base64编码</button>
+            <button onclick="checkLogs()">📋 查看调试信息</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function showResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            resultsDiv.innerHTML = `
+                <div class="${type}">
+                    <strong>[${timestamp}]</strong><br>
+                    ${message}
+                </div>
+            `;
+        }
+
+        function testBase64() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showResult('请输入用户名和密码', 'error');
+                return;
+            }
+            
+            const credentials = `${username}:${password}`;
+            const base64Credentials = btoa(credentials);
+            const authHeader = `Basic ${base64Credentials}`;
+            
+            showResult(`
+                <strong>Base64编码测试</strong><br>
+                原始凭据: ${credentials}<br>
+                Base64编码: ${base64Credentials}<br>
+                Authorization头: ${authHeader}<br>
+                <br>
+                验证解码: ${atob(base64Credentials)}
+            `, 'info');
+        }
+
+        async function testAuth() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showResult('请输入用户名和密码', 'error');
+                return;
+            }
+            
+            showResult('正在测试身份验证...', 'info');
+            
+            try {
+                const credentials = btoa(`${username}:${password}`);
+                const response = await fetch('/api/configs', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Basic ${credentials}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const responseText = await response.text();
+                let responseData;
+                
+                try {
+                    responseData = JSON.parse(responseText);
+                } catch (e) {
+                    responseData = responseText;
+                }
+                
+                if (response.ok) {
+                    showResult(`
+                        <strong>✅ 身份验证成功！</strong><br>
+                        状态码: ${response.status}<br>
+                        响应: ${JSON.stringify(responseData, null, 2)}
+                    `, 'success');
+                } else if (response.status === 401) {
+                    showResult(`
+                        <strong>❌ 身份验证失败</strong><br>
+                        状态码: ${response.status}<br>
+                        错误信息: ${responseData.message || responseData}<br>
+                        <br>
+                        <div class="debug-info">
+                            <strong>调试信息：</strong><br>
+                            用户名: ${username}<br>
+                            密码长度: ${password.length}<br>
+                            Base64凭据: ${credentials}<br>
+                            <br>
+                            可能原因：<br>
+                            1. 环境变量 ADMIN_USERNAME 或 ADMIN_PASSWORD 未正确配置<br>
+                            2. 用户名或密码不匹配<br>
+                            3. EdgeOne Functions中Base64解码问题
+                        </div>
+                    `, 'error');
+                } else {
+                    showResult(`
+                        <strong>⚠️ 意外的响应</strong><br>
+                        状态码: ${response.status}<br>
+                        响应: ${JSON.stringify(responseData, null, 2)}
+                    `, 'error');
+                }
+                
+            } catch (error) {
+                showResult(`
+                    <strong>❌ 连接错误</strong><br>
+                    错误信息: ${error.message}<br>
+                    <br>
+                    这通常意味着：<br>
+                    1. EdgeOne Functions未正确部署<br>
+                    2. 网络连接问题<br>
+                    3. CORS配置问题
+                `, 'error');
+            }
+        }
+
+        function checkLogs() {
+            showResult(`
+                <strong>📋 如何查看EdgeOne Functions调试日志：</strong><br>
+                <br>
+                1. 登录 EdgeOne Pages 控制台<br>
+                2. 进入项目 "company"<br>
+                3. 找到 "Functions" 或"云函数" 选项<br>
+                4. 查看 "日志" 或 "Logs" 部分<br>
+                5. 寻找包含认证信息的日志<br>
+                <br>
+                <strong>预期看到的日志：</strong><br>
+                • Auth header received: Present<br>
+                • Base64 credentials length: XX<br>
+                • Decoded credentials format: Valid<br>
+                • Parsed username: ${document.getElementById('username').value || 'your_username'}<br>
+                • Environment - Username: Set, Password: Set<br>
+                • Auth validation result: true/false<br>
+                <br>
+                如果看到 "Environment - Username: Missing" 或 "Password: Missing"，<br>
+                说明环境变量配置有问题。
+            `, 'info');
+        }
+    </script>
+</body>
+</html>
