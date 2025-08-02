@@ -315,11 +315,11 @@
             
             try {
                 // 加载配置管理模块
-                if (!window.FallbackConfigManager) {
+                if (!window.fallbackConfigManager) {
                     await loadScript('../js/config-fallback.js');
                 }
                 
-                const configManager = new window.FallbackConfigManager();
+                const configManager = window.fallbackConfigManager;
                 const isValid = await configManager.validateCredentials(username, password);
                 
                 if (isValid) {
