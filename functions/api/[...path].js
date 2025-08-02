@@ -243,6 +243,63 @@ export async function onRequest(context) {
                 headers: { 'Content-Type': 'application/json' }
             }));
         }
+        
+        if (segments.length === 2 && segments[0] === 'config') {
+            const configKey = segments[1];
+            console.log('Processing /api/config/' + configKey + ' endpoint');
+            
+            // 检查配置键是否有效
+            if (!CONFIG_FILES[configKey]) {
+                return setCorsHeaders(new Response(JSON.stringify({
+                    success: false,
+                    error: 'Invalid config key',
+                    message: `配置键 '${configKey}' 不存在`,
+                    availableKeys: Object.keys(CONFIG_FILES)
+                }), {
+                    status: 404,
+                    headers: { 'Content-Type': 'application/json' }
+                }));
+            }
+            
+            try {
+                // 从KV存储获取配置
+                const configData = await env.stella.get(configKey);
+                
+                if (configData) {
+                    return setCorsHeaders(new Response(JSON.stringify({
+                        success: true,
+                        configKey: configKey,
+                        data: JSON.parse(configData),
+                        source: 'KV Storage',
+                        timestamp: new Date().toISOString()
+                    }), {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' }
+                    }));
+                } else {
+                    return setCorsHeaders(new Response(JSON.stringify({
+                        success: false,
+                        error: 'Config not found',
+                        message: `配置 '${configKey}' 在KV存储中不存在`,
+                        configKey: configKey
+                    }), {
+                        status: 404,
+                        headers: { 'Content-Type': 'application/json' }
+                    }));
+                }
+            } catch (error) {
+                console.error('KV read error:', error);
+                return setCorsHeaders(new Response(JSON.stringify({
+                    success: false,
+                    error: 'KV Storage Error',
+                    message: `读取配置失败: ${error.message}`,
+                    configKey: configKey
+                }), {
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                }));
+            }
+        }
 
         // 404 - 路径未找到
         console.log('No matching endpoint for:', segments);
@@ -253,7 +310,8 @@ export async function onRequest(context) {
             availablePaths: [
                 '/api/test',
                 '/api/debug',
-                '/api/configs'
+                '/api/configs',
+                '/api/config/{key}'
             ]
         }), { 
             status: 404,
