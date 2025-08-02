@@ -36,23 +36,75 @@ function setCorsHeaders(response) {
     return response;
 }
 
+// Base64解码函数（EdgeOne Functions兼容）
+function base64Decode(str) {
+    try {
+        // 首先尝试使用原生atob
+        if (typeof atob !== 'undefined') {
+            return atob(str);
+        }
+        
+        // 手动实现Base64解码
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        let result = '';
+        let i = 0;
+        
+        // 移除非Base64字符
+        str = str.replace(/[^A-Za-z0-9+/]/g, '');
+        
+        while (i < str.length) {
+            const encoded1 = chars.indexOf(str.charAt(i++));
+            const encoded2 = chars.indexOf(str.charAt(i++));
+            const encoded3 = chars.indexOf(str.charAt(i++));
+            const encoded4 = chars.indexOf(str.charAt(i++));
+            
+            const bitmap = (encoded1 << 18) | (encoded2 << 12) | (encoded3 << 6) | encoded4;
+            
+            result += String.fromCharCode((bitmap >> 16) & 255);
+            if (encoded3 !== 64 && encoded3 !== -1) {
+                result += String.fromCharCode((bitmap >> 8) & 255);
+            }
+            if (encoded4 !== 64 && encoded4 !== -1) {
+                result += String.fromCharCode(bitmap & 255);
+            }
+        }
+        
+        return result;
+    } catch (error) {
+        console.error('Base64 decode error:', error);
+        throw error;
+    }
+}
+
 // 用户名密码验证（通过环境变量配置）
 function validateAuth(request, env) {
     const authHeader = request.headers.get('Authorization');
+    console.log('Auth header received:', authHeader ? 'Present' : 'Missing');
+    
     if (!authHeader || !authHeader.startsWith('Basic ')) {
+        console.log('Invalid auth header format');
         return false;
     }
 
     try {
         const base64Credentials = authHeader.split(' ')[1];
-        const credentials = atob(base64Credentials);
+        console.log('Base64 credentials length:', base64Credentials.length);
+        
+        const credentials = base64Decode(base64Credentials);
+        console.log('Decoded credentials format:', credentials ? 'Valid' : 'Invalid');
+        
         const [username, password] = credentials.split(':');
+        console.log('Parsed username:', username, 'Password length:', password ? password.length : 0);
 
         const validUsername = env.ADMIN_USERNAME;
         const validPassword = env.ADMIN_PASSWORD;
+        console.log('Environment - Username:', validUsername ? 'Set' : 'Missing', 'Password:', validPassword ? 'Set' : 'Missing');
 
-        return validUsername && validPassword && 
+        const isValid = validUsername && validPassword && 
                username === validUsername && password === validPassword;
+        console.log('Auth validation result:', isValid);
+        
+        return isValid;
     } catch (error) {
         console.error('Auth validation error:', error);
         return false;
