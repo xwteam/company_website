@@ -79,32 +79,21 @@ function base64Decode(str) {
 // 用户名密码验证（通过环境变量配置）
 function validateAuth(request, env) {
     const authHeader = request.headers.get('Authorization');
-    console.log('Auth header received:', authHeader ? 'Present' : 'Missing');
     
     if (!authHeader || !authHeader.startsWith('Basic ')) {
-        console.log('Invalid auth header format');
         return false;
     }
 
     try {
         const base64Credentials = authHeader.split(' ')[1];
-        console.log('Base64 credentials length:', base64Credentials.length);
-        
         const credentials = base64Decode(base64Credentials);
-        console.log('Decoded credentials format:', credentials ? 'Valid' : 'Invalid');
-        
         const [username, password] = credentials.split(':');
-        console.log('Parsed username:', username, 'Password length:', password ? password.length : 0);
 
         const validUsername = env.ADMIN_USERNAME;
         const validPassword = env.ADMIN_PASSWORD;
-        console.log('Environment - Username:', validUsername ? 'Set' : 'Missing', 'Password:', validPassword ? 'Set' : 'Missing');
 
-        const isValid = validUsername && validPassword && 
+        return validUsername && validPassword && 
                username === validUsername && password === validPassword;
-        console.log('Auth validation result:', isValid);
-        
-        return isValid;
     } catch (error) {
         console.error('Auth validation error:', error);
         return false;
