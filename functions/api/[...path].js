@@ -364,18 +364,7 @@ export async function onRequest(context) {
     }
 
     try {
-        // 验证身份（支持用户名密码或API密钥）
-        if (!validateAuth(request, env) && !validateApiKey(request, env)) {
-            return setCorsHeaders(new Response(JSON.stringify({ 
-                error: 'Unauthorized',
-                message: 'Invalid credentials'
-            }), { 
-                status: 401,
-                headers: { 'Content-Type': 'application/json' }
-            }));
-        }
-
-        // 路由处理
+        // 处理无需认证的端点
         if (pathSegments.length === 0) {
             // /api/
             return setCorsHeaders(new Response(JSON.stringify({
@@ -416,7 +405,21 @@ export async function onRequest(context) {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' }
             }));
-        } else if (pathSegments[0] === 'test') {
+        }
+
+        // 验证身份（对于需要认证的端点）
+        if (!validateAuth(request, env) && !validateApiKey(request, env)) {
+            return setCorsHeaders(new Response(JSON.stringify({ 
+                error: 'Unauthorized',
+                message: 'Invalid credentials'
+            }), { 
+                status: 401,
+                headers: { 'Content-Type': 'application/json' }
+            }));
+        }
+
+        // 处理需要认证的端点
+        if (pathSegments[0] === 'test') {
             // /api/test
             return setCorsHeaders(new Response(JSON.stringify({
                 success: true,
