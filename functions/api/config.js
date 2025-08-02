@@ -151,6 +151,18 @@ export async function onRequest(context) {
                 }
             } else if (pathname === '/api/config/sync') {
                 return await handleSyncToGitee(request, env);
+            } else if (pathname === '/api/test') {
+                // 测试端点，用于验证Functions部署状态
+                return setCorsHeaders(new Response(JSON.stringify({
+                    success: true,
+                    message: 'EdgeOne Functions API 工作正常！',
+                    timestamp: new Date().toISOString(),
+                    environment: 'EdgeOne Pages Functions',
+                    version: '1.0.0'
+                }), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' }
+                }));
             }
 
             return setCorsHeaders(new Response(JSON.stringify({ 
