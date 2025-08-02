@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理面板诊断工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-success { background: #28a745; }
+        .status-error { background: #dc3545; }
+        .status-warning { background: #ffc107; }
+        .status-unknown { background: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-stethoscope"></i> 管理面板诊断工具</h1>
+        
+        <div class="test-section">
+            <h3>🔍 系统环境检测</h3>
+            <p>检测当前运行环境和基础设置</p>
+            <button class="btn" onclick="checkEnvironment()">
+                <i class="fas fa-play"></i> 检测环境
+            </button>
+            <div id="env-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🌐 API连接测试</h3>
+            <p>测试EdgeOne Functions API是否正常工作</p>
+            <button class="btn" onclick="testApiConnection()">
+                <i class="fas fa-wifi"></i> 测试API连接
+            </button>
+            <button class="btn btn-secondary" onclick="testSpecificEndpoint()">
+                <i class="fas fa-cog"></i> 测试具体端点
+            </button>
+            <div id="api-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔑 身份验证测试</h3>
+            <p>测试用户名密码验证功能</p>
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="test-username" placeholder="测试用户名" style="padding: 8px; margin-right: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                <input type="password" id="test-password" placeholder="测试密码" style="padding: 8px; margin-right: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                <button class="btn" onclick="testAuthentication()">
+                    <i class="fas fa-key"></i> 测试验证
+                </button>
+            </div>
+            <div id="auth-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📁 配置文件测试</h3>
+            <p>测试配置文件的读取和写入功能</p>
+            <button class="btn" onclick="testConfigFiles()">
+                <i class="fas fa-file"></i> 测试配置文件
+            </button>
+            <button class="btn btn-secondary" onclick="testKVStorage()">
+                <i class="fas fa-database"></i> 测试KV存储
+            </button>
+            <div id="config-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔧 修复建议</h3>
+            <p>根据检测结果提供修复建议</p>
+            <button class="btn btn-secondary" onclick="generateFixSuggestions()">
+                <i class="fas fa-wrench"></i> 生成修复建议
+            </button>
+            <div id="fix-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔗 快速跳转</h3>
+            <button class="btn btn-secondary" onclick="window.open('admin-modular.html', '_blank')">打开模块化管理中心</button>
+            <button class="btn btn-secondary" onclick="window.open('../admin_manager.html', '_blank')">打开原版管理中心</button>
+            <button class="btn btn-secondary" onclick="window.open('../api-test.html', '_blank')">打开API测试工具</button>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {};
+
+        function showResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        async function checkEnvironment() {
+            showResult('env-result', '正在检测环境...', 'info');
+            
+            const results = [];
+            
+            // 检查当前URL
+            results.push(`当前URL: ${window.location.href}`);
+            
+            // 检查用户代理
+            results.push(`浏览器: ${navigator.userAgent}`);
+            
+            // 检查本地存储
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                results.push('✅ 本地存储: 可用');
+            } catch (e) {
+                results.push('❌ 本地存储: 不可用');
+            }
+            
+            // 检查文件协议
+            if (window.location.protocol === 'file:') {
+                results.push('⚠️ 协议: file:// (可能导致CORS问题)');
+            } else {
+                results.push(`✅ 协议: ${window.location.protocol}`);
+            }
+            
+            // 检查CSS文件
+            const cssFiles = ['styles/core.css', 'styles/forms.css', 'styles/collapsible.css'];
+            for (const cssFile of cssFiles) {
+                try {
+                    const response = await fetch(cssFile, { method: 'HEAD' });
+                    if (response.ok) {
+                        results.push(`✅ CSS文件: ${cssFile}`);
+                    } else {
+                        results.push(`❌ CSS文件: ${cssFile} (${response.status})`);
+                    }
+                } catch (e) {
+                    results.push(`❌ CSS文件: ${cssFile} (${e.message})`);
+                }
+            }
+            
+            testResults.environment = results;
+            showResult('env-result', results.join('\n'), 'info');
+        }
+
+        async function testApiConnection() {
+            showResult('api-result', '正在测试API连接...', 'info');
+            
+            const results = [];
+            const baseUrl = window.location.origin;
+            
+            // 测试基础API端点
+            const endpoints = [
+                '/api/test',
+                '/api/configs',
+                '/api/config/index'
+            ];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const url = baseUrl + endpoint;
+                    results.push(`测试: ${url}`);
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    const text = await response.text();
+                    
+                    if (text.trim().startsWith('<')) {
+                        results.push(`❌ ${endpoint}: 返回HTML页面 (Functions未部署或路由错误)`);
+                    } else {
+                        try {
+                            const json = JSON.parse(text);
+                            results.push(`✅ ${endpoint}: JSON响应 (${response.status})`);
+                            results.push(`   响应: ${JSON.stringify(json, null, 2).substring(0, 200)}...`);
+                        } catch (e) {
+                            results.push(`⚠️ ${endpoint}: 非JSON响应 (${response.status})`);
+                            results.push(`   内容: ${text.substring(0, 200)}...`);
+                        }
+                    }
+                } catch (error) {
+                    results.push(`❌ ${endpoint}: 连接失败 (${error.message})`);
+                }
+            }
+            
+            testResults.api = results;
+            showResult('api-result', results.join('\n'), 'info');
+        }
+
+        async function testSpecificEndpoint() {
+            const endpoint = prompt('请输入要测试的API端点 (例如: /api/test):');
+            if (!endpoint) return;
+            
+            showResult('api-result', `正在测试 ${endpoint}...`, 'info');
+            
+            try {
+                const url = window.location.origin + endpoint;
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                let result = `测试端点: ${endpoint}\n`;
+                result += `状态码: ${response.status}\n`;
+                result += `响应头: ${JSON.stringify(Object.fromEntries(response.headers), null, 2)}\n`;
+                result += `响应体: ${text}`;
+                
+                const type = response.ok ? 'success' : 'error';
+                showResult('api-result', result, type);
+            } catch (error) {
+                showResult('api-result', `测试失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuthentication() {
+            const username = document.getElementById('test-username').value;
+            const password = document.getElementById('test-password').value;
+            
+            if (!username || !password) {
+                showResult('auth-result', '请输入测试用户名和密码', 'warning');
+                return;
+            }
+            
+            showResult('auth-result', '正在测试身份验证...', 'info');
+            
+            try {
+                // 加载配置管理模块
+                if (!window.fallbackConfigManager) {
+                    await loadScript('../js/config-fallback.js');
+                }
+                
+                const configManager = window.fallbackConfigManager;
+                const isValid = await configManager.validateCredentials(username, password);
+                
+                if (isValid) {
+                    showResult('auth-result', '✅ 身份验证成功！', 'success');
+                } else {
+                    showResult('auth-result', '❌ 用户名或密码错误', 'error');
+                }
+            } catch (error) {
+                showResult('auth-result', `身份验证失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testConfigFiles() {
+            showResult('config-result', '正在测试配置文件...', 'info');
+            
+            const results = [];
+            const configFiles = ['index', 'products', 'services', 'contact', 'footer', 'partners', 'about'];
+            
+            for (const configFile of configFiles) {
+                try {
+                    const response = await fetch(`../config/${configFile}.json`);
+                    if (response.ok) {
+                        const config = await response.json();
+                        results.push(`✅ ${configFile}.json: 加载成功 (${Object.keys(config).length} 个配置项)`);
+                    } else {
+                        results.push(`❌ ${configFile}.json: 加载失败 (${response.status})`);
+                    }
+                } catch (error) {
+                    results.push(`❌ ${configFile}.json: ${error.message}`);
+                }
+            }
+            
+            testResults.configs = results;
+            showResult('config-result', results.join('\n'), 'info');
+        }
+
+        async function testKVStorage() {
+            showResult('config-result', '正在测试KV存储...', 'info');
+            
+            try {
+                const response = await fetch('/api/configs');
+                const text = await response.text();
+                
+                if (text.trim().startsWith('<')) {
+                    showResult('config-result', '❌ KV存储测试失败: API返回HTML页面\n这通常表示EdgeOne Functions没有正确部署', 'error');
+                } else {
+                    const result = JSON.parse(text);
+                    showResult('config-result', `✅ KV存储连接正常\n响应: ${JSON.stringify(result, null, 2)}`, 'success');
+                }
+            } catch (error) {
+                showResult('config-result', `❌ KV存储测试失败: ${error.message}`, 'error');
+            }
+        }
+
+        function generateFixSuggestions() {
+            const suggestions = [];
+            
+            // 基于测试结果生成建议
+            if (testResults.api) {
+                const hasApiErrors = testResults.api.some(result => result.includes('❌') || result.includes('返回HTML页面'));
+                if (hasApiErrors) {
+                    suggestions.push('🔧 EdgeOne Functions部署问题:');
+                    suggestions.push('   1. 检查EdgeOne Pages控制台中Functions是否正确部署');
+                    suggestions.push('   2. 确认_routes.json文件配置正确');
+                    suggestions.push('   3. 检查functions/api/目录下的文件是否完整');
+                    suggestions.push('   4. 重新部署Functions代码');
+                    suggestions.push('');
+                }
+            }
+            
+            if (testResults.environment) {
+                const hasCssErrors = testResults.environment.some(result => result.includes('❌') && result.includes('CSS'));
+                if (hasCssErrors) {
+                    suggestions.push('🎨 CSS文件路径问题:');
+                    suggestions.push('   1. 确保admin/styles/目录下的CSS文件存在');
+                    suggestions.push('   2. 检查文件路径是否正确');
+                    suggestions.push('   3. 尝试刷新浏览器缓存');
+                    suggestions.push('');
+                }
+                
+                const isFileProtocol = testResults.environment.some(result => result.includes('file://'));
+                if (isFileProtocol) {
+                    suggestions.push('⚠️ 协议问题:');
+                    suggestions.push('   1. 建议使用HTTP服务器运行，而不是直接打开HTML文件');
+                    suggestions.push('   2. 可以使用VS Code Live Server或其他本地服务器');
+                    suggestions.push('   3. 或者直接部署到EdgeOne Pages');
+                    suggestions.push('');
+                }
+            }
+            
+            if (suggestions.length === 0) {
+                suggestions.push('✅ 未发现明显问题，系统看起来运行正常');
+                suggestions.push('');
+                suggestions.push('如果仍有问题，请尝试:');
+                suggestions.push('   1. 清除浏览器缓存');
+                suggestions.push('   2. 检查浏览器控制台错误信息');
+                suggestions.push('   3. 确认EdgeOne Pages环境变量配置');
+            }
+            
+            showResult('fix-result', suggestions.join('\n'), 'warning');
+        }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // 页面加载完成后自动运行环境检测
+        window.addEventListener('load', () => {
+            setTimeout(checkEnvironment, 500);
+        });
+    </script>
+</body>
+</html>
