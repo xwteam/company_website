@@ -1,5 +1,16 @@
 # EdgeOne Pages 部署指南
 
+## 🆕 重要更新
+
+🎉 **您的项目现已支持 EdgeOne KV 存储！**
+
+- ✅ 完全兼容原有 Gitee 存储方案
+- ✅ 新增 EdgeOne KV 高性能存储选项
+- ✅ 支持 Gitee ↔ KV 双向数据迁移
+- ✅ 管理后台可实时切换存储类型
+
+详细的 KV 存储配置和使用指南请参考：**[KV-STORAGE-GUIDE.md](./KV-STORAGE-GUIDE.md)**
+
 ## 🎯 部署兼容性确认
 
 ### ✅ 完全兼容的功能
@@ -74,6 +85,15 @@
 │   ├── 📄 partners.json
 │   ├── 📄 about.json
 │   └── 📄 footer.json
+├── 📁 functions/ (EdgeOne Functions API)
+│   └── 📁 api/
+│       ├── 📄 auth.js (认证管理)
+│       ├── 📄 config.js (配置管理，支持KV)
+│       ├── 📄 products.js (产品管理，支持KV)
+│       └── 📄 migration.js (数据迁移)
+├── 📄 _routes.json (API路由配置)
+├── 📄 admin-simple.html (管理后台，支持KV)
+├── 📄 KV-STORAGE-GUIDE.md (KV存储配置指南)
 ```
 
 ## 🚀 部署步骤

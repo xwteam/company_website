@@ -466,13 +466,26 @@
 
         <!-- 状态栏 -->
         <div class="status-bar">
-            <div style="display: flex; align-items: center;">
-                <div id="statusIndicator" class="status-indicator"></div>
-                <span id="statusText">初始化中...</span>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="display: flex; align-items: center;">
+                    <div id="statusIndicator" class="status-indicator"></div>
+                    <span id="statusText">初始化中...</span>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="storageType" style="font-size: 14px; color: #555;">存储类型:</label>
+                    <select id="storageType" onchange="changeStorageType()" style="padding: 4px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+                        <option value="gitee">Gitee 仓库</option>
+                        <option value="kv">EdgeOne KV</option>
+                    </select>
+                </div>
             </div>
             
             <div class="user-info">
                 <span id="currentUser"></span>
+                <button class="btn btn-secondary" onclick="showMigrationPanel()" style="padding: 6px 12px; font-size: 12px; margin-right: 8px;">
+                    🔄 数据迁移
+                </button>
                 <button class="btn btn-secondary" onclick="logout()" style="padding: 6px 12px; font-size: 12px;">
                     退出登录
                 </button>
@@ -561,6 +574,61 @@
                 <div id="productMessages" class="messages"></div>
                 <div id="productsList" style="margin-top: 20px;"></div>
             </div>
+
+            <!-- 数据迁移面板 -->
+            <div id="migrationPanel" class="editor-section" style="display: none;">
+                <div class="editor-header">
+                    <h3>🔄 数据迁移管理</h3>
+                    <div class="editor-actions">
+                        <button class="btn btn-secondary" onclick="getStorageInfo()">
+                            📊 存储信息
+                        </button>
+                        <button class="btn btn-secondary" onclick="hideMigrationPanel()">
+                            ✖️ 关闭
+                        </button>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div style="border: 2px solid #e1e5e9; border-radius: 8px; padding: 15px;">
+                        <h4>📁 Gitee → EdgeOne KV</h4>
+                        <p style="color: #666; font-size: 14px; margin: 10px 0;">将数据从Gitee仓库迁移到EdgeOne KV存储</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="migrateData('migrateGiteeToKV', 'all')">
+                                全部迁移
+                            </button>
+                            <button class="btn btn-secondary" onclick="migrateData('migrateGiteeToKV', 'configs')">
+                                配置文件
+                            </button>
+                            <button class="btn btn-secondary" onclick="migrateData('migrateGiteeToKV', 'products')">
+                                产品文件
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="border: 2px solid #e1e5e9; border-radius: 8px; padding: 15px;">
+                        <h4>☁️ EdgeOne KV → Gitee</h4>
+                        <p style="color: #666; font-size: 14px; margin: 10px 0;">将数据从EdgeOne KV存储迁移到Gitee仓库</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="migrateData('migrateKVToGitee', 'all')">
+                                全部迁移
+                            </button>
+                            <button class="btn btn-secondary" onclick="migrateData('migrateKVToGitee', 'configs')">
+                                配置文件
+                            </button>
+                            <button class="btn btn-secondary" onclick="migrateData('migrateKVToGitee', 'products')">
+                                产品文件
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="storageInfo" style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 15px; display: none;">
+                    <!-- 存储信息将在这里显示 -->
+                </div>
+
+                <div id="migrationMessages" class="messages"></div>
+            </div>
         </div>
     </div>
 
@@ -579,6 +647,7 @@
         let currentConfigKey = null;
         let currentConfigData = null;
         let isModified = false;
+        let currentStorageType = 'gitee'; // 'gitee' 或 'kv'
 
         // 中文安全的Base64编码解码函数
         function safeBase64Decode(str) {
@@ -935,51 +1004,95 @@
                 document.getElementById('currentConfigTitle').textContent = `${configFiles[configKey].icon} ${configFiles[configKey].name}`;
                 
                 // 加载配置
-                await loadConfigFromGitee(configKey);
+                await loadConfigFromStorage(configKey);
             }
         }
 
-        // 从Gitee加载配置
-        async function loadConfigFromGitee(configKey) {
+        // 加载配置文件 (支持Gitee和KV存储)
+        async function loadConfigFromStorage(configKey) {
             showLoading(true);
             updateStatus('正在加载...', false);
             clearMessages();
 
             try {
                 const config = configFiles[configKey];
-                const url = `https://gitee.com/api/v5/repos/${giteeConfig.username}/${giteeConfig.repo}/contents/${config.file}?access_token=${giteeConfig.token}`;
                 
-                console.log('正在请求Gitee API:', url.replace(giteeConfig.token, '***TOKEN***'));
-                
-                const response = await fetch(url);
-                
-                console.log('Gitee API响应状态:', response.status, response.statusText);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                if (currentStorageType === 'kv') {
+                    // 从KV存储加载配置
+                    const response = await fetch('/api/config', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': getAuthHeader()
+                        },
+                        body: JSON.stringify({ 
+                            action: 'getConfig',
+                            configType: configKey,
+                            storageType: 'kv'
+                        })
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            throw new Error(`配置 ${configKey} 在KV存储中不存在`);
+                        }
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(result.message || result.error);
+                    }
+
+                    currentConfigData = {
+                        content: result.config,
+                        source: 'kv'
+                    };
+
+                    // 显示JSON内容供编辑
+                    const jsonString = JSON.stringify(result.config, null, 2);
+                    document.getElementById('configEditor').value = jsonString;
+                    isModified = false;
+                    
+                    showMessage('配置从KV存储加载成功', 'success');
+                    updateStatus('KV已连接', true);
+                } else {
+                    // 从Gitee加载配置
+                    const url = `https://gitee.com/api/v5/repos/${giteeConfig.username}/${giteeConfig.repo}/contents/${config.file}?access_token=${giteeConfig.token}`;
+                    
+                    console.log('正在请求Gitee API:', url.replace(giteeConfig.token, '***TOKEN***'));
+                    
+                    const response = await fetch(url);
+                    
+                    console.log('Gitee API响应状态:', response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    // 使用安全的中文解码
+                    const decodedContent = safeBase64Decode(data.content);
+                    const content = JSON.parse(decodedContent);
+                    
+                    currentConfigData = {
+                        content: content,
+                        sha: data.sha,
+                        source: 'gitee'
+                    };
+
+                    // 显示JSON内容供编辑
+                    const jsonString = JSON.stringify(content, null, 2);
+                    document.getElementById('configEditor').value = jsonString;
+                    isModified = false;
+                    
+                    // 调试：检查中文字符
+                    console.log('加载的JSON内容预览:', jsonString.substring(0, 200));
+                    console.log('包含中文字符:', /[\u4e00-\u9fa5]/.test(jsonString));
+                    
+                    showMessage('配置从Gitee加载成功', 'success');
+                    updateStatus('Gitee已连接', true);
                 }
-
-                const data = await response.json();
-                // 使用安全的中文解码
-                const decodedContent = safeBase64Decode(data.content);
-                const content = JSON.parse(decodedContent);
-                
-                currentConfigData = {
-                    content: content,
-                    sha: data.sha
-                };
-
-                // 显示JSON内容供编辑
-                const jsonString = JSON.stringify(content, null, 2);
-                document.getElementById('configEditor').value = jsonString;
-                isModified = false;
-                
-                // 调试：检查中文字符
-                console.log('加载的JSON内容预览:', jsonString.substring(0, 200));
-                console.log('包含中文字符:', /[\u4e00-\u9fa5]/.test(jsonString));
-                
-                showMessage('配置加载成功', 'success');
-                updateStatus('已连接', true);
 
             } catch (error) {
                 console.error('加载配置失败:', error);
@@ -990,7 +1103,7 @@
             }
         }
 
-        // 保存配置到Gitee
+        // 保存配置 (支持Gitee和KV存储)
         async function saveConfig() {
             if (!currentConfigKey || !currentConfigData) {
                 showMessage('请先选择一个配置文件', 'info');
@@ -1000,8 +1113,9 @@
             const editorContent = document.getElementById('configEditor').value;
             
             // 验证JSON格式
+            let configData;
             try {
-                JSON.parse(editorContent);
+                configData = JSON.parse(editorContent);
             } catch (error) {
                 showMessage(`JSON格式错误: ${error.message}`, 'error');
                 return;
@@ -1012,45 +1126,80 @@
             clearMessages();
 
             try {
-                const config = configFiles[currentConfigKey];
-                const url = `https://gitee.com/api/v5/repos/${giteeConfig.username}/${giteeConfig.repo}/contents/${config.file}`;
-                
-                const requestBody = {
-                    access_token: giteeConfig.token,
-                    content: safeBase64Encode(editorContent),
-                    message: `更新 ${config.name} 配置`,
-                    sha: currentConfigData.sha
-                };
-                
-                console.log('正在保存到Gitee...', {
-                    url: url.replace(giteeConfig.token, '***TOKEN***'),
-                    message: requestBody.message
-                });
-                
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(requestBody)
-                });
+                if (currentStorageType === 'kv') {
+                    // 保存到KV存储
+                    const response = await fetch('/api/config', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': getAuthHeader()
+                        },
+                        body: JSON.stringify({ 
+                            action: 'saveConfig',
+                            configType: currentConfigKey,
+                            configData: configData,
+                            storageType: 'kv'
+                        })
+                    });
 
-                if (!response.ok) {
-                    const errorData = await response.text();
-                    console.error('保存失败响应:', errorData);
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(result.message || result.error);
+                    }
+
+                    currentConfigData.content = configData;
+                    currentConfigData.source = 'kv';
+                    isModified = false;
+                    
+                    showMessage('✅ 配置保存成功！已同步到EdgeOne KV存储', 'success');
+                    updateStatus('KV已保存', true);
+                } else {
+                    // 保存到Gitee
+                    const config = configFiles[currentConfigKey];
+                    const url = `https://gitee.com/api/v5/repos/${giteeConfig.username}/${giteeConfig.repo}/contents/${config.file}`;
+                    
+                    const requestBody = {
+                        access_token: giteeConfig.token,
+                        content: safeBase64Encode(editorContent),
+                        message: `更新 ${config.name} 配置`,
+                        sha: currentConfigData.sha
+                    };
+                    
+                    console.log('正在保存到Gitee...', {
+                        url: url.replace(giteeConfig.token, '***TOKEN***'),
+                        message: requestBody.message
+                    });
+                    
+                    const response = await fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.text();
+                        console.error('保存失败响应:', errorData);
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    console.log('保存成功:', result);
+                    
+                    // 更新SHA值
+                    currentConfigData.sha = result.content.sha;
+                    currentConfigData.content = configData;
+                    currentConfigData.source = 'gitee';
+                    isModified = false;
+                    
+                    showMessage('✅ 配置保存成功！已同步到Gitee仓库', 'success');
+                    updateStatus('Gitee已保存', true);
                 }
-
-                const result = await response.json();
-                console.log('保存成功:', result);
-                
-                // 更新SHA值
-                currentConfigData.sha = result.content.sha;
-                currentConfigData.content = JSON.parse(editorContent);
-                isModified = false;
-                
-                showMessage('✅ 配置保存成功！已同步到Gitee仓库', 'success');
-                updateStatus('已保存', true);
 
             } catch (error) {
                 console.error('保存配置失败:', error);
@@ -1074,7 +1223,7 @@
                 }
             }
 
-            await loadConfigFromGitee(currentConfigKey);
+            await loadConfigFromStorage(currentConfigKey);
         }
 
         // JSON格式检查功能
@@ -1236,7 +1385,8 @@
                     },
                     body: JSON.stringify({ 
                         action: 'getProduct',
-                        item: item
+                        item: item,
+                        storageType: currentStorageType
                     })
                 });
 
@@ -1310,7 +1460,8 @@
                     body: JSON.stringify({ 
                         action: 'saveProduct',
                         item: item,
-                        productData: productData
+                        productData: productData,
+                        storageType: currentStorageType
                     })
                 });
 
@@ -1343,7 +1494,10 @@
                         'Content-Type': 'application/json',
                         'Authorization': getAuthHeader()
                     },
-                    body: JSON.stringify({ action: 'listProducts' })
+                    body: JSON.stringify({ 
+                        action: 'listProducts',
+                        storageType: currentStorageType
+                    })
                 });
 
                 if (response.ok) {
@@ -1515,6 +1669,198 @@
                 }
             }
         });
+
+        // 存储类型切换
+        function changeStorageType() {
+            const storageSelect = document.getElementById('storageType');
+            const newStorageType = storageSelect.value;
+            
+            if (isModified && !confirm('当前有未保存的修改，确定要切换存储类型吗？')) {
+                // 恢复原值
+                storageSelect.value = currentStorageType;
+                return;
+            }
+            
+            currentStorageType = newStorageType;
+            
+            // 更新状态显示
+            if (currentStorageType === 'kv') {
+                updateStatus('切换到KV存储', true);
+                showMessage('已切换到EdgeOne KV存储模式', 'info');
+            } else {
+                updateStatus('切换到Gitee', true);
+                showMessage('已切换到Gitee仓库模式', 'info');
+            }
+            
+            // 如果当前有选中的配置，重新加载
+            if (currentConfigKey && currentConfigData) {
+                loadConfigFromStorage(currentConfigKey);
+            }
+        }
+
+        // 显示数据迁移面板
+        function showMigrationPanel() {
+            // 隐藏其他面板
+            document.getElementById('editorSection').classList.remove('active');
+            document.getElementById('productManager').style.display = 'none';
+            
+            // 显示迁移面板
+            document.getElementById('migrationPanel').style.display = 'block';
+            
+            // 加载存储信息
+            getStorageInfo();
+        }
+
+        // 隐藏数据迁移面板
+        function hideMigrationPanel() {
+            document.getElementById('migrationPanel').style.display = 'none';
+        }
+
+        // 获取存储信息
+        async function getStorageInfo() {
+            try {
+                const response = await fetch('/api/migration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': getAuthHeader()
+                    },
+                    body: JSON.stringify({ action: 'getStorageInfo' })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        displayStorageInfo(result.storageInfo);
+                    }
+                } else {
+                    console.warn('获取存储信息失败');
+                }
+            } catch (error) {
+                console.error('获取存储信息错误:', error);
+            }
+        }
+
+        // 显示存储信息
+        function displayStorageInfo(info) {
+            const storageInfoDiv = document.getElementById('storageInfo');
+            
+            const html = `
+                <h4>📊 存储状态信息</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+                    <div>
+                        <h5>📁 Gitee 仓库</h5>
+                        <p>状态: ${info.gitee.available ? '✅ 已配置' : '❌ 未配置'}</p>
+                    </div>
+                    <div>
+                        <h5>☁️ EdgeOne KV 存储</h5>
+                        <p>配置存储: ${info.kv.config ? '✅ 已配置' : '❌ 未配置'} ${info.kv.configCount !== undefined ? `(${info.kv.configCount}个配置)` : ''}</p>
+                        <p>产品存储: ${info.kv.products ? '✅ 已配置' : '❌ 未配置'} ${info.kv.productCount !== undefined ? `(${info.kv.productCount}个产品)` : ''}</p>
+                    </div>
+                </div>
+            `;
+            
+            storageInfoDiv.innerHTML = html;
+            storageInfoDiv.style.display = 'block';
+        }
+
+        // 执行数据迁移
+        async function migrateData(action, dataType) {
+            if (!confirm(`确定要执行 ${dataType === 'all' ? '全部数据' : dataType === 'configs' ? '配置文件' : '产品文件'} 的迁移吗？`)) {
+                return;
+            }
+
+            showLoading(true);
+            clearMigrationMessages();
+
+            try {
+                const response = await fetch('/api/migration', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': getAuthHeader()
+                    },
+                    body: JSON.stringify({ 
+                        action: action,
+                        dataType: dataType
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        showMigrationMessage(`✅ ${result.message}`, 'success');
+                        
+                        // 显示详细结果
+                        if (result.results) {
+                            let detailHtml = '<h5>迁移详情:</h5>';
+                            
+                            if (result.results.configs && result.results.configs.length > 0) {
+                                detailHtml += '<p><strong>配置文件:</strong></p><ul>';
+                                result.results.configs.forEach(item => {
+                                    detailHtml += `<li>${item.type || item.item}: ${item.status === 'success' ? '✅' : '❌'} ${item.error || ''}</li>`;
+                                });
+                                detailHtml += '</ul>';
+                            }
+                            
+                            if (result.results.products && result.results.products.length > 0) {
+                                detailHtml += '<p><strong>产品文件:</strong></p><ul>';
+                                result.results.products.forEach(item => {
+                                    detailHtml += `<li>${item.item}: ${item.status === 'success' ? '✅' : '❌'} ${item.error || ''}</li>`;
+                                });
+                                detailHtml += '</ul>';
+                            }
+                            
+                            if (result.results.errors && result.results.errors.length > 0) {
+                                detailHtml += '<p><strong>错误:</strong></p><ul>';
+                                result.results.errors.forEach(error => {
+                                    detailHtml += `<li>${error.type}: ${error.error}</li>`;
+                                });
+                                detailHtml += '</ul>';
+                            }
+                            
+                            showMigrationMessage(detailHtml, 'info');
+                        }
+                        
+                        // 更新存储信息
+                        setTimeout(() => {
+                            getStorageInfo();
+                        }, 1000);
+                    } else {
+                        showMigrationMessage(`❌ ${result.error || result.message}`, 'error');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                showMigrationMessage(`迁移失败: ${error.message}`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 显示迁移消息
+        function showMigrationMessage(message, type = 'info') {
+            const messagesDiv = document.getElementById('migrationMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = message;
+            
+            messagesDiv.appendChild(messageDiv);
+            
+            // 5秒后自动移除消息
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+
+        // 清除迁移消息
+        function clearMigrationMessages() {
+            const messagesDiv = document.getElementById('migrationMessages');
+            messagesDiv.innerHTML = '';
+        }
 
         // 初始化
         init();
