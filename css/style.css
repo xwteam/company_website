@@ -1,20 +1,21 @@
-/* 全局样式 */
+/* 现代化全局样式 */
 :root {
-    --primary-color: #1a56db;
-    --secondary-color: #3b82f6;
-    --accent-color: #e11d48;
-    --text-color: #111827;
-    --light-text: #4b5563;
-    --bg-color: #fff;
-    --light-bg: #f9fafb;
-    --dark-bg: #111827;
-    --border-color: #e5e7eb;
+    --primary-color: #1a1a1a;
+    --secondary-color: #6b7280;
+    --accent-color: #3b82f6;
+    --text-color: #1a1a1a;
+    --light-text: #6b7280;
+    --bg-color: #ffffff;
+    --light-bg: #f8fafc;
+    --dark-bg: #0f172a;
+    --border-color: #e2e8f0;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
-    --border-radius: 4px;
-    --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --transition: all 0.3s ease;
+    --border-radius: 8px;
+    --box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --max-width: 1200px;
 }
 
 * {
@@ -24,29 +25,34 @@
 }
 
 body {
-    font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
     color: var(--text-color);
-    line-height: 1.7;
+    line-height: 1.6;
     font-size: 16px;
     background-color: var(--bg-color);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    letter-spacing: -0.025em;
 }
 
 h1 {
-    font-size: 3.5rem;
-    letter-spacing: -1px;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
 }
 
 h2 {
@@ -94,30 +100,41 @@ img {
 }
 
 section {
-    padding: 100px 0;
+    padding: 80px 0;
 }
 
-/* 按钮样式 */
+.hero {
+    padding: 160px 0 120px;
+}
+
+/* 现代化按钮样式 */
 .btn {
-    display: inline-block;
-    padding: 12px 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 28px;
     border-radius: var(--border-radius);
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
     cursor: pointer;
     transition: var(--transition);
     border: none;
-    font-size: 1rem;
+    font-size: 15px;
+    text-decoration: none;
+    white-space: nowrap;
+    min-height: 48px;
 }
 
 .btn.primary {
     background-color: var(--primary-color);
     color: white;
+    box-shadow: var(--box-shadow);
 }
 
 .btn.primary:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
+    background-color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
 }
 
 .btn.primary.light {
@@ -137,7 +154,8 @@ section {
 
 .btn.secondary:hover {
     background-color: var(--light-bg);
-    transform: translateY(-2px);
+    border-color: var(--text-color);
+    transform: translateY(-1px);
 }
 
 .btn.outline {
@@ -165,17 +183,17 @@ header {
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 20px 0;
+    padding: 24px 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(0px);
 }
 
 header.scrolled {
-    background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 15px 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 0;
 }
 
 header .container {
@@ -185,31 +203,33 @@ header .container {
 }
 
 .logo a {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    transition: all 0.3s ease;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    letter-spacing: -0.025em;
+    transition: var(--transition);
 }
 
-/* 滚动时logo的额外对比度 */
-header.scrolled .logo a {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.logo a:hover {
+    color: var(--secondary-color);
 }
 
 nav ul {
     display: flex;
     list-style: none;
+    align-items: center;
 }
 
 nav ul li {
-    margin-left: 40px;
+    margin-left: 32px;
 }
 
 nav ul li a {
-    color: var(--text-color);
+    color: var(--secondary-color);
     font-weight: 500;
+    font-size: 15px;
     position: relative;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 /* 滚动时导航链接的额外对比度 */
@@ -219,18 +239,19 @@ header.scrolled nav ul li a {
 
 nav ul li a:hover,
 nav ul li a.active {
-    color: var(--primary-color);
+    color: var(--text-color);
 }
 
 nav ul li a::after {
     content: '';
     position: absolute;
     width: 0;
-    height: 2px;
-    bottom: -5px;
-    left: 0;
-    background-color: var(--primary-color);
+    height: 1px;
+    bottom: -4px;
+    left: 50%;
+    background-color: var(--text-color);
     transition: var(--transition);
+    transform: translateX(-50%);
 }
 
 nav ul li a:hover::after,
@@ -262,9 +283,12 @@ header.scrolled .header-cta .btn {
 /* 英雄区域 */
 .hero {
     position: relative;
-    padding: 200px 0 150px;
-    background-color: transparent;
+    padding: 160px 0 120px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
 }
 
 .hero-bg {
@@ -276,6 +300,7 @@ header.scrolled .header-cta .btn {
     z-index: -1;
     background-size: cover;
     background-position: center;
+    opacity: 0.1;
 }
 
 .hero-bg-overlay {
@@ -284,30 +309,41 @@ header.scrolled .header-cta .btn {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(226, 232, 240, 0.8) 100%);
     z-index: -1;
 }
 
 .hero-content {
-    max-width: 600px;
+    max-width: 700px;
+    text-align: left;
 }
 
 .hero h1 {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-    color: white;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin-bottom: 24px;
+    color: var(--text-color);
+    line-height: 1.1;
+    font-weight: 700;
 }
 
 .hero p {
     font-size: 1.25rem;
-    max-width: 500px;
+    max-width: 600px;
     margin-bottom: 40px;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--light-text);
+    line-height: 1.6;
 }
 
 .cta-buttons {
     display: flex;
-    gap: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cta-buttons .btn {
+    font-size: 16px;
+    padding: 16px 32px;
+    min-width: 160px;
 }
 
 /* 服务区域 */
@@ -325,21 +361,37 @@ header.scrolled .header-cta .btn {
 
 .service-card {
     background-color: var(--bg-color);
-    border-radius: var(--border-radius);
-    padding: 30px;
+    border-radius: 12px;
+    padding: 32px 24px;
     transition: var(--transition);
     text-align: center;
+    border: 1px solid var(--border-color);
+    height: 100%;
 }
 
 .service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--box-shadow);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-color);
 }
 
 .service-icon {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: 20px;
+    font-size: 2rem;
+    color: var(--accent-color);
+    margin-bottom: 24px;
+}
+
+.service-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+}
+
+.service-card p {
+    color: var(--light-text);
+    line-height: 1.6;
+    font-size: 15px;
 }
 
 /* 项目区域 */
