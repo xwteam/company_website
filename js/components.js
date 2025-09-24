@@ -92,52 +92,9 @@ class ComponentLoader {
         }
     }
     
-    // 加载并应用页脚配置
-    async loadFooterConfig() {
-        try {
-            const response = await fetch('config/footer.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const footerConfig = await response.json();
-            this.applyFooterConfig(footerConfig);
-            return true;
-        } catch (error) {
-            console.error('加载页脚配置失败:', error);
-            return false;
-        }
-    }
-    
-    // 应用页脚配置到页面
-    applyFooterConfig(config) {
-        // 更新品牌标语
-        const taglineElement = document.getElementById('footer-tagline');
-        if (taglineElement && config.brand) {
-            taglineElement.textContent = config.brand.tagline;
-        }
-        
-        // 更新联系信息
-        if (config.contact) {
-            const emailElement = document.getElementById('footer-email');
-            const phoneElement = document.getElementById('footer-phone');
-            const addressElement = document.getElementById('footer-address');
-            
-            if (emailElement) {
-                emailElement.textContent = config.contact.email;
-                emailElement.href = `mailto:${config.contact.email}`;
-            }
-            
-            if (phoneElement) {
-                phoneElement.textContent = config.contact.phone;
-                phoneElement.href = `tel:${config.contact.phone.replace(/\s|\(|\)|\+/g, '')}`;
-            }
-            
-            if (addressElement) {
-                addressElement.innerHTML = config.contact.address;
-            }
-        }
-        
-        // 页脚配置应用完成
+    // 设置当前年份（无需JSON配置）
+    updateFooterInfo() {
+        // 页脚信息已直接在HTML中编写，无需动态加载
     }
     
     // 初始化所有组件
@@ -161,8 +118,8 @@ class ComponentLoader {
                 // 设置当前年份
                 this.setCurrentYear();
                 
-                // 加载页脚配置
-                await this.loadFooterConfig();
+                // 更新页脚信息
+                this.updateFooterInfo();
             }
             
             // 组件加载完成

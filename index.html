@@ -15,12 +15,12 @@
 
     <!-- 英雄区域 -->
     <section class="hero">
-        <div id="hero-bg" class="hero-bg"></div>
+        <div class="hero-bg" style="background-image: url('images/hero-bg.jpg');"></div>
         <div class="hero-bg-overlay"></div>
         <div class="container">
             <div class="hero-content">
-                <h1 id="hero-title">Crafting digital<br>experiences with purpose</h1>
-                <p id="hero-description">Strategy-driven design and technology for forward-thinking brands</p>
+                <h1>Crafting digital<br>experiences with purpose</h1>
+                <p>Strategy-driven design and technology for forward-thinking brands</p>
                 <div class="cta-buttons">
                     <a href="products.html" class="btn primary">View Our Products</a>
                     <a href="contact.html" class="btn secondary">Work With Us</a>
@@ -30,74 +30,102 @@
     </section>
 
     <!-- 服务介绍 -->
-    <section class="services">
+    <section class="services-intro">
         <div class="container">
-            <h2>Our Services</h2>
-            <p id="services-description" class="section-description">We combine strategy, design, and technology to create effective digital solutions</p>
-            
-            <div id="services-grid" class="services-grid">
-                <!-- 服务卡片将通过JavaScript动态生成 -->
+            <div class="section-header">
+                <h2>What We Do</h2>
+                <p>We create digital experiences that connect brands with their audiences</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Brand Identity</h3>
+                    <p>Creating memorable brand experiences that resonate with your target audience and differentiate you from competitors.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Building responsive, fast, and user-friendly websites that convert visitors into customers and grow your business.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>UX Design</h3>
+                    <p>Designing intuitive user experiences that delight users and drive engagement across all digital touchpoints.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3>Digital Marketing</h3>
+                    <p>Strategic marketing campaigns that increase brand awareness and drive measurable results for your business.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- 精选项目 -->
-    <section class="featured-projects">
+    <!-- 统计数据 -->
+    <section class="stats">
         <div class="container">
-            <h2>Featured Products</h2>
-            <p id="featured-products-description" class="section-description">A selection of our quality products across categories</p>
-            
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/project-1.jpg" alt="Financial Platform Project">
-                        <div class="project-category">Web Development</div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Nova Finance Platform</h3>
-                        <p>A modern banking interface with advanced analytics and personalized insights</p>
-                        <div class="project-tags">
-                            <span>React</span>
-                            <span>TypeScript</span>
-                            <span>Financial</span>
-                        </div>
-                    </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Projects Completed</div>
                 </div>
-                
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/project-2.jpg" alt="Eco Habitat Branding">
-                        <div class="project-category">Brand Identity</div>
-                    </div>
-                    <div class="project-info">
-                        <h3>Eco Habitat</h3>
-                        <p>Complete brand identity for a sustainable housing initiative focused on eco-friendly living</p>
-                        <div class="project-tags">
-                            <span>Branding</span>
-                            <span>Sustainability</span>
-                        </div>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Client Satisfaction</div>
                 </div>
-                
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="images/project-3.jpg" alt="Urban Mobility App">
-                        <div class="project-category">UX Design</div>
-                    </div>
-                    <div class="project-info">
-                        <h3>CityMove</h3>
-                        <p>User-centered mobility app that integrates public transit, ride-sharing, and micro-mobility options</p>
-                        <div class="project-tags">
-                            <span>Mobile</span>
-                            <span>UX/UI</span>
-                            <span>Transportation</span>
-                        </div>
-                    </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5+</div>
+                    <div class="stat-label">Years Experience</div>
                 </div>
             </div>
-            
-            <div class="section-cta">
-                <a href="products.html" class="btn primary">View All Products</a>
+        </div>
+    </section>
+
+    <!-- 精选作品 -->
+    <section class="featured-work">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Work</h2>
+                <p>Some of our recent projects that we're proud of</p>
+            </div>
+            <div class="featured-project">
+                <div class="project-image">
+                    <img src="images/featured-project.jpg" alt="Featured Project">
+                </div>
+                <div class="project-content">
+                    <div class="project-category">Brand Identity & Web Design</div>
+                    <h3>Tech Startup Rebranding</h3>
+                    <p>A complete brand overhaul for an innovative AI company, including logo design, visual identity system, and responsive website development.</p>
+                    <div class="project-tags">
+                        <span class="tag">Brand Strategy</span>
+                        <span class="tag">Visual Identity</span>
+                        <span class="tag">Web Design</span>
+                        <span class="tag">Development</span>
+                    </div>
+                    <div class="project-results">
+                        <div class="result-item">
+                            <span class="result-number">300%</span>
+                            <span class="result-label">Brand Recognition Increase</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-number">250%</span>
+                            <span class="result-label">Website Traffic Growth</span>
+                        </div>
+                    </div>
+                    <a href="products.html" class="btn primary">View All Projects</a>
+                </div>
             </div>
         </div>
     </section>
@@ -105,15 +133,74 @@
     <!-- 客户评价 -->
     <section class="testimonials">
         <div class="container">
-            <h2>Client Testimonials</h2>
-            <p id="testimonials-description" class="section-description">Hear from the businesses we have helped transform</p>
-            
-            <div id="testimonials-carousel" class="testimonials-carousel">
-                <!-- 客户评价将通过JavaScript动态生成 -->
+            <div class="section-header">
+                <h2>What Our Clients Say</h2>
+                <p>Don't just take our word for it</p>
             </div>
-            
-            <div id="carousel-indicators" class="carousel-indicators">
-                <!-- 轮播指示器将通过JavaScript动态生成 -->
+            <div class="testimonials-carousel">
+                <div class="testimonial-container">
+                    <div class="testimonial-item active">
+                        <div class="testimonial-content">
+                            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <p class="quote">"Brand delivered exceptional results that exceeded our expectations. Their creativity and professionalism made our project a huge success."</p>
+                            <div class="client-info">
+                                <div class="client-image">
+                                    <img src="images/client-1.jpg" alt="Sarah Johnson">
+                                </div>
+                                <div class="client-details">
+                                    <h4>Sarah Johnson</h4>
+                                    <p>CEO, Tech Innovations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-content">
+                            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <p class="quote">"Working with Brand was a fantastic experience. They understood our vision and brought it to life with stunning design and flawless execution."</p>
+                            <div class="client-info">
+                                <div class="client-image">
+                                    <img src="images/client-2.jpg" alt="Michael Chen">
+                                </div>
+                                <div class="client-details">
+                                    <h4>Michael Chen</h4>
+                                    <p>Founder, Creative Studio</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item">
+                        <div class="testimonial-content">
+                            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <p class="quote">"The team's attention to detail and commitment to quality is unmatched. Our new brand identity has transformed our business."</p>
+                            <div class="client-info">
+                                <div class="client-image">
+                                    <img src="images/client-3.jpg" alt="Emily Rodriguez">
+                                </div>
+                                <div class="client-details">
+                                    <h4>Emily Rodriguez</h4>
+                                    <p>Marketing Director, Growth Co</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-indicators" id="carousel-indicators">
+                <span class="indicator active" data-index="0"></span>
+                <span class="indicator" data-index="1"></span>
+                <span class="indicator" data-index="2"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 行动号召 -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Start Your Project?</h2>
+                <p>Let's create something amazing together. Get in touch and let's discuss your vision.</p>
+                <a href="contact.html" class="btn primary large">Get Started Today</a>
             </div>
         </div>
     </section>
@@ -121,345 +208,137 @@
     <!-- 页脚容器 -->
     <div id="footer-container"></div>
 
+    <!-- JavaScript -->
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
-    
     <script>
-        // 读取JSON配置文件并应用到页面
+        // 简单的轮播功能
         document.addEventListener('DOMContentLoaded', function() {
-            // 显示加载状态
-            function showStatus(message, type = 'info') {
-                const statusDiv = document.createElement('div');
-                statusDiv.className = `status-message ${type}`;
-                statusDiv.textContent = message;
-                statusDiv.style.position = 'fixed';
-                statusDiv.style.bottom = '20px';
-                statusDiv.style.right = '20px';
-                statusDiv.style.padding = '10px 15px';
-                statusDiv.style.borderRadius = '4px';
-                statusDiv.style.zIndex = '9999';
-                
-                if (type === 'info') {
-                    statusDiv.style.backgroundColor = '#3498db';
-                } else if (type === 'success') {
-                    statusDiv.style.backgroundColor = '#2ecc71';
-                } else if (type === 'error') {
-                    statusDiv.style.backgroundColor = '#e74c3c';
-                }
-                
-                statusDiv.style.color = 'white';
-                document.body.appendChild(statusDiv);
-                
-                setTimeout(() => {
-                    statusDiv.style.opacity = '0';
-                    statusDiv.style.transition = 'opacity 0.5s';
-                    setTimeout(() => {
-                        document.body.removeChild(statusDiv);
-                    }, 500);
-                }, 3000);
-            }
-            
-            // 显示错误信息
-            function showError(message) {
-                showStatus(message, 'error');
-            }
-            
-            // 显示成功信息
-            function showSuccess(message) {
-                showStatus(message, 'success');
-            }
-            
-            // 加载配置文件
-            async function loadConfig() {
-                try {
-                    const response = await fetch('config/index.json');
-                    if (!response.ok) {
-                        throw new Error(`HTTP错误: ${response.status}`);
-                    }
-                    const config = await response.json();
-                    applyConfig(config);
-                    // 配置加载成功，无需显示提示
-                } catch (error) {
-                    console.error('加载配置文件失败:', error);
-                    showError('加载配置文件失败，请检查浏览器控制台了解详情');
-                }
-            }
-            
-            // 应用配置到页面
-            function applyConfig(config) {
-                // 设置英雄区域背景
-                if (config['hero-bg']) {
-                    document.getElementById('hero-bg').style.backgroundImage = `url(${config['hero-bg']})`;
-                }
-                
-                // 设置英雄区域标题
-                if (config['hero-content-title']) {
-                    document.getElementById('hero-title').innerHTML = config['hero-content-title'];
-                }
-                
-                // 设置英雄区域描述
-                if (config['hero-content-description']) {
-                    document.getElementById('hero-description').textContent = config['hero-content-description'];
-                }
-                
-                // 设置服务描述
-                if (config['services-description']) {
-                    if (typeof config['services-description'] === 'string') {
-                        document.getElementById('services-description').textContent = config['services-description'];
-                    } else if (config['services-description'].title) {
-                        document.getElementById('services-description').textContent = config['services-description'].title;
-                        
-                        // 生成服务卡片
-                        if (config['services-description'].items && Array.isArray(config['services-description'].items)) {
-                            const servicesGrid = document.getElementById('services-grid');
-                            servicesGrid.innerHTML = ''; // 清空现有内容
-                            
-                            config['services-description'].items.forEach(item => {
-                                const serviceCard = document.createElement('div');
-                                serviceCard.className = 'service-card';
-                                
-                                serviceCard.innerHTML = `
-                                    <div class="service-icon">
-                                        <i class="${item.icon || 'fas fa-star'}"></i>
-                                    </div>
-                                    <h3>${item.title || 'Service Title'}</h3>
-                                    <p>${item.desc || 'Service description goes here'}</p>
-                                `;
-                                
-                                servicesGrid.appendChild(serviceCard);
-                            });
-                        }
-                    }
-                }
-                
-                // 设置精选产品描述
-                if (config['featured-products-description']) {
-                    document.getElementById('featured-products-description').textContent = config['featured-products-description'];
-                }
-                
-                // 设置客户评价
-                if (config['testimonials-description']) {
-                    if (typeof config['testimonials-description'] === 'string') {
-                        document.getElementById('testimonials-description').textContent = config['testimonials-description'];
-                    } else if (config['testimonials-description'].title) {
-                        document.getElementById('testimonials-description').textContent = config['testimonials-description'].title;
-                        
-                        // 生成客户评价轮播
-                        if (config['testimonials-description'].items && Array.isArray(config['testimonials-description'].items)) {
-                            const testimonialsCarousel = document.getElementById('testimonials-carousel');
-                            const carouselIndicators = document.getElementById('carousel-indicators');
-                            
-                            testimonialsCarousel.innerHTML = ''; // 清空现有内容
-                            carouselIndicators.innerHTML = ''; // 清空现有内容
-                            
-                            // 添加容器元素
-                            const testimonialContainer = document.createElement('div');
-                            testimonialContainer.className = 'testimonial-container';
-                            testimonialsCarousel.appendChild(testimonialContainer);
-                            
-                            config['testimonials-description'].items.forEach((item, index) => {
-                                // 创建轮播项
-                                const testimonialItem = document.createElement('div');
-                                testimonialItem.className = 'testimonial-item';
-                                if (index === 0) {
-                                    testimonialItem.classList.add('active');
-                                }
-                                
-                                testimonialItem.innerHTML = `
-                                    <div class="testimonial-content">
-                                        <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-                                        <p class="quote">${item.quote || 'Testimonial quote goes here'}</p>
-                                        <div class="client-info">
-                                            <div class="client-image">
-                                                <img src="${item.avatar || 'images/default-avatar.jpg'}" alt="${item.name || 'Client'}">
-                                            </div>
-                                            <div class="client-details">
-                                                <h4>${item.name || 'Client Name'}</h4>
-                                                <p>${item.position || 'Position, Company'}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                                
-                                testimonialContainer.appendChild(testimonialItem);
-                                
-                                // 创建指示器
-                                const indicator = document.createElement('span');
-                                indicator.className = index === 0 ? 'indicator active' : 'indicator';
-                                indicator.setAttribute('data-index', index);
-                                carouselIndicators.appendChild(indicator);
-                                
-                                // 添加指示器点击事件
-                                indicator.addEventListener('click', function() {
-                                    showSlide(index);
-                                });
-                            });
-                            
-                            // 添加自动轮播功能
-                            let currentSlide = 0;
-                            const slides = testimonialContainer.querySelectorAll('.testimonial-item');
-                            const indicators = carouselIndicators.querySelectorAll('.indicator');
-                            let slideInterval = setInterval(nextSlide, 5000);
-                            
-                            // 显示指定幻灯片
-                            function showSlide(index) {
-                                // 重置自动轮播计时器
-                                clearInterval(slideInterval);
-                                slideInterval = setInterval(nextSlide, 5000);
-                                
-                                // 移除所有active类
-                                slides.forEach(slide => slide.classList.remove('active'));
-                                indicators.forEach(ind => ind.classList.remove('active'));
-                                
-                                // 添加active类到当前项
-                                currentSlide = index;
-                                slides[currentSlide].classList.add('active');
-                                indicators[currentSlide].classList.add('active');
-                                
-                                // 添加动画效果
-                                slides[currentSlide].style.animation = 'fadeIn 0.5s ease-in-out';
-                            }
-                            
-                            // 下一张幻灯片
-                            function nextSlide() {
-                                currentSlide = (currentSlide + 1) % slides.length;
-                                showSlide(currentSlide);
-                            }
-                            
-                            // 上一张幻灯片
-                            function prevSlide() {
-                                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-                                showSlide(currentSlide);
-                            }
-                            
-                            // 添加滚轮控制
-                            testimonialContainer.addEventListener('wheel', function(event) {
-                                event.preventDefault();
-                                if (event.deltaY > 0) {
-                                    nextSlide();
-                                } else {
-                                    prevSlide();
-                                }
-                            });
-                            
-                            // 添加触摸控制
-                            let touchStartX = 0;
-                            let touchEndX = 0;
-                            
-                            testimonialContainer.addEventListener('touchstart', function(event) {
-                                touchStartX = event.changedTouches[0].screenX;
-                            }, false);
-                            
-                            testimonialContainer.addEventListener('touchend', function(event) {
-                                touchEndX = event.changedTouches[0].screenX;
-                                handleSwipe();
-                            }, false);
-                            
-                            function handleSwipe() {
-                                if (touchEndX < touchStartX) {
-                                    nextSlide();
-                                } else if (touchEndX > touchStartX) {
-                                    prevSlide();
-                                }
-                            }
-                            
-                            // 设置鼠标指针样式，提示可以滚动
-                            testimonialContainer.style.cursor = 'ns-resize';
-                            
-                            // 添加内联样式确保轮播正常显示
-                            const style = document.createElement('style');
-                            style.textContent = `
-                                .testimonial-item {
-                                    display: none;
-                                    animation: fadeIn 0.5s ease-in-out;
-                                    background-color: transparent;
-                                }
-                                .testimonial-item.active {
-                                    display: block;
-                                }
-                                .testimonial-content {
-                                    background-color: transparent;
-                                    text-align: center;
-                                    max-width: 700px;
-                                    margin: 0 auto;
-                                }
-                                .testimonial-content::before {
-                                    content: '';
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    right: 0;
-                                    bottom: 0;
-                                    background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-                                    z-index: -1;
-                                    border-radius: 8px;
-                                }
-                                .testimonial-container {
-                                    background-color: transparent;
-                                    box-shadow: none;
-                                    max-width: 800px;
-                                    width: 100%;
-                                    margin-left: auto;
-                                    margin-right: auto;
-                                    padding: 30px;
-                                    margin-top: 20px;
-                                }
-                                .testimonials-carousel {
-                                    display: flex;
-                                    justify-content: center;
-                                    width: 100%;
-                                }
-                                .testimonials .section-description {
-                                    margin-bottom: 20px;
-                                }
-                                .carousel-indicators {
-                                    display: flex;
-                                    justify-content: center;
-                                    margin-top: 30px;
-                                    width: 100%;
-                                }
-                                .quote-icon {
-                                    font-size: 36px;
-                                    color: var(--primary-color);
-                                    opacity: 0.3;
-                                    margin-bottom: 15px;
-                                    text-align: center;
-                                    display: block;
-                                }
-                                .testimonial-content .quote {
-                                    font-size: 18px;
-                                    line-height: 1.8;
-                                    font-style: italic;
-                                    margin-bottom: 30px;
-                                    color: #333;
-                                    text-align: center;
-                                }
-                                .client-info {
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                }
-                                @keyframes fadeIn {
-                                    from {
-                                        opacity: 0;
-                                        transform: translateY(20px);
-                                    }
-                                    to {
-                                        opacity: 1;
-                                        transform: translateY(0);
-                                    }
-                                }
-                            `;
-                            document.head.appendChild(style);
-                        }
-                    }
-                }
+            const testimonialContainer = document.querySelector('.testimonial-container');
+            const indicators = document.querySelectorAll('.indicator');
+            const slides = document.querySelectorAll('.testimonial-item');
+            let currentSlide = 0;
+            let slideInterval;
 
+            // 显示指定幻灯片
+            function showSlide(index) {
+                // 移除所有active类
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(ind => ind.classList.remove('active'));
+                
+                // 添加active类到当前项
+                currentSlide = index;
+                slides[currentSlide].classList.add('active');
+                indicators[currentSlide].classList.add('active');
             }
-            
-            // 加载配置
-            loadConfig();
+
+            // 下一张幻灯片
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            // 指示器点击事件
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    showSlide(index);
+                    // 重置自动轮播
+                    clearInterval(slideInterval);
+                    slideInterval = setInterval(nextSlide, 5000);
+                });
+            });
+
+            // 自动轮播
+            slideInterval = setInterval(nextSlide, 5000);
+
+            // 鼠标悬停时暂停轮播
+            testimonialContainer.addEventListener('mouseenter', () => {
+                clearInterval(slideInterval);
+            });
+
+            testimonialContainer.addEventListener('mouseleave', () => {
+                slideInterval = setInterval(nextSlide, 5000);
+            });
         });
     </script>
+
+    <style>
+        /* 轮播样式 */
+        .testimonial-item {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .testimonial-item.active {
+            display: block;
+        }
+        .testimonial-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        .quote-icon {
+            font-size: 36px;
+            color: var(--primary-color);
+            opacity: 0.3;
+            margin-bottom: 15px;
+        }
+        .testimonial-content .quote {
+            font-size: 18px;
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .client-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .client-image img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .client-details h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .client-details p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .indicator.active {
+            background-color: var(--primary-color);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </body>
-</html> 
+</html>

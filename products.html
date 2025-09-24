@@ -18,16 +18,20 @@
         <!-- 项目标题 -->
         <section class="projects-header">
             <div class="container">
-                <h1 id="page-title">Our Products</h1>
-                <p id="page-description">Explore our portfolio of products across various industries and categories.</p>
+                <h1>我们的产品与服务</h1>
+                <p>探索我们在各个行业和类别中的产品组合，为您提供专业的解决方案。</p>
             </div>
         </section>
 
-        <!-- 项目筛选 -->
+        <!-- 产品分类筛选 -->
         <section class="project-filters">
             <div class="container">
-                <div class="filter-buttons" id="filter-buttons">
-                    <!-- 动态生成筛选按钮 -->
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">全部产品</button>
+                    <button class="filter-btn" data-filter="nail">美甲工具</button>
+                    <button class="filter-btn" data-filter="web">网站开发</button>
+                    <button class="filter-btn" data-filter="design">品牌设计</button>
+                    <button class="filter-btn" data-filter="app">移动应用</button>
                 </div>
             </div>
         </section>
@@ -35,28 +39,167 @@
         <!-- 项目列表 -->
         <section class="projects-list">
             <div class="container">
-                <div class="projects-grid" id="products-grid">
-                    <!-- 动态生成产品卡片 -->
-                </div>
-                
-                <!-- 分页控件 -->
-                <div class="pagination-container" id="pagination-container" style="display: none;">
-                    <div class="pagination">
-                        <button class="page-btn prev-btn" id="prev-btn">
-                            <i class="fas fa-chevron-left"></i> 上一页
-                        </button>
-                        
-                        <div class="page-numbers" id="page-numbers">
-                            <!-- 动态生成页码 -->
+                <div class="projects-grid">
+                    <!-- 美甲工具类产品 -->
+                    <div class="project-card" data-category="nail">
+                        <div class="project-image">
+                            <img src="images/nail-file-main.jpg" alt="专业指甲锉">
                         </div>
-                        
-                        <button class="page-btn next-btn" id="next-btn">
-                            下一页 <i class="fas fa-chevron-right"></i>
-                        </button>
+                        <div class="project-content">
+                            <div class="project-category">美甲工具</div>
+                            <h3>专业指甲锉</h3>
+                            <p>高品质专业指甲锉，采用优质材料制作，为您的指甲护理提供完美体验。</p>
+                            <div class="project-tags">
+                                <span>美甲</span>
+                                <span>护理</span>
+                                <span>专业工具</span>
+                            </div>
+                            <a href="products/nail/index.html" class="btn secondary">查看详情</a>
+                        </div>
                     </div>
-                    
-                    <div class="pagination-info">
-                        <span id="pagination-info">显示第 1-9 项，共 15 项</span>
+
+                    <!-- 网站开发类产品 -->
+                    <div class="project-card" data-category="web">
+                        <div class="project-image">
+                            <img src="images/corporate-website-main.jpg" alt="企业官网设计">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">网站开发</div>
+                            <h3>企业官网设计开发</h3>
+                            <p>为现代企业打造专业、响应式的官方网站，提升品牌价值和业务转化。</p>
+                            <div class="project-tags">
+                                <span>响应式</span>
+                                <span>SEO优化</span>
+                                <span>现代设计</span>
+                            </div>
+                            <a href="products/web/corporate-website.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- 品牌设计类产品 -->
+                    <div class="project-card" data-category="design">
+                        <div class="project-image">
+                            <img src="images/brand-identity-main.jpg" alt="品牌形象设计">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">品牌设计</div>
+                            <h3>品牌形象设计</h3>
+                            <p>为企业打造独特而令人难忘的品牌形象，建立强有力的视觉语言。</p>
+                            <div class="project-tags">
+                                <span>Logo设计</span>
+                                <span>VI系统</span>
+                                <span>品牌策略</span>
+                            </div>
+                            <a href="products/design/brand-identity.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- 电商平台 -->
+                    <div class="project-card" data-category="web">
+                        <div class="project-image">
+                            <img src="images/ecommerce-platform.jpg" alt="电商平台开发">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">网站开发</div>
+                            <h3>电商平台开发</h3>
+                            <p>功能完整的在线商城系统，包含购物车、支付、订单管理等功能。</p>
+                            <div class="project-tags">
+                                <span>电商</span>
+                                <span>在线支付</span>
+                                <span>订单管理</span>
+                            </div>
+                            <a href="products/web/ecommerce.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- 包装设计 -->
+                    <div class="project-card" data-category="design">
+                        <div class="project-image">
+                            <img src="images/packaging-design.jpg" alt="产品包装设计">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">品牌设计</div>
+                            <h3>产品包装设计</h3>
+                            <p>创意包装设计，提升产品价值，增强品牌在货架上的竞争力。</p>
+                            <div class="project-tags">
+                                <span>包装设计</span>
+                                <span>创意</span>
+                                <span>品牌价值</span>
+                            </div>
+                            <a href="products/design/packaging.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- 移动应用 -->
+                    <div class="project-card" data-category="app">
+                        <div class="project-image">
+                            <img src="images/mobile-app.jpg" alt="移动应用开发">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">移动应用</div>
+                            <h3>移动应用开发</h3>
+                            <p>iOS和Android原生应用开发，提供优秀的用户体验和性能。</p>
+                            <div class="project-tags">
+                                <span>iOS</span>
+                                <span>Android</span>
+                                <span>原生开发</span>
+                            </div>
+                            <a href="products/app/mobile-app.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- 指甲抛光块 -->
+                    <div class="project-card" data-category="nail">
+                        <div class="project-image">
+                            <img src="images/nail-buffer.jpg" alt="指甲抛光块">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">美甲工具</div>
+                            <h3>指甲抛光块</h3>
+                            <p>四面抛光设计，让指甲更加光亮平滑，是美甲护理的必备工具。</p>
+                            <div class="project-tags">
+                                <span>抛光</span>
+                                <span>四面设计</span>
+                                <span>光亮</span>
+                            </div>
+                            <a href="products/nail/buffer.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- UI设计 -->
+                    <div class="project-card" data-category="design">
+                        <div class="project-image">
+                            <img src="images/ui-design.jpg" alt="界面UI设计">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">品牌设计</div>
+                            <h3>界面UI设计</h3>
+                            <p>用户友好的界面设计系统，提升用户体验和产品可用性。</p>
+                            <div class="project-tags">
+                                <span>UI设计</span>
+                                <span>用户体验</span>
+                                <span>设计系统</span>
+                            </div>
+                            <a href="products/design/ui-design.html" class="btn secondary">查看详情</a>
+                        </div>
+                    </div>
+
+                    <!-- 推皮器 -->
+                    <div class="project-card" data-category="nail">
+                        <div class="project-image">
+                            <img src="images/cuticle-pusher.jpg" alt="专业推皮器">
+                        </div>
+                        <div class="project-content">
+                            <div class="project-category">美甲工具</div>
+                            <h3>专业推皮器</h3>
+                            <p>安全推理死皮，呵护指甲健康，专业美甲师推荐的必备工具。</p>
+                            <div class="project-tags">
+                                <span>推皮</span>
+                                <span>安全</span>
+                                <span>专业</span>
+                            </div>
+                            <a href="products/nail/pusher.html" class="btn secondary">查看详情</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,18 +208,21 @@
         <!-- 特色项目 -->
         <section class="featured-project">
             <div class="container">
-                <div class="featured-label" id="featured-label">Featured Product</div>
+                <div class="featured-label">精选产品</div>
                 <div class="featured-content">
                     <div class="featured-text">
-                        <h2 id="featured-title">Smart Home Ecosystem</h2>
-                        <p id="featured-description">A complete smart home solution with integrated devices, intuitive controls, and energy management features for modern living.</p>
-                        <ul class="featured-results" id="featured-features">
-                            <!-- 动态生成特性列表 -->
+                        <h2>企业数字化解决方案</h2>
+                        <p>集品牌设计、网站开发、移动应用于一体的完整数字化解决方案，帮助企业在数字时代建立强大的在线存在。</p>
+                        <ul class="featured-results">
+                            <li><i class="fas fa-check"></i> 完整的品牌视觉识别系统</li>
+                            <li><i class="fas fa-check"></i> 响应式企业官网开发</li>
+                            <li><i class="fas fa-check"></i> 移动端应用程序</li>
+                            <li><i class="fas fa-check"></i> 数字营销策略支持</li>
                         </ul>
-                        <a href="contact.html" class="btn primary" id="featured-button">Get in Touch</a>
+                        <a href="contact.html" class="btn primary">联系咨询</a>
                     </div>
                     <div class="featured-image">
-                        <img id="featured-image" src="images/featured-project.jpg" alt="Smart Home Ecosystem">
+                        <img src="images/featured-project.jpg" alt="企业数字化解决方案">
                     </div>
                 </div>
             </div>
@@ -85,11 +231,26 @@
         <!-- 项目流程 -->
         <section class="our-process">
             <div class="container">
-                <h2 id="process-title">Our Process</h2>
-                <p class="section-description" id="process-description">How we develop each product to ensure exceptional quality</p>
+                <h2>我们的流程</h2>
+                <p class="section-description">如何开发每个产品以确保卓越的质量</p>
                 
-                <div class="process-grid" id="process-grid">
-                    <!-- 动态生成流程步骤 -->
+                <div class="process-grid">
+                    <div class="process-item">
+                        <h3>需求分析</h3>
+                        <p>深入了解客户需求，制定详细的项目计划和时间表</p>
+                    </div>
+                    <div class="process-item">
+                        <h3>设计开发</h3>
+                        <p>使用最新技术和设计理念，创造优质的产品体验</p>
+                    </div>
+                    <div class="process-item">
+                        <h3>测试优化</h3>
+                        <p>全面测试产品功能，持续优化直至达到最佳效果</p>
+                    </div>
+                    <div class="process-item">
+                        <h3>交付维护</h3>
+                        <p>按时交付最终产品，并提供后续的维护和支持服务</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -97,9 +258,9 @@
         <!-- 联系我们 -->
         <section class="contact-cta blue-bg">
             <div class="container">
-                <h2 id="cta-title">Let's discuss your product needs</h2>
-                <p id="cta-description">Ready to explore our product offerings? We'd love to help you find the perfect solutions.</p>
-                <a href="contact.html" class="btn primary light" id="cta-button">Get in Touch</a>
+                <h2>让我们讨论您的产品需求</h2>
+                <p>准备探索我们的产品和服务？我们很乐意帮助您找到完美的解决方案。</p>
+                <a href="contact.html" class="btn primary light">联系我们</a>
             </div>
         </section>
     </main>
@@ -107,278 +268,15 @@
     <!-- 页脚容器 -->
     <div id="footer-container"></div>
 
+    <!-- JavaScript -->
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
     
     <script>
-        // 全局变量
-        let filterBtns = [];
-        let allProducts = []; // 存储所有产品数据
-        let filteredProducts = []; // 存储筛选后的产品数据
-        let currentPage = 1; // 当前页码
-        let itemsPerPage = 9; // 每页显示的产品数量
-        let activeFilter = 'all'; // 当前激活的筛选器
-        
-        // 加载products配置文件
-        async function loadProductsConfig() {
-            try {
-                const response = await fetch('config/products.json');
-                const config = await response.json();
-                
-                // 更新页面标题
-                if (config['page-header']) {
-                    const header = config['page-header'];
-                    document.getElementById('page-title').textContent = header.title;
-                    document.getElementById('page-description').textContent = header.description;
-                }
-                
-                // 生成筛选按钮
-                if (config.filters) {
-                    generateFilterButtons(config.filters);
-                }
-                
-                // 存储产品数据并初始化显示
-                if (config.products) {
-                    allProducts = config.products;
-                    filteredProducts = [...allProducts];
-                    updateProductDisplay();
-                }
-                
-                // 更新特色产品
-                if (config['featured-product']) {
-                    updateFeaturedProduct(config['featured-product']);
-                }
-                
-                // 更新流程
-                if (config['our-process']) {
-                    updateProcess(config['our-process']);
-                }
-                
-                // 更新联系CTA
-                if (config['contact-cta']) {
-                    updateContactCTA(config['contact-cta']);
-                }
-                
-                // 初始化筛选和分页功能
-                initializeFiltering();
-                initializePagination();
-                
-            } catch (error) {
-                console.error('加载products配置文件失败:', error);
-            }
-        }
-        
-        // 生成筛选按钮
-        function generateFilterButtons(filters) {
-            const container = document.getElementById('filter-buttons');
-            container.innerHTML = '';
-            
-            filters.forEach(filter => {
-                const button = document.createElement('button');
-                button.className = filter.active ? 'filter-btn active' : 'filter-btn';
-                button.setAttribute('data-filter', filter.value);
-                button.textContent = filter.label;
-                container.appendChild(button);
-            });
-        }
-        
-        // 根据筛选条件过滤产品
-        function filterProducts(filterValue) {
-            activeFilter = filterValue;
-            currentPage = 1; // 重置到第一页
-            
-            if (filterValue === 'all') {
-                filteredProducts = [...allProducts];
-            } else {
-                filteredProducts = allProducts.filter(product => product.category === filterValue);
-            }
-            
-            updateProductDisplay();
-        }
-        
-        // 更新产品显示（包括分页）
-        function updateProductDisplay() {
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const currentProducts = filteredProducts.slice(startIndex, endIndex);
-            
-            // 生成当前页的产品
-            generateProducts(currentProducts);
-            
-            // 更新分页控件
-            updatePagination();
-        }
-        
-        // 生成产品列表
-        function generateProducts(products) {
-            const grid = document.getElementById('products-grid');
-            grid.innerHTML = '';
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'project-card';
-                productCard.setAttribute('data-category', product.category);
-                
-                const tagsHtml = product.tags.map(tag => `<span>${tag}</span>`).join('');
-                
-                productCard.innerHTML = `
-                    <div class="project-image">
-                        <img src="${product.image}" alt="${product.title}">
-                    </div>
-                    <div class="project-content">
-                        <div class="project-category">${product.categoryLabel}</div>
-                        <h3>${product.title}</h3>
-                        <p>${product.description}</p>
-                        <div class="project-tags">
-                            ${tagsHtml}
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(productCard);
-            });
-        }
-        
-        // 更新特色产品
-        function updateFeaturedProduct(featured) {
-            document.getElementById('featured-label').textContent = featured.label;
-            document.getElementById('featured-title').textContent = featured.title;
-            document.getElementById('featured-description').textContent = featured.description;
-            document.getElementById('featured-image').src = featured.image;
-            document.getElementById('featured-button').textContent = featured.buttonText;
-            
-            const featuresContainer = document.getElementById('featured-features');
-            featuresContainer.innerHTML = '';
-            
-            featured.features.forEach(feature => {
-                const li = document.createElement('li');
-                li.innerHTML = `<i class="fas fa-check"></i> ${feature}`;
-                featuresContainer.appendChild(li);
-            });
-        }
-        
-        // 更新流程
-        function updateProcess(process) {
-            document.getElementById('process-title').textContent = process.title;
-            document.getElementById('process-description').textContent = process.description;
-            
-            const grid = document.getElementById('process-grid');
-            grid.innerHTML = '';
-            
-            process.steps.forEach(step => {
-                const processItem = document.createElement('div');
-                processItem.className = 'process-item';
-                processItem.innerHTML = `
-                    <h3>${step.title}</h3>
-                    <p>${step.description}</p>
-                `;
-                grid.appendChild(processItem);
-            });
-        }
-        
-        // 更新联系CTA
-        function updateContactCTA(cta) {
-            document.getElementById('cta-title').textContent = cta.title;
-            document.getElementById('cta-description').textContent = cta.description;
-            document.getElementById('cta-button').textContent = cta.buttonText;
-        }
-        
-        // 更新分页控件
-        function updatePagination() {
-            const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-            const paginationContainer = document.getElementById('pagination-container');
-            const pageNumbers = document.getElementById('page-numbers');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            const paginationInfo = document.getElementById('pagination-info');
-            
-            // 如果总页数小于等于1，隐藏分页控件
-            if (totalPages <= 1) {
-                paginationContainer.style.display = 'none';
-                return;
-            }
-            
-            paginationContainer.style.display = 'block';
-            
-            // 更新上一页下一页按钮状态
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages;
-            
-            // 生成页码按钮 - 优化显示逻辑
-            pageNumbers.innerHTML = '';
-            
-            // 分页显示策略：最多显示7个页码按钮
-            // 格式：[1] ... [当前页-1] [当前页] [当前页+1] ... [最后页]
-            const maxVisiblePages = 7;
-            
-            if (totalPages <= maxVisiblePages) {
-                // 总页数少于等于7页时，显示所有页码
-                for (let i = 1; i <= totalPages; i++) {
-                    createPageButton(i, i === currentPage);
-                }
-            } else {
-                // 总页数超过7页时，使用省略号策略
-                
-                // 始终显示第1页
-                createPageButton(1, currentPage === 1);
-                
-                // 如果当前页离第1页较远，显示省略号
-                if (currentPage > 4) {
-                    createEllipsis();
-                }
-                
-                // 显示当前页附近的页码
-                const startPage = Math.max(2, currentPage - 1);
-                const endPage = Math.min(totalPages - 1, currentPage + 1);
-                
-                for (let i = startPage; i <= endPage; i++) {
-                    createPageButton(i, i === currentPage);
-                }
-                
-                // 如果当前页离最后一页较远，显示省略号
-                if (currentPage < totalPages - 3) {
-                    createEllipsis();
-                }
-                
-                // 始终显示最后一页（如果最后一页不是第1页）
-                if (totalPages > 1) {
-                    createPageButton(totalPages, currentPage === totalPages);
-                }
-            }
-            
-            // 更新分页信息
-            const startItem = (currentPage - 1) * itemsPerPage + 1;
-            const endItem = Math.min(currentPage * itemsPerPage, filteredProducts.length);
-            paginationInfo.textContent = `显示第 ${startItem}-${endItem} 项，共 ${filteredProducts.length} 项`;
-        }
-        
-        // 创建页码按钮
-        function createPageButton(pageNumber, isActive) {
-            const pageBtn = document.createElement('button');
-            pageBtn.className = isActive ? 'page-number active' : 'page-number';
-            pageBtn.textContent = pageNumber;
-            pageBtn.addEventListener('click', () => goToPage(pageNumber));
-            document.getElementById('page-numbers').appendChild(pageBtn);
-        }
-        
-        // 创建省略号
-        function createEllipsis() {
-            const ellipsis = document.createElement('span');
-            ellipsis.className = 'page-ellipsis';
-            ellipsis.textContent = '...';
-            document.getElementById('page-numbers').appendChild(ellipsis);
-        }
-        
-        // 跳转到指定页面
-        function goToPage(page) {
-            if (page < 1 || page > Math.ceil(filteredProducts.length / itemsPerPage)) return;
-            currentPage = page;
-            updateProductDisplay();
-        }
-        
-        // 初始化筛选功能
-        function initializeFiltering() {
-            filterBtns = document.querySelectorAll('.filter-btn');
+        // 产品筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const projectCards = document.querySelectorAll('.project-card');
             
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -388,35 +286,54 @@
                     this.classList.add('active');
                     
                     const filterValue = this.getAttribute('data-filter');
-                    filterProducts(filterValue);
+                    
+                    // 筛选产品卡片
+                    projectCards.forEach(card => {
+                        if (filterValue === 'all') {
+                            card.style.display = 'block';
+                            card.style.animation = 'fadeIn 0.3s ease-in-out';
+                        } else {
+                            const category = card.getAttribute('data-category');
+                            if (category === filterValue) {
+                                card.style.display = 'block';
+                                card.style.animation = 'fadeIn 0.3s ease-in-out';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
                 });
             });
-        }
-        
-        // 初始化分页功能
-        function initializePagination() {
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            
-            prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    goToPage(currentPage - 1);
-                }
-            });
-            
-            nextBtn.addEventListener('click', () => {
-                const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    goToPage(currentPage + 1);
-                }
-            });
-        }
-        
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            // 加载配置
-            loadProductsConfig();
         });
     </script>
+    
+    <style>
+        /* 筛选动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+        }
+        
+        /* 筛选按钮样式优化 */
+        .filter-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    </style>
 </body>
-</html> 
+</html>
