@@ -1,344 +1,253 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brand - Digital Experiences with Purpose</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/fontawesome/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Brand - 首页</title>
+    <meta name="description" content="我们创造提升品牌价值的数字体验">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- 导航栏容器 -->
-    <div id="header-container"></div>
-
-    <!-- 英雄区域 -->
-    <section class="hero">
-        <div class="hero-bg" style="background-image: url('images/hero-bg.jpg');"></div>
-        <div class="hero-bg-overlay"></div>
+    <!-- Header -->
+    <header class="header" id="header">
         <div class="container">
-            <div class="hero-content">
-                <h1>We craft digital experiences<br>that elevate brands</h1>
-                <p>Strategy-led design and technology for forward-thinking brands and businesses.</p>
-                <div class="cta-buttons">
-                    <a href="products.html" class="btn primary">View Our Projects</a>
-                    <a href="contact.html" class="btn secondary">Get in Touch</a>
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">Brand</a>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="nav-desktop">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="partners.html" class="nav-link">Partners</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <a href="contact.html" class="btn btn-primary btn-desktop">Get in Touch</a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="index.html" class="mobile-nav-link active">Home</a>
+            <a href="products.html" class="mobile-nav-link">Products</a>
+            <a href="partners.html" class="mobile-nav-link">Partners</a>
+            <a href="about.html" class="mobile-nav-link">About</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+            <a href="contact.html" class="btn btn-primary btn-full">Get in Touch</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <img src="https://images.pexels.com/photos/3861458/pexels-photo-3861458.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Hero background">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">We craft digital experiences that elevate brands</h1>
+                <p class="hero-subtitle">Strategy-led design and technology for forward-thinking brands and businesses.</p>
+                <div class="hero-buttons">
+                    <a href="products.html" class="btn btn-primary btn-lg">
+                        View Our Products
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </a>
+                    <a href="contact.html" class="btn btn-outline btn-lg">Get in Touch</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-icon"></div>
+        </div>
     </section>
 
-    <!-- 服务介绍 -->
-    <section class="services-intro">
+    <!-- Services Section -->
+    <section class="section section-alt" id="services">
         <div class="container">
             <div class="section-header">
-                <h2>Our Services</h2>
-                <p>We blend strategy, design, and technology to create impactful digital solutions.</p>
+                <div class="section-header-content">
+                    <h2 class="section-title">Our Services</h2>
+                    <p class="section-subtitle">We blend strategy, design, and technology to create impactful digital solutions.</p>
+                </div>
             </div>
+            
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-palette"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m12 19 7-7 3 3-7 7-3-3z"/>
+                            <path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                            <path d="m2 2 7.586 7.586"/>
+                            <circle cx="11" cy="11" r="2"/>
+                        </svg>
                     </div>
-                    <h3>Brand Identity</h3>
-                    <p>We create distinctive visual systems that embody your brand values.</p>
+                    <h3 class="service-title">Brand Identity</h3>
+                    <p class="service-description">We create distinctive visual systems that embody your brand values.</p>
                 </div>
+                
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-code"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"/>
+                            <polyline points="8 6 2 12 8 18"/>
+                        </svg>
                     </div>
-                    <h3>Web Development</h3>
-                    <p>Custom web solutions built with cutting-edge technologies for performance and scalability.</p>
+                    <h3 class="service-title">Web Development</h3>
+                    <p class="service-description">Custom web solutions built with cutting-edge technologies for performance and scalability.</p>
                 </div>
+                
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-mobile-alt"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
                     </div>
-                    <h3>UX Design</h3>
-                    <p>Human-centered design that creates intuitive, engaging experiences for your users.</p>
+                    <h3 class="service-title">UX Design</h3>
+                    <p class="service-description">Human-centered design that creates intuitive, engaging experiences for your users.</p>
                 </div>
+                
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="fas fa-bullhorn"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="20" x2="12" y2="10"/>
+                            <line x1="18" y1="20" x2="18" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="16"/>
+                        </svg>
                     </div>
-                    <h3>Digital Marketing</h3>
-                    <p>Data-driven strategies to increase your visibility and drive meaningful engagement.</p>
+                    <h3 class="service-title">Digital Marketing</h3>
+                    <p class="service-description">Data-driven strategies to increase your visibility and drive meaningful engagement.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 统计数据 -->
-    <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Projects Completed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Client Satisfaction</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Happy Clients</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">5+</div>
-                    <div class="stat-label">Years Experience</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 精选作品 -->
-    <section class="featured-work">
+    <!-- Featured Products -->
+    <section class="section">
         <div class="container">
             <div class="section-header">
-                <h2>Featured Projects</h2>
-                <p>A selection of our recent work across various industries.</p>
-            </div>
-            <div class="featured-project">
-                <div class="project-image">
-                    <img src="images/featured-project.jpg" alt="Featured Project">
+                <div class="section-header-content">
+                    <h2 class="section-title">Featured Products</h2>
+                    <p class="section-subtitle">A selection of our recent work across various industries.</p>
                 </div>
-                <div class="project-content">
-                    <div class="project-category">Brand Identity & Web Design</div>
-                    <h3>Tech Startup Rebranding</h3>
-                    <p>A complete brand overhaul for an innovative AI company, including logo design, visual identity system, and responsive website development.</p>
-                    <div class="project-tags">
-                        <span class="tag">Brand Strategy</span>
-                        <span class="tag">Visual Identity</span>
-                        <span class="tag">Web Design</span>
-                        <span class="tag">Development</span>
-                    </div>
-                    <div class="project-results">
-                        <div class="result-item">
-                            <span class="result-number">300%</span>
-                            <span class="result-label">Brand Recognition Increase</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-number">250%</span>
-                            <span class="result-label">Website Traffic Growth</span>
-                        </div>
-                    </div>
-                    <a href="products.html" class="btn primary">View All Projects</a>
-                </div>
+                <a href="products.html" class="btn btn-outline">
+                    View All Products
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 7h10v10"/>
+                        <path d="M7 17 17 7"/>
+                    </svg>
+                </a>
             </div>
+            
+            <div class="products-grid" id="featuredProducts"></div>
         </div>
     </section>
 
-    <!-- 客户评价 -->
-    <section class="testimonials">
-        <div class="container">
-            <div class="section-header">
-                <h2>What Our Clients Say</h2>
-                <p>Don't just take our word for it</p>
-            </div>
-            <div class="testimonials-carousel">
-                <div class="testimonial-container">
-                    <div class="testimonial-item active">
-                        <div class="testimonial-content">
-                            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-                            <p class="quote">"Brand delivered exceptional results that exceeded our expectations. Their creativity and professionalism made our project a huge success."</p>
-                            <div class="client-info">
-                                <div class="client-image">
-                                    <img src="images/client-1.jpg" alt="Sarah Johnson">
-                                </div>
-                                <div class="client-details">
-                                    <h4>Sarah Johnson</h4>
-                                    <p>CEO, Tech Innovations</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-content">
-                            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-                            <p class="quote">"Working with Brand was a fantastic experience. They understood our vision and brought it to life with stunning design and flawless execution."</p>
-                            <div class="client-info">
-                                <div class="client-image">
-                                    <img src="images/client-2.jpg" alt="Michael Chen">
-                                </div>
-                                <div class="client-details">
-                                    <h4>Michael Chen</h4>
-                                    <p>Founder, Creative Studio</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-content">
-                            <div class="quote-icon"><i class="fas fa-quote-left"></i></div>
-                            <p class="quote">"The team's attention to detail and commitment to quality is unmatched. Our new brand identity has transformed our business."</p>
-                            <div class="client-info">
-                                <div class="client-image">
-                                    <img src="images/client-3.jpg" alt="Emily Rodriguez">
-                                </div>
-                                <div class="client-details">
-                                    <h4>Emily Rodriguez</h4>
-                                    <p>Marketing Director, Growth Co</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-indicators" id="carousel-indicators">
-                <span class="indicator active" data-index="0"></span>
-                <span class="indicator" data-index="1"></span>
-                <span class="indicator" data-index="2"></span>
-            </div>
-        </div>
-    </section>
-
-    <!-- 行动号召 -->
-    <section class="cta">
+    <!-- CTA Section -->
+    <section class="cta-section">
         <div class="container">
             <div class="cta-content">
-                <h2>Ready to start your project?</h2>
-                <p>Let's create something exceptional together. Get in touch with our team to discuss your ideas.</p>
-                <a href="contact.html" class="btn primary large">Get in Touch</a>
+                <h2 class="cta-title">Ready to start your product?</h2>
+                <p class="cta-subtitle">Let's create something exceptional together. Get in touch with our team to discuss your ideas.</p>
+                <a href="contact.html" class="btn btn-secondary btn-lg">
+                    Get in Touch
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- 页脚容器 -->
-    <div id="footer-container"></div>
-
-    <!-- JavaScript -->
-    <script src="js/components.js"></script>
-    <script src="js/main.js"></script>
-    <script>
-        // 简单的轮播功能
-        document.addEventListener('DOMContentLoaded', function() {
-            const testimonialContainer = document.querySelector('.testimonial-container');
-            const indicators = document.querySelectorAll('.indicator');
-            const slides = document.querySelectorAll('.testimonial-item');
-            let currentSlide = 0;
-            let slideInterval;
-
-            // 显示指定幻灯片
-            function showSlide(index) {
-                // 移除所有active类
-                slides.forEach(slide => slide.classList.remove('active'));
-                indicators.forEach(ind => ind.classList.remove('active'));
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">Brand</h3>
+                    <p class="footer-description">We create digital experiences that elevate your brand and inspire your audience.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+                        <a href="#" aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+                        <a href="#" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+                    </div>
+                </div>
                 
-                // 添加active类到当前项
-                currentSlide = index;
-                slides[currentSlide].classList.add('active');
-                indicators[currentSlide].classList.add('active');
-            }
+                <div class="footer-links">
+                    <h4 class="footer-title">Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Services</h4>
+                    <ul>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Brand Identity</a></li>
+                        <li><a href="#">UX Design</a></li>
+                        <li><a href="#">Digital Marketing</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4 class="footer-title">Contact</h4>
+                    <p>123 Design Street<br>San Francisco, CA 94103</p>
+                    <p><a href="mailto:hello@brand.com">hello@brand.com</a></p>
+                    <p><a href="tel:+14155555555">+1 (415) 555-5555</a></p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Brand. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-            // 下一张幻灯片
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % slides.length;
-                showSlide(currentSlide);
-            }
-
-            // 指示器点击事件
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    showSlide(index);
-                    // 重置自动轮播
-                    clearInterval(slideInterval);
-                    slideInterval = setInterval(nextSlide, 5000);
-                });
-            });
-
-            // 自动轮播
-            slideInterval = setInterval(nextSlide, 5000);
-
-            // 鼠标悬停时暂停轮播
-            testimonialContainer.addEventListener('mouseenter', () => {
-                clearInterval(slideInterval);
-            });
-
-            testimonialContainer.addEventListener('mouseleave', () => {
-                slideInterval = setInterval(nextSlide, 5000);
-            });
-        });
-    </script>
-
-    <style>
-        /* 轮播样式 */
-        .testimonial-item {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        .testimonial-item.active {
-            display: block;
-        }
-        .testimonial-content {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 30px;
-        }
-        .quote-icon {
-            font-size: 36px;
-            color: var(--primary-color);
-            opacity: 0.3;
-            margin-bottom: 15px;
-        }
-        .testimonial-content .quote {
-            font-size: 18px;
-            line-height: 1.8;
-            font-style: italic;
-            margin-bottom: 30px;
-            color: #333;
-        }
-        .client-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-        .client-image img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .client-details h4 {
-            margin: 0 0 5px 0;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .client-details p {
-            margin: 0;
-            font-size: 14px;
-            color: #666;
-        }
-        .carousel-indicators {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-            gap: 10px;
-        }
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #ddd;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .indicator.active {
-            background-color: var(--primary-color);
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <script src="js/products-data.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
+

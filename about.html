@@ -1,227 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Brand</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/fontawesome/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- 导航栏容器 -->
-    <div id="header-container"></div>
-
-    <!-- 英雄区域 -->
-    <section class="about-hero">
+    <header class="header" id="header">
         <div class="container">
-            <div class="about-hero-content">
-                <div class="about-hero-text">
-                    <h1 id="hero-title">Crafting digital experiences with purpose</h1>
-                    <p id="hero-description">We're a team of designers, developers, and strategists passionate about creating meaningful digital experiences.</p>
-                    <div class="cta-buttons" id="hero-buttons">
-                        <!-- 动态生成按钮 -->
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">Brand</a>
+                </div>
+                
+                <nav class="nav-desktop">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="partners.html" class="nav-link">Partners</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <line x1="12" y1="1" x2="12" y2="3"/>
+                            <line x1="12" y1="21" x2="12" y2="23"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="1" y1="12" x2="3" y2="12"/>
+                            <line x1="21" y1="12" x2="23" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </button>
+                    <a href="contact.html" class="btn btn-primary btn-desktop">Get in Touch</a>
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="index.html" class="mobile-nav-link">Home</a>
+            <a href="products.html" class="mobile-nav-link">Products</a>
+            <a href="partners.html" class="mobile-nav-link">Partners</a>
+            <a href="about.html" class="mobile-nav-link active">About</a>
+            <a href="contact.html" class="mobile-nav-link">Contact</a>
+            <a href="contact.html" class="btn btn-primary btn-full">Get in Touch</a>
+        </div>
+    </div>
+
+    <main style="padding-top: 8rem; padding-bottom: 6rem;">
+        <div class="container">
+            <div class="section-header-content" style="margin-bottom: 4rem;">
+                <h1 class="section-title" style="font-size: 3rem;">About Us</h1>
+                <p class="section-subtitle">We're a team of designers, developers, and strategists passionate about creating meaningful digital experiences.</p>
+            </div>
+
+            <section class="section-alt" style="margin: 0 -1.5rem; padding: 4rem 1.5rem; border-radius: 0.5rem;">
+                <div style="max-width: 48rem; margin: 0 auto; text-align: center;">
+                    <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 1.5rem;">Our Mission</h2>
+                    <p style="color: var(--color-muted-foreground); font-size: 1.125rem; line-height: 1.8;">
+                        We believe in the power of design and technology to transform businesses and create lasting impact. Our mission is to help brands navigate the digital landscape with innovative solutions that drive growth and engagement.
+                    </p>
+                </div>
+            </section>
+
+            <section style="margin-top: 6rem;">
+                <h2 style="font-family: var(--font-serif); font-size: 2rem; margin-bottom: 3rem; text-align: center;">Our Values</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v4.5"/>
+                                <path d="m20 10-4.5-2.5"/>
+                                <path d="m18 20-3-5"/>
+                                <path d="m6 20 3-5"/>
+                                <path d="m4 10 4.5-2.5"/>
+                                <path d="M12 12v2.5"/>
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Excellence</h3>
+                        <p class="service-description">We're committed to delivering exceptional quality in everything we do, from strategy to execution.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Collaboration</h3>
+                        <p class="service-description">We believe the best work happens when we collaborate openly with our clients and each other.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12h5"/>
+                                <path d="M17 12h5"/>
+                                <path d="M12 2v5"/>
+                                <path d="M12 17v5"/>
+                                <path d="M12 12 2 2"/>
+                                <path d="m12 12 10 10"/>
+                                <path d="m12 12 10-10"/>
+                                <path d="m12 12-10 10"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Innovation</h3>
+                        <p class="service-description">We continuously explore new ideas, technologies, and approaches to create forward-thinking solutions.</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="service-title">Purpose</h3>
+                        <p class="service-description">We choose to work on products that create positive impact and align with our values.</p>
                     </div>
                 </div>
-                <div class="about-hero-image">
-                    <img id="hero-image" src="images/about-hero.jpg" alt="Team working together">
+            </section>
+
+            <section class="cta-section" style="margin-top: 6rem; border-radius: 0.5rem;">
+                <div class="cta-content">
+                    <h2 class="cta-title" style="font-size: 2.25rem;">Join us on our creative journey</h2>
+                    <p class="cta-subtitle">Whether you're looking to collaborate or join our team, we'd love to hear from you.</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="contact.html" class="btn btn-secondary btn-lg">Get in Touch</a>
+                        <a href="products.html" class="btn btn-outline btn-lg" style="border-color: var(--color-primary-foreground); color: var(--color-primary-foreground);">View Our Products</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3 class="footer-logo">Brand</h3>
+                    <p class="footer-description">We create digital experiences that elevate your brand and inspire your audience.</p>
+                    <div class="social-links">
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+                        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Navigation</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Services</h4>
+                    <ul>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Brand Identity</a></li>
+                        <li><a href="#">UX Design</a></li>
+                        <li><a href="#">Digital Marketing</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4 class="footer-title">Contact</h4>
+                    <p>123 Design Street<br>San Francisco, CA 94103</p>
+                    <p><a href="mailto:hello@brand.com">hello@brand.com</a></p>
+                    <p><a href="tel:+14155555555">+1 (415) 555-5555</a></p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Brand. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
 
-    <!-- 公司故事 -->
-    <section class="our-story">
-        <div class="container">
-            <h2 id="story-title">Our Story</h2>
-            <p class="section-description" id="story-description">From humble beginnings to becoming a leading creative agency</p>
-            
-            <!-- 时间线 - 开始 -->
-            <div class="timeline" id="timeline-container">
-                <!-- 动态生成时间线 -->
-            </div>
-            <!-- 时间线 - 结束 -->
-        </div>
-    </section>
-
-    <!-- 价值观 -->
-    <section class="our-values">
-        <div class="container">
-            <h2 id="values-title">Our Values</h2>
-            <p class="section-description" id="values-description">The principles that guide our work and relationships</p>
-            
-            <div class="values-grid" id="values-grid">
-                <!-- 动态生成价值观 -->
-            </div>
-        </div>
-    </section>
-
-    <!-- 团队 -->
-    <section class="our-team">
-        <div class="container">
-            <h2 id="team-title">Our Team</h2>
-            <p class="section-description" id="team-description">Meet the talented individuals behind our creative solutions</p>
-            
-            <div class="team-grid" id="team-grid">
-                <!-- 动态生成团队成员 -->
-            </div>
-        </div>
-    </section>
-
-    <!-- 加入我们 -->
-    <section class="join-us blue-bg">
-        <div class="container">
-            <h2 id="join-title">Join us on our creative journey</h2>
-            <p id="join-description">Whether you're looking to collaborate or join our team, we'd love to hear from you.</p>
-            <div class="join-buttons" id="join-buttons">
-                <!-- 动态生成按钮 -->
-            </div>
-        </div>
-    </section>
-
-    <!-- 页脚容器 -->
-    <div id="footer-container"></div>
-
-    <script src="js/components.js"></script>
     <script src="js/main.js"></script>
-    <script>
-        // 加载about配置文件
-        async function loadAboutConfig() {
-            try {
-                const response = await fetch('config/about.json');
-                const config = await response.json();
-                
-                // 更新英雄区域
-                if (config['hero-section']) {
-                    const hero = config['hero-section'];
-                    document.getElementById('hero-title').textContent = hero.title;
-                    document.getElementById('hero-description').textContent = hero.description;
-                    document.getElementById('hero-image').src = hero.image;
-                    generateButtons('hero-buttons', hero.buttons);
-                }
-                
-                // 更新公司故事
-                if (config['our-story']) {
-                    const story = config['our-story'];
-                    document.getElementById('story-title').textContent = story.title;
-                    document.getElementById('story-description').textContent = story.description;
-                    generateTimeline(story.timeline);
-                }
-                
-                // 更新价值观
-                if (config['our-values']) {
-                    const values = config['our-values'];
-                    document.getElementById('values-title').textContent = values.title;
-                    document.getElementById('values-description').textContent = values.description;
-                    generateValues(values.values);
-                }
-                
-                // 更新团队
-                if (config['our-team']) {
-                    const team = config['our-team'];
-                    document.getElementById('team-title').textContent = team.title;
-                    document.getElementById('team-description').textContent = team.description;
-                    generateTeam(team.members);
-                }
-                
-                // 更新加入我们
-                if (config['join-us']) {
-                    const join = config['join-us'];
-                    document.getElementById('join-title').textContent = join.title;
-                    document.getElementById('join-description').textContent = join.description;
-                    generateButtons('join-buttons', join.buttons);
-                }
-                
-            } catch (error) {
-                console.error('加载about配置文件失败:', error);
-            }
-        }
-        
-        // 生成按钮
-        function generateButtons(containerId, buttons) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            
-            buttons.forEach(button => {
-                const buttonElement = document.createElement('a');
-                buttonElement.href = button.url;
-                buttonElement.className = button.class;
-                buttonElement.textContent = button.text;
-                container.appendChild(buttonElement);
-            });
-        }
-        
-        // 生成时间线
-        function generateTimeline(timeline) {
-            const container = document.getElementById('timeline-container');
-            container.innerHTML = '';
-            
-            timeline.forEach(item => {
-                const timelineItem = document.createElement('div');
-                timelineItem.className = item.reverse ? 'timeline-item reverse' : 'timeline-item';
-                timelineItem.innerHTML = `
-                    <div class="timeline-badge">${item.year}</div>
-                    <div class="timeline-content">
-                        <div class="timeline-image">
-                            <img src="${item.image}" alt="${item.title}">
-                        </div>
-                        <div class="timeline-text">
-                            <h3>${item.title}</h3>
-                            <p>${item.description}</p>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(timelineItem);
-            });
-        }
-        
-        // 生成价值观
-        function generateValues(values) {
-            const grid = document.getElementById('values-grid');
-            grid.innerHTML = '';
-            
-            values.forEach(value => {
-                const valueCard = document.createElement('div');
-                valueCard.className = 'value-card';
-                valueCard.innerHTML = `
-                    <div class="value-icon">
-                        <i class="${value.icon}"></i>
-                    </div>
-                    <h3>${value.title}</h3>
-                    <p>${value.description}</p>
-                `;
-                grid.appendChild(valueCard);
-            });
-        }
-        
-        // 生成团队成员
-        function generateTeam(members) {
-            const grid = document.getElementById('team-grid');
-            grid.innerHTML = '';
-            
-            members.forEach(member => {
-                const teamMember = document.createElement('div');
-                teamMember.className = 'team-member';
-                teamMember.innerHTML = `
-                    <div class="member-image">
-                        <img src="${member.image}" alt="${member.name}">
-                    </div>
-                    <div class="member-info">
-                        <h3>${member.name}</h3>
-                        <div class="position">${member.position}</div>
-                        <p class="bio">${member.bio}</p>
-                    </div>
-                `;
-                grid.appendChild(teamMember);
-            });
-        }
-        
-        // 页面加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            // 加载配置
-            loadAboutConfig();
-        });
-    </script>
 </body>
-</html> 
+</html>
+
